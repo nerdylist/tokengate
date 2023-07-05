@@ -1,85 +1,82 @@
 import { useState, useEffect } from "react";
-import type { NextPage } from "next";
-import { useWallet } from '@meshsdk/react';
-import { CardanoWallet } from '@meshsdk/react';
-import Router from 'next/router';
+import { useWallet, CardanoWallet } from '@meshsdk/react';
 import Cookies from 'js-cookie';
 
-const Home: NextPage = () => {
+const Home = () => {
   const { connected, wallet } = useWallet();
   const [assetExists, setAssetExists] = useState<null | boolean>(null);
-  const token = getURLParameter('token');
+  const [token, setToken] = useState<string | null>(null);
+  const [showUnlockedContent, setShowUnlockedContent] = useState<boolean>(false);
+  const [showRestrictedContent, setShowRestrictedContent] = useState<boolean>(false);
+  const [showConnectWallet, setShowConnectWallet] = useState<boolean>(true);
 
-  function getURLParameter(name) {
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(name);
-    }
-    return null;
-  }
-  
-
-  function base64Encode(str) {
+  function base64Encode(str: string) {
     return btoa(str);
   }
 
-  function base64Decode(encodedStr) {
-    return atob(encodedStr);
-  }
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setToken(new URLSearchParams(window.location.search).get('token'));
+    }
+  }, []);
 
   useEffect(() => {
     async function checkAsset() {
-      if (wallet && connected) {
+      if (wallet && connected && token) {
         const assets = await wallet.getAssets();
         const assetExists = assets.find(asset => asset.fingerprint === token) ? true : false;
         setAssetExists(assetExists);
 
-        // Set cookie with wallet contents JSON
-        Cookies.set('token', base64Encode(token));
+        // Set cookie with token
+        if (assetExists) {
+          Cookies.set('token', base64Encode(token));
+          setShowUnlockedContent(true);
+          setShowRestrictedContent(false);
+          setShowConnectWallet(false);
+        } else {
+          Cookies.set('token', '0');
+          setShowUnlockedContent(false);
+          setShowRestrictedContent(true);
+          setShowConnectWallet(false);
+        }
       }
     }
     checkAsset();
-  }, [wallet, connected]);
+  }, [wallet, connected, token]);
 
   useEffect(() => {
-    // Check for the asset fingerprint in the wallet contents stored in the cookie on page reload
-    const walletContentsCookie = Cookies.get('walletContents');
-    if (walletContentsCookie) {
-      const walletContents = JSON.parse(walletContentsCookie);
-      const assets = walletContents.assets || [];
-      const assetExists = assets.find(asset => asset.fingerprint === token) ? true : false;
-      setAssetExists(assetExists);
-
-      // Auto-load restricted content if the fingerprint exists in the cookie
-      if (assetExists) {
-        handleRedirect();
+    const tokenCookie = Cookies.get('token');
+    if (tokenCookie) {
+      if (tokenCookie !== '0' && tokenCookie !== base64Encode(token)) {
+        Cookies.remove('token');
+        setShowConnectWallet(true);
+      } else {
+        setShowUnlockedContent(tokenCookie !== '0');
+        setShowRestrictedContent(tokenCookie === '0');
+        setShowConnectWallet(false);
       }
+    } else {
+      setShowConnectWallet(true);
     }
-  }, []);
-
-  const handleRedirect = () => {
-    // Redirect the user to the URL
-    Router.push('https://thekreeps.com/?k=' + base64Encode(token)); // Replace with your desired URL
-  };
+  }, [token]);
 
   return (
-    <div>
-      {!connected && (
+    <div class="tokengate">
+      {showConnectWallet && (
         <>
-          <h1>Connect Wallet</h1>
           <CardanoWallet />
         </>
       )}
-      {connected && assetExists === true && (
+      {showUnlockedContent && (
         <>
-          <button class="unlocked" onClick={handleRedirect}>
+          <p className="unlocked">
             UNLOCKED CONTENT
-          </button>
+          </p>
         </>
       )}
-      {connected && assetExists === false && (
+      {showRestrictedContent && (
         <>
-          <p class="restricted">
+          <p className="restricted">
             RESTRICTED CONTENT
           </p>
         </>
