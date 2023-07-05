@@ -1,5 +1,13 @@
+BODY, HTML { 
+    background: #111;
+    color: #FFF;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 12px;
+}
 .mr-wallet-button, .mr-menu-list {
-    border-radius: 10px;
+    border-radius: 5px;
     background:rgba(0,0,0,0.95)!important;
     color: #FFF!important;
     border:0px;
