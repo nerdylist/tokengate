@@ -1,35 +1,21 @@
-# Starter Next.js TypeScript
+# TokenGate
 
-Start a new project on Next.js. This starter template consists of a connect wallet button and wallet integration.
-      
+TokenGate is a script built on Next.js and TypeScript that allows you to create a token gate for Cardano NFTs. It provides a mechanism to unlock exclusive content on your website for users who hold a specific NFT in their wallet.
+
+## Overview
+
+The script operates by checking a user's wallet for a specific asset or any asset from a specified policy ID. If the asset or policy ID is found in the user's wallet, the gated content is unlocked and displayed to the user. If the asset or policy ID is not found, the content remains locked.
+
+The script also includes a "Connect Wallet" button for users to connect their Cardano wallet, and a "Hide" link to disconnect the wallet and hide the unlocked content.
+
 ## Getting Started
 
-Start project locally using CLI:
-
-```bash
-npx create-mesh-app starter-next-ts-template
-```
-
-Start your project on [Demeter](https://demeter.run/):
-
-[![Code in Cardano Workspace](https://demeter.run/code/badge.svg)](https://demeter.run/code?repository=https://github.com/MeshJS/starter-next-ts-template.git&template=typescript)
+To get started with TokenGate, you can clone the project from the GitHub repository and follow the instructions in the README to install and run the project locally.
 
 ## Learn More
 
-### [React components and hooks](https://meshjs.dev/react)
-
-Frontend components for wallet connections, and useful React hooks to getting wallet states - Mesh provides everything you need to bring your Web3 user interface to life.
-
-### [APIs](https://meshjs.dev/apis)
-
-From wallet integrations to transaction builders, Mesh makes Web3 development easy with reliable, scalable, and well-engineered APIs & developer tools.
-
-### [Guides](https://meshjs.dev/guides)
-
-Whether you are new to web development or a seasoned blockchain full-stack developer, these guides will help you get started.
+TokenGate is built on the MeshJS library, which provides a set of tools and APIs for interacting with the Cardano blockchain. You can learn more about MeshJS and its capabilities on the MeshJS website.
 
 ## Connect with us
 
-Follow us on [Twitter](https://twitter.com/meshsdk) for updates.
-
-Join our [Discord](https://discord.gg/Z6AH9dahdH) for any questions and suggestions.
+For any questions or suggestions about TokenGate, feel free to reach out through our GitHub repository.
