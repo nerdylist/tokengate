@@ -111,15 +111,16 @@ const Home = () => {
       {showUnlockedContent && (
         <>
           <p className="unlocked">
-            UNLOCKED CONTENT
-            <a href="#" onClick={handleHide}>HIDE</a> {/* Added "HIDE" link */}
+            UNLOCKED CONTENT<br/>
+            <a href="#" onClick={handleHide}>HIDE</a>
           </p>
         </>
       )}
       {showRestrictedContent && (
         <>
           <p className="restricted">
-            RESTRICTED CONTENT
+            RESTRICTED CONTENT<br/>
+            <a href="#" onClick={handleHide}>HIDE</a>
           </p>
         </>
       )}
