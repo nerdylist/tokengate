@@ -4,6 +4,9 @@
 // Version: 0.1.0
 // Based on: https://github.com/MeshJS/mesh
 // Repo: https://github.com/nerdylist/tokengate
+// Test Policy: b100d99535d04dc2cd28ffaad90dcc57f01f6dce6b565f4be8fab033
+// Test Token: asset1t84stfqy424gh4nsdsfe5gfqzy4lpe8ssm0fjj
+
 import { useState, useEffect } from "react";
 import { useWallet, CardanoWallet } from '@meshsdk/react';
 import Cookies from 'js-cookie';
@@ -54,7 +57,7 @@ const Home = () => {
 
   useEffect(() => {
     async function checkPolicy() {
-      if (wallet && connected && policy) {
+      if (wallet && connected && policy && !token) { // Only check policy if no token is provided
         const assets = await wallet.getAssets();
         const policyExists = assets.find(asset => asset.policyId === policy) ? true : false;
         
@@ -73,7 +76,7 @@ const Home = () => {
       }
     }
     checkPolicy();
-  }, [wallet, connected, policy, assetExists]);
+  }, [wallet, connected, policy, assetExists, token]); // Added token to the dependency array
 
   useEffect(() => {
     const tokenCookie = Cookies.get('token');
