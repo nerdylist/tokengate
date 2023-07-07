@@ -119,7 +119,8 @@ const Home = () => {
       {showRestrictedContent && (
         <>
           <p className="restricted">
-            RESTRICTED CONTENT
+            RESTRICTED CONTENT<br/>
+            <a href="#" onClick={handleHide}>HIDE</a>
           </p>
         </>
       )}
