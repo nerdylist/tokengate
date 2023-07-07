@@ -1,6 +1,9 @@
+// Title: TokenGate
+// Description: A simple token gate for Cardano NFTs
+// Author: NerdyList
+// Version: 0.1.0
 // Based on: https://github.com/MeshJS/mesh
-// Updated FE w/ UI and logic for tokengate
-// New repo: https://github.com/nerdylist/tokengate
+// Repo: https://github.com/nerdylist/tokengate
 import { useState, useEffect } from "react";
 import { useWallet, CardanoWallet } from '@meshsdk/react';
 import Cookies from 'js-cookie';
