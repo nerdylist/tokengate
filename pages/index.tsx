@@ -12,7 +12,7 @@ import { useWallet, CardanoWallet } from '@meshsdk/react';
 import Cookies from 'js-cookie';
 
 const Home = () => {
-  const { connected, wallet } = useWallet();
+  const { connected, wallet, disconnect } = useWallet();
   const [assetExists, setAssetExists] = useState<null | boolean>(null);
   const [token, setToken] = useState<string | null>(null);
   const [policy, setPolicy] = useState<string | null>(null);
@@ -22,6 +22,15 @@ const Home = () => {
 
   function base64Encode(str: string) {
     return btoa(str);
+  }
+
+  function handleHide() {
+    Cookies.remove('token');
+    Cookies.remove('policy');
+    disconnect();
+    setShowUnlockedContent(false);
+    setShowRestrictedContent(false);
+    setShowConnectWallet(true);
   }
 
   useEffect(() => {
@@ -103,6 +112,7 @@ const Home = () => {
         <>
           <p className="unlocked">
             UNLOCKED CONTENT
+            <a href="#" onClick={handleHide}>HIDE</a> {/* Added "HIDE" link */}
           </p>
         </>
       )}
