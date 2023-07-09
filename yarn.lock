@@ -422,6 +422,11 @@
   dependencies:
     tslib "^2.4.0"
 
+"@types/js-cookie@^3.0.3":
+  version "3.0.3"
+  resolved "https://registry.npmjs.org/@types/js-cookie/-/js-cookie-3.0.3.tgz"
+  integrity sha512-Xe7IImK09HP1sv2M/aI+48a20VX+TdRJucfq4vfRVy6nWN8PYPOEnlMRSgxJAgYQIXJVL8dZ4/ilAM7dWNaOww==
+
 "@types/json5@^0.0.29":
   version "0.0.29"
   resolved "https://registry.npmjs.org/@types/json5/-/json5-0.0.29.tgz"

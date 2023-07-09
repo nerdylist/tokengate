@@ -97,11 +97,10 @@ const Home = () => {
     const tokenCookie = Cookies.get('token');
     const policyCookie = Cookies.get('policy');
     if (tokenCookie || policyCookie) {
-      const validToken = tokenCookie !== '0' && tokenCookie === base64Encode(token);
-      const validPolicy = policyCookie !== '0' && policyCookie === base64Encode(policy);
+      const validToken = tokenCookie !== '0' && token !== null && tokenCookie === base64Encode(token);
+      const validPolicy = policyCookie !== '0' && policy !== null && policyCookie === base64Encode(policy);
       setShowUnlockedContent(validToken || validPolicy);
       setShowRestrictedContent(!validToken && !validPolicy);
-      setShowConnectWallet(false);
     } else {
       setShowConnectWallet(true);
     }
