@@ -101,6 +101,7 @@ const Home = () => {
       const validPolicy = policyCookie !== '0' && policy !== null && policyCookie === base64Encode(policy);
       setShowUnlockedContent(validToken || validPolicy);
       setShowRestrictedContent(!validToken && !validPolicy);
+      setShowConnectWallet(!(validToken || validPolicy)); // Hide Connect Wallet button if a valid token or policy exists
     } else {
       setShowConnectWallet(true);
     }
