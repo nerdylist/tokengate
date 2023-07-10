@@ -45,6 +45,10 @@ BODY, HTML {
 .mr-wallet-button:after {
     content: "\00A0\00A0\1F512";
 }
+.lock-button:before{
+    content: "\1F511\00A0\00A0"!important;
+    font-size: 10px!important;
+}
 
 .mr-menu-list {
     border-bottom-right-radius: 5px;
@@ -112,6 +116,13 @@ DIV.MenuItem__StyledItem-sc-obisy3-0:hover * {
 .restricted {
     color: #CC0000;
 }
+.restricted::after {
+    /* content: "𝗹𝘃𝗹𝘆.𝗶𝗼";
+    font-size: .7em;
+    margin-left: 10px;
+    vertical-align: middle;
+    white-space: pre; */
+}
 
 DIV.tokengate {
     width: auto;
@@ -119,8 +130,19 @@ DIV.tokengate {
     text-align: center;
 }
 
-.unlocked A, .restricted A {
-    background: linear-gradient(0deg, rgba(44,18,171,1) 0%, rgba(255,0,71,1) 100%);
+.unlocked A {
+    background: linear-gradient(0deg, rgb(12, 140, 144) 0%, rgb(11, 224, 107) 100%);
+    color: #FFF;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    margin-top: 10px;
+    display:inline-block;
+    font-size: 10px;
+}
+
+.restricted A {
+    background: linear-gradient(0deg, rgb(173, 8, 65) 0%, rgba(255,0,71,1) 100%);
     color: #FFF;
     text-decoration: none;
     padding: 5px 10px;

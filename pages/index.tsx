@@ -120,7 +120,7 @@ const Home = () => {
           <p className="unlocked">
             UNLOCKED CONTENT<br/>
             <span className="tokenPolicy">key: {token} {policy}</span><br/>
-            <a href="#" onClick={handleHide}>Lock <span className="lvlyBadge keyhole hide"></span></a>
+            <a href="#" onClick={handleHide} className="lock-button">LOCK <span className="lvlyBadge keyhole"></span></a>
           </p>
         </>
       )}
@@ -128,7 +128,7 @@ const Home = () => {
         <>
           <p className="restricted">
             RESTRICTED CONTENT<br/>
-            <a href="#" onClick={handleHide}>RETRY</a>
+            <a href="#" onClick={handleHide} className="lock-button">RETRY <span className="lvlyBadge keyhole"></span></a>
           </p>
         </>
       )}
