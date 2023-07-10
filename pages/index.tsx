@@ -118,7 +118,7 @@ const Home = () => {
         <>
           <p className="unlocked">
             UNLOCKED CONTENT<br/>
-            <a href="#" onClick={handleHide}>HIDE</a>
+            <a href="#" onClick={handleHide}>Disconnect <span class="lvlyBadge"></span></a>
           </p>
         </>
       )}
@@ -126,7 +126,7 @@ const Home = () => {
         <>
           <p className="restricted">
             RESTRICTED CONTENT<br/>
-            <a href="#" onClick={handleHide}>HIDE</a>
+            <a href="#" onClick={handleHide}>RETRY</a>
           </p>
         </>
       )}

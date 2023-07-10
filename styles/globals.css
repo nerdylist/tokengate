@@ -58,3 +58,24 @@ DIV.tokengate {
     margin-top: 10px;
     display:inline-block;
 }
+.lvlyBadge {
+    display:inline-block;
+    background: rgb(44,18,171);
+    background: linear-gradient(0deg, rgba(44,18,171,1) 0%, rgba(255,0,71,1) 100%);
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: bolder;
+    padding:0px 6px 2px 6px;
+    font-size: 10px;
+    line-height: 14px;
+    margin-top:-10px!important;
+    margin-left: 6px;
+    position: absolute;
+    border-radius: 3px;
+    letter-spacing: -.5px;
+    -webkit-box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.1);
+    -moz-box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.1);
+    box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.1);    
+}
+.lvlyBadge::before {
+    content: "𝗹𝘃𝗹𝘆.𝗶𝗼"; 
+}
