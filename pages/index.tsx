@@ -27,6 +27,7 @@ const Home = () => {
   const [policy, setPolicy] = useState<string | null>(null);
   const [showUnlockedContent, setShowUnlockedContent] = useState<boolean>(false);
   const [showRestrictedContent, setShowRestrictedContent] = useState<boolean>(false);
+  const [showConnectWallet, setShowConnectWallet] = useState<boolean>(true);
   
   function base64Encode(str: string) {
     return btoa(str);
@@ -98,11 +99,13 @@ const Home = () => {
       const validPolicy = policyCookie !== '0' && policy !== null && policyCookie === base64Encode(policy);
       setShowUnlockedContent(validToken || validPolicy);
       setShowRestrictedContent(!validToken && !validPolicy);
+      setShowConnectWallet(false); // Hide Connect Wallet button if a valid token or policy exists
     } else {
       setShowUnlockedContent(false);
       setShowRestrictedContent(false);
+      setShowConnectWallet(true); // Show Connect Wallet button if no valid token or policy exists
     }
-  }, [token, policy]);
+  }, [token, policy]);  
 
   return (
     <div className="tokengate">
