@@ -107,11 +107,23 @@ const Home = () => {
     }
   }, [token, policy]);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const button = document.querySelector('.mr-wallet-button');
+      if (button) {
+        button.textContent = '';
+        clearInterval(interval);
+      }
+    }, 100);
+  }, []);
+
+
   return (
     <div className="tokengate">
       {showConnectWallet && (
         <>
           <CardanoWallet />
+          
         </>
       )}
       {showUnlockedContent && (
