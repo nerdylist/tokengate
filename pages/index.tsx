@@ -1,7 +1,7 @@
 // Title: TokenGate
 // Description: A simple token gate for Cardano NFTs
 // Author: NerdyList
-// Version: 0.1.5
+// Version: 0.1.5.2
 //
 // Resource References:
 // https://github.com/MeshJS/mesh
