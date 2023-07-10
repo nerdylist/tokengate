@@ -28,7 +28,7 @@ const Home = () => {
   const [showUnlockedContent, setShowUnlockedContent] = useState<boolean>(false);
   const [showRestrictedContent, setShowRestrictedContent] = useState<boolean>(false);
   const [showConnectWallet, setShowConnectWallet] = useState<boolean>(true);  
-  
+ 
   function base64Encode(str: string) {
     return btoa(str);
   }
@@ -55,15 +55,15 @@ const Home = () => {
         const assets = await wallet.getAssets();
         const assetExists = assets.find(asset => asset.fingerprint === token) ? true : false;
         setAssetExists(assetExists);
-  
-        // Set or remove cookie with token
+
+        // Set cookie with token
         if (assetExists) {
           Cookies.set('token', base64Encode(token));
           setShowUnlockedContent(true);
           setShowRestrictedContent(false);
           setShowConnectWallet(false);
         } else {
-          Cookies.remove('token');
+          Cookies.set('token', '0');
           setShowUnlockedContent(false);
           setShowRestrictedContent(true);
           setShowConnectWallet(false);
@@ -72,21 +72,21 @@ const Home = () => {
     }
     checkAsset();
   }, [wallet, connected, token]);
-  
+
   useEffect(() => {
     async function checkPolicy() {
       if (wallet && connected && policy && !token) { // Only check policy if no token is provided
         const assets = await wallet.getAssets();
         const policyExists = assets.find(asset => asset.policyId === policy) ? true : false;
         
-        // Set or remove cookie with policy
+        // Set cookie with policy
         if (policyExists) {
           Cookies.set('policy', base64Encode(policy));
           setShowUnlockedContent(true);
           setShowRestrictedContent(false);
           setShowConnectWallet(false);
-        } else if (!assetExists) { // Only remove if no asset exists
-          Cookies.remove('policy');
+        } else if (!assetExists) { // Only set to '0' if no asset exists
+          Cookies.set('policy', '0');
           setShowUnlockedContent(false);
           setShowRestrictedContent(true);
           setShowConnectWallet(false);
