@@ -1,8 +1,6 @@
 * {
     padding: 0px;
     margin: 0px;
-}
-*, *:hover {
     -webkit-transition: all 1000ms ease;
     -moz-transition: all 1000ms ease;
     -ms-transition: all 1000ms ease;
@@ -10,77 +8,84 @@
     transition: all 1000ms ease;
 }
 
-BODY, HTML { 
-    background: transparent;
-    color: #FFF;
+BODY, HTML, .unlocked, .restricted { 
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-weight: bold;
     text-transform: uppercase;
+}
+
+BODY, HTML {
+    background: transparent;
+    color: #FFF;
     font-size: 12px;
     padding:0px!important;
     margin:0px!important;
 }
+
 .mr-wallet-button {    
     border-top-right-radius: 5px;
     border-top-left-radius: 5px;
-    background: rgb(44,18,171,1);
     background: linear-gradient(0deg,rgb(21, 8, 85) 0%, rgb(110, 36, 201) 100%);
     color: #FFF!important;
     border:0px;
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-weight: bold;
-    padding: 0px!important;
-    width: auto;
     padding: 6px 10px 8px 10px!important;
-}
-.tokengate::before {
-    content: '';
-}
-.mr-wallet-button {
+    width: auto;
     font-size: 0px!important;
     display: none;
 }
-.mr-wallet-button:before {
+
+.mr-wallet-button:before, .mr-wallet-button:after {
     font-size: 20px!important;
+}
+
+.mr-wallet-button:before {
     content: "\1F512\00A0\00A0 UNLOCK";
 }
+
 .mr-wallet-button:after {
-    font-size: 20px!important;  
     content: "\00A0\00A0\1F512";
 }
 
 .mr-menu-list {
     border-bottom-right-radius: 5px;
     border-bottom-left-radius: 5px;
-    background: rgb(44,18,171,.9);
+    background-color: rgba(0,0,0,.95);
     color: #FFF!important;
     border:0px;
+    padding-top: 10px;
 }
-
 
 DIV.MenuItem__StyledItem-sc-obisy3-0 {
     padding: 20px!important;
     text-align: left;
     border-bottom: 2px solid rgba(0,0,0,.5);
+    font-size: 10px!important;
+    font-weight: bold;
 }
+
 DIV.MenuItem__StyledItem-sc-obisy3-0:last-child {
-    text-align: left;
     border-bottom: 0px solid rgba(0,0,0,.5);
     overflow:hidden;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
 }
+
 DIV.MenuItem__StyledItem-sc-obisy3-0 * {
     padding: 5px;
 }
+
+DIV.MenuItem__StyledItem-sc-obisy3-0:hover {
+    background: rgb(44,18,171,.9);
+}
+
 DIV.MenuItem__StyledItem-sc-obisy3-0:hover * {
-    font-size: 1.4em!important;
+    font-size: 16px!important;
 }
 
 .ChevronDown__StyledChevronDown-sc-17n3mfh-0.bqaZfE {
     display: none;
-  }
-  
+}
+
 .tokengate div {
     margin: 0px auto!important;
     text-align: center!important;
@@ -89,16 +94,10 @@ DIV.MenuItem__StyledItem-sc-obisy3-0:hover * {
     padding: 0px!important;
 }
 
-.mr-menu-list {
-    padding-top: 10px;
-}
-
 .unlocked, .restricted {
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-weight: bold;
-    text-transform: uppercase;
     font-size: 1.5em;
 }
+
 .unlocked {
     background:rgba(0,0,0,0.8);
     color:#FFF;
@@ -109,9 +108,11 @@ DIV.MenuItem__StyledItem-sc-obisy3-0:hover * {
     width: auto;
     text-align: center;
 }
+
 .restricted {
     color: #CC0000;
 }
+
 DIV.tokengate {
     width: auto;
     margin: 0px auto;
@@ -119,7 +120,6 @@ DIV.tokengate {
 }
 
 .unlocked A, .restricted A {
-    background: rgb(44,18,171);
     background: linear-gradient(0deg, rgba(44,18,171,1) 0%, rgba(255,0,71,1) 100%);
     color: #FFF;
     text-decoration: none;
@@ -129,9 +129,9 @@ DIV.tokengate {
     display:inline-block;
     font-size: 10px;
 }
+
 .lvlyBadge {
     display:inline-block;
-    background: rgb(44,18,171);
     background: linear-gradient(0deg, rgba(44,18,171,1) 0%, rgba(255,0,71,1) 100%);
     color: rgba(255, 255, 255, 0.95);
     font-weight: bolder;
@@ -147,9 +147,11 @@ DIV.tokengate {
     -moz-box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.1);
     box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.1);    
 }
+
 .lvlyBadge::before {
     content: "𝗹𝘃𝗹𝘆.𝗶𝗼"; 
 }
+
 .hide {
     display:none!important;
 }
