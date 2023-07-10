@@ -1,7 +1,7 @@
 // Title: TokenGate
 // Description: A simple token gate for Cardano NFTs
 // Author: NerdyList
-// Version: 0.1.6.0
+// Version: 0.1.6.1
 //
 // Resource References:
 // https://github.com/MeshJS/mesh
@@ -119,7 +119,8 @@ const Home = () => {
         <>
           <p className="unlocked">
             UNLOCKED CONTENT<br/>
-            <a href="#" onClick={handleHide}>Lock <span class="lvlyBadge keyhole hide"></span></a>
+            <span className="tokenPolicy">key: {token} {policy}</span><br/>
+            <a href="#" onClick={handleHide}>Lock <span className="lvlyBadge keyhole hide"></span></a>
           </p>
         </>
       )}
