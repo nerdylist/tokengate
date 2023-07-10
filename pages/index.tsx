@@ -1,7 +1,7 @@
 /* Title: TokenGate
   * Description: A simple token gate for Cardano NFTs
   * Author: NerdyList
-  * Version: 0.1.6.7
+  * Version: 0.1.6.8
   *
   * Resource References:
   * https://github.com/MeshJS/mesh
@@ -27,7 +27,6 @@ const Home = () => {
   const [policy, setPolicy] = useState<string | null>(null);
   const [showUnlockedContent, setShowUnlockedContent] = useState<boolean>(false);
   const [showRestrictedContent, setShowRestrictedContent] = useState<boolean>(false);
-  const [showConnectWallet, setShowConnectWallet] = useState<boolean>(true);  
   
   function base64Encode(str: string) {
     return btoa(str);
@@ -39,7 +38,6 @@ const Home = () => {
     disconnect();
     setShowUnlockedContent(false);
     setShowRestrictedContent(false);
-    setShowConnectWallet(true);
   }
 
   useEffect(() => {
@@ -61,12 +59,10 @@ const Home = () => {
           Cookies.set('token', base64Encode(token));
           setShowUnlockedContent(true);
           setShowRestrictedContent(false);
-          setShowConnectWallet(false);
         } else {
           Cookies.set('token', '0');
           setShowUnlockedContent(false);
           setShowRestrictedContent(true);
-          setShowConnectWallet(false);
         }
       }
     }
@@ -84,35 +80,19 @@ const Home = () => {
           Cookies.set('policy', base64Encode(policy));
           setShowUnlockedContent(true);
           setShowRestrictedContent(false);
-          setShowConnectWallet(false);
         } else if (!assetExists) { // Only set to '0' if no asset exists
           Cookies.set('policy', '0');
           setShowUnlockedContent(false);
           setShowRestrictedContent(true);
-          setShowConnectWallet(false);
         }
       }
     }
     checkPolicy();
   }, [wallet, connected, policy, assetExists, token]); // Added token to the dependency array
 
-  useEffect(() => {
-    const tokenCookie = Cookies.get('token');
-    const policyCookie = Cookies.get('policy');
-    if (tokenCookie || policyCookie) {
-      const validToken = tokenCookie !== '0' && token !== null && tokenCookie === base64Encode(token);
-      const validPolicy = policyCookie !== '0' && policy !== null && policyCookie === base64Encode(policy);
-      setShowUnlockedContent(validToken || validPolicy);
-      setShowRestrictedContent(!validToken && !validPolicy);
-      setShowConnectWallet(!(validToken || validPolicy)); // Hide Connect Wallet button if a valid token or policy exists
-    } else {
-      setShowConnectWallet(true);
-    }
-  }, [token, policy]);
-
   return (
     <div className="tokengate">
-      {showConnectWallet && (
+      {!connected && (
         <>
           <CardanoWallet />
           
