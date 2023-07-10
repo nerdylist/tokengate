@@ -1,7 +1,7 @@
 /* Title: TokenGate
   * Description: A simple token gate for Cardano NFTs
   * Author: NerdyList
-  * Version: 0.1.7.1
+  * Version: 0.1.6.
   *
   * Resource References:
   * https://github.com/MeshJS/mesh
@@ -49,4 +49,74 @@ const Home = () => {
 
   useEffect(() => {
     async function checkAsset() {
-      if (wallet && connected
+      if (wallet && connected && token) {
+        const assets = await wallet.getAssets();
+        const assetExists = assets.find(asset => asset.fingerprint === token) ? true : false;
+        setAssetExists(assetExists);
+
+        // Set cookie with token
+        if (assetExists) {
+          Cookies.set('token', base64Encode(token));
+          setShowUnlockedContent(true);
+          setShowRestrictedContent(false);
+        } else {
+          Cookies.set('token', '0');
+          setShowUnlockedContent(false);
+          setShowRestrictedContent(true);
+        }
+      }
+    }
+    checkAsset();
+  }, [wallet, connected, token]);
+
+  useEffect(() => {
+    async function checkPolicy() {
+      if (wallet && connected && policy && !token) { // Only check policy if no token is provided
+        const assets = await wallet.getAssets();
+        const policyExists = assets.find(asset => asset.policyId === policy) ? true : false;
+        
+        // Set cookie with policy
+        if (policyExists) {
+          Cookies.set('policy', base64Encode(policy));
+          setShowUnlockedContent(true);
+          setShowRestrictedContent(false);
+        } else if (!assetExists) { // Only set to '0' if no asset exists
+          Cookies.set('policy', '0');
+          setShowUnlockedContent(false);
+          setShowRestrictedContent(true);
+        }
+      }
+    }
+    checkPolicy();
+  }, [wallet, connected, policy, assetExists, token]); // Added token to the dependency array
+
+  return (
+    <div className="tokengate">
+      {!connected && (
+        <>
+          <CardanoWallet />
+          
+        </>
+      )}
+      {showUnlockedContent && (
+        <>
+          <p className="unlocked">
+            UNLOCKED CONTENT<br/>
+            <span className="tokenPolicy">key: {token} {policy}</span><br/>
+            <a href="#" onClick={handleHide} className="lock-button">LOCK <span className="lvlyBadge keyhole"></span></a>
+          </p>
+        </>
+      )}
+      {showRestrictedContent && (
+        <>
+          <p className="restricted">
+            RESTRICTED CONTENT<br/>
+            <a href="#" onClick={handleHide} className="lock-button">RETRY <span className="lvlyBadge keyhole"></span></a>
+          </p>
+        </>
+      )}
+    </div>
+  );
+};
+
+export default Home;
