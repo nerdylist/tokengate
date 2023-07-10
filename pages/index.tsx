@@ -107,17 +107,6 @@ const Home = () => {
     }
   }, [token, policy]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const button = document.querySelector('.tokengate .mr-wallet-button');
-      if (button && button.textContent !== '') {
-        button.textContent = '\u00A0'; // Unicode for non-breaking space
-        clearInterval(interval);
-      }
-    }, 100);
-    return () => clearInterval(interval); // Clear interval on unmount
-  }, []);
-
   return (
     <div className="tokengate">
       {showConnectWallet && (
