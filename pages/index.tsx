@@ -1,7 +1,7 @@
 /* Title: TokenGate
   * Description: A simple token gate for Cardano NFTs
   * Author: NerdyList
-  * Version: 0.1.6.8
+  * Version: 0.1.6.9
   *
   * Resource References:
   * https://github.com/MeshJS/mesh
@@ -90,9 +90,23 @@ const Home = () => {
     checkPolicy();
   }, [wallet, connected, policy, assetExists, token]); // Added token to the dependency array
 
+  useEffect(() => {
+    const tokenCookie = Cookies.get('token');
+    const policyCookie = Cookies.get('policy');
+    if (tokenCookie || policyCookie) {
+      const validToken = tokenCookie !== '0' && token !== null && tokenCookie === base64Encode(token);
+      const validPolicy = policyCookie !== '0' && policy !== null && policyCookie === base64Encode(policy);
+      setShowUnlockedContent(validToken || validPolicy);
+      setShowRestrictedContent(!validToken && !validPolicy);
+    } else {
+      setShowUnlockedContent(false);
+      setShowRestrictedContent(false);
+    }
+  }, [token, policy]);
+
   return (
     <div className="tokengate">
-      {!connected && (
+      {!connected && !Cookies.get('token') && !Cookies.get('policy') && (
         <>
           <CardanoWallet />
           
