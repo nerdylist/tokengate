@@ -15,7 +15,8 @@
     "@meshsdk/core": "1.5.2",
     "@meshsdk/react": "1.1.7",
     "eslint-config-next": "^12.0.4",
-    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-react": "^7.25.3",
     "js-cookie": "^3.0.5",
     "next": "13.0.2",
     "react": "18.2.0",
@@ -27,5 +28,8 @@
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.8",
     "typescript": "4.8.4"
+  },
+  "overrides": {
+    "semver": "^7.5.3"
   }
 }
