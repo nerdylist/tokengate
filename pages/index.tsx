@@ -1,7 +1,7 @@
 // Title: TokenGate
 // Description: A simple token gate for Cardano NFTs
 // Author: NerdyList
-// Version: 0.1.0
+// Version: 0.1.3
 //
 // Resource References:
 // https://github.com/MeshJS/mesh
@@ -24,8 +24,8 @@ const Home = () => {
   const [policy, setPolicy] = useState<string | null>(null);
   const [showUnlockedContent, setShowUnlockedContent] = useState<boolean>(false);
   const [showRestrictedContent, setShowRestrictedContent] = useState<boolean>(false);
-  const [showConnectWallet, setShowConnectWallet] = useState<boolean>(true);
-
+  const [showConnectWallet, setShowConnectWallet] = useState<boolean>(true);  
+  
   function base64Encode(str: string) {
     return btoa(str);
   }
@@ -118,7 +118,7 @@ const Home = () => {
         <>
           <p className="unlocked">
             UNLOCKED CONTENT<br/>
-            <a href="#" onClick={handleHide}>Disconnect <span class="lvlyBadge"></span></a>
+            <a href="#" onClick={handleHide}>Lock <span class="lvlyBadge keyhole hide"></span></a>
           </p>
         </>
       )}
