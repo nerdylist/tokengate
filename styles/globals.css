@@ -2,6 +2,13 @@
     padding: 0px;
     margin: 0px;
 }
+*, *:hover {
+    -webkit-transition: all 1000ms ease;
+    -moz-transition: all 1000ms ease;
+    -ms-transition: all 1000ms ease;
+    -o-transition: all 1000ms ease;
+    transition: all 1000ms ease;
+}
 
 BODY, HTML { 
     background: transparent;
@@ -14,32 +21,66 @@ BODY, HTML {
     margin:0px!important;
 }
 .mr-wallet-button {    
-    border-radius: 5px;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
     background: rgb(44,18,171,1);
-    background: linear-gradient(0deg, rgba(255,0,71,1) 0%, rgb(21, 8, 85) 100%);
+    background: linear-gradient(0deg,rgb(21, 8, 85) 0%, rgb(110, 36, 201) 100%);
     color: #FFF!important;
     border:0px;
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-weight: bold;
+    padding: 0px!important;
+    width: auto;
+    padding: 6px 10px 8px 10px!important;
 }
 .tokengate::before {
     content: '';
 }
-.mr-wallet-button * {
-    font-size: 0;
+.mr-wallet-button {
+    font-size: 0px!important;
+    display: none;
 }
-.mr-wallet-button::before {
-    content: "\1F512\00A0\00A0";
+.mr-wallet-button:before {
+    font-size: 20px!important;
+    content: "\1F512\00A0\00A0 UNLOCK";
 }
-.mr-wallet-button::after {
-    content: "UNLOCK\00A0\00A0\1F512";
+.mr-wallet-button:after {
+    font-size: 20px!important;  
+    content: "\00A0\00A0\1F512";
 }
+
 .mr-menu-list {
-    border-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
     background: rgb(44,18,171,.9);
     color: #FFF!important;
     border:0px;
 }
+
+
+DIV.MenuItem__StyledItem-sc-obisy3-0 {
+    padding: 20px!important;
+    text-align: left;
+    border-bottom: 2px solid rgba(0,0,0,.5);
+}
+DIV.MenuItem__StyledItem-sc-obisy3-0:last-child {
+    text-align: left;
+    border-bottom: 0px solid rgba(0,0,0,.5);
+    overflow:hidden;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+DIV.MenuItem__StyledItem-sc-obisy3-0 * {
+    padding: 5px;
+}
+DIV.MenuItem__StyledItem-sc-obisy3-0:hover * {
+    font-size: 1.4em!important;
+}
+
+.ChevronDown__StyledChevronDown-sc-17n3mfh-0.bqaZfE {
+    display: none;
+  }
+  
 .tokengate div {
     margin: 0px auto!important;
     text-align: center!important;
@@ -86,6 +127,7 @@ DIV.tokengate {
     border-radius: 3px;
     margin-top: 10px;
     display:inline-block;
+    font-size: 10px;
 }
 .lvlyBadge {
     display:inline-block;
