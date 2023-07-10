@@ -39,11 +39,12 @@ BODY, HTML {
 }
 
 .mr-wallet-button:before, .mr-wallet-button:after {
-    font-size: 20px!important;
+    font-size: 14px!important;
 }
 
 .mr-wallet-button:before {
     content: "\1F512\00A0\00A0 UNLOCK";
+    font-weight: bold;
 }
 
 .mr-wallet-button:after {
@@ -62,12 +63,14 @@ BODY, HTML {
     border:0px;
     padding-top: 10px;
 }
+.mr-menu-list div:nth-child(2) {
+    display: none;
+  }
 
 DIV.MenuItem__StyledItem-sc-obisy3-0 {
     padding: 20px!important;
     text-align: left;
     border-bottom: 2px solid rgba(0,0,0,.5);
-    font-size: 10px!important;
     font-weight: bold;
 }
 
