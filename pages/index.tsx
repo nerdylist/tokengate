@@ -1,7 +1,7 @@
 /* Title: TokenGate
   * Description: A simple token gate for Cardano NFTs
   * Author: NerdyList
-  * Version: 0.1.7.7
+  * Version: 0.1.8
   *
   * Resource References:
   * https://github.com/MeshJS/mesh
@@ -29,7 +29,8 @@ const Home = () => {
   const [policy, setPolicy] = useState<string | null>(null);
   const [showUnlockedContent, setShowUnlockedContent] = useState<boolean>(false);
   const [showRestrictedContent, setShowRestrictedContent] = useState<boolean>(false);
-  
+  const [hasMounted, setHasMounted] = useState(false); // New state variable
+
   function base64Encode(str: string) {
     return btoa(str);
   }
@@ -43,11 +44,15 @@ const Home = () => {
   }
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    setHasMounted(true); // Set hasMounted to true after component has mounted
+  }, []);
+
+  useEffect(() => {
+    if (hasMounted) { // Only run this effect if the component has mounted
       setToken(new URLSearchParams(window.location.search).get('token'));
       setPolicy(new URLSearchParams(window.location.search).get('policy'));
     }
-  }, []);
+  }, [hasMounted]);
 
   useEffect(() => {
     async function checkAsset() {
@@ -92,9 +97,27 @@ const Home = () => {
     checkPolicy();
   }, [wallet, connected, policy, assetExists, token]); // Added token to the dependency array
 
+  useEffect(() => {
+    const tokenCookie = Cookies.get('token');
+    const policyCookie = Cookies.get('policy');
+    if (tokenCookie || policyCookie) {
+      const validToken = tokenCookie !== '0' && token !== null && tokenCookie === base64Encode(token);
+      const validPolicy = policyCookie !== '0' && policy !== null && policyCookie === base64Encode(policy);
+      setShowUnlockedContent(validToken || validPolicy);
+      setShowRestrictedContent(!validToken && !validPolicy);
+    } else {
+      setShowUnlockedContent(false);
+      setShowRestrictedContent(false);
+    }
+  }, [token, policy]);  
+
+  if (!hasMounted) {
+    return null; // Return null if the component hasn't mounted yet
+  }
+
   return (
     <div className="tokengate">
-      {!connected && (
+      {!connected && !Cookies.get('token') && !Cookies.get('policy') && (
         <>
           <CardanoWallet />
           
