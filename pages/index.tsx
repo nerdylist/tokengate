@@ -8,6 +8,8 @@
 // https://docs.blockfrost.io/
 //
 // Repo: https://github.com/nerdylist/tokengate
+// Main UI: https://raw.githubusercontent.com/nerdylist/tokengate/main/pages/index.tsx
+// Main CSS: https://raw.githubusercontent.com/nerdylist/tokengate/main/styles/globals.css
 //
 // Test Policy: b100d99535d04dc2cd28ffaad90dcc57f01f6dce6b565f4be8fab033
 // Test Token: asset1t84stfqy424gh4nsdsfe5gfqzy4lpe8ssm0fjj
