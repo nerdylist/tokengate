@@ -1,7 +1,7 @@
 // Title: TokenGate
 // Description: A simple token gate for Cardano NFTs
 // Author: NerdyList
-// Version: 0.1.4
+// Version: 0.1.5
 //
 // Resource References:
 // https://github.com/MeshJS/mesh
@@ -117,7 +117,7 @@ const Home = () => {
     }, 100);
     return () => clearInterval(interval); // Clear interval on unmount
   }, []);
-  
+
   return (
     <div className="tokengate">
       {showConnectWallet && (
