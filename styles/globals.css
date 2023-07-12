@@ -27,9 +27,8 @@ BODY, HTML {
 }
 
 .mr-wallet-button {    
-    border-top-right-radius: 5px;
-    border-top-left-radius: 5px;
-    background: linear-gradient(0deg,rgb(21, 8, 85) 0%, rgb(110, 36, 201) 100%);
+    border-radius:5px;
+    background: linear-gradient(0deg,rgb(11, 11, 11) 0%, rgb(51, 51, 51) 100%);
     color: #FFF!important;
     border:0px;
     padding: 6px 10px 8px 10px!important;
@@ -43,7 +42,7 @@ BODY, HTML {
 }
 
 .mr-wallet-button:before {
-    content: "\1F512\00A0\00A0 UNLOCK";
+    content: "\1F512\00A0\00A0 𝗨𝗡𝗟𝗢𝗖𝗞";
     font-weight: bold;
 }
 
@@ -56,17 +55,23 @@ BODY, HTML {
 }
 
 .mr-menu-list {
-    border-bottom-right-radius: 5px;
-    border-bottom-left-radius: 5px;
+    border-radius: 5px;
     background-color: rgba(0,0,0,.95);
     color: #FFF!important;
     border:0px;
     padding-top: 10px;
+    z-index:20;
 }
 .mr-menu-list div:nth-child(2) {
     display: none;
   }
-
+.mr-menu-list:last-child::after {
+    content: "𝘁𝗼𝗸𝗲𝗻𝗚𝟴.𝗰𝗼𝗺";
+    color: #FFF;
+    margin: 10px 0px;
+    line-height: 20px;
+    display: block;
+}
 DIV.MenuItem__StyledItem-sc-obisy3-0 {
     padding: 20px!important;
     text-align: left;
@@ -86,7 +91,8 @@ DIV.MenuItem__StyledItem-sc-obisy3-0 * {
 }
 
 DIV.MenuItem__StyledItem-sc-obisy3-0:hover {
-    background: rgb(44,18,171,.9);
+    background: rgb(65, 15, 184);
+    border-radius: 5px;
 }
 
 DIV.MenuItem__StyledItem-sc-obisy3-0:hover * {
@@ -104,7 +110,60 @@ DIV.MenuItem__StyledItem-sc-obisy3-0:hover * {
     vertical-align: middle;
     padding: 0px!important;
 }
-
+.badge {
+    text-align: center;
+}
+.badge::after {
+    color: #000;
+    content: "𝘁𝗼𝗸𝗲𝗻𝗚𝟴.𝗰𝗼𝗺";
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.15);
+    font-size: 1.1em;
+    background: rgba(0,0,0,0.05);
+    display:inline-block;
+    padding: 5px 10px;
+    border-radius: 3px;
+    margin-top:10px;
+    letter-spacing: -.25px;
+    border:1px solid rgba(0,0,0,0.05);
+    -webkit-transition: all 1000ms ease;
+    -moz-transition: all 1000ms ease;
+    -ms-transition: all 1000ms ease;
+    -o-transition: all 1000ms ease;
+    transition: all 1000ms ease;    
+}
+.badge:hover::after {
+    content: "𝗖𝗟𝗜𝗖𝗞 𝗡𝗢𝗪 \1F511";
+    font-size: .9em;
+    background: rgba(0,0,0,1);
+    display:inline-block;
+    padding: 5px 10px;
+    border-radius: 3px;
+    margin-top:10px;
+    border:1px solid rgba(0,0,0,0.05);
+    color:#FFF;
+    -webkit-transition: all 1000ms ease;
+    -moz-transition: all 1000ms ease;
+    -ms-transition: all 1000ms ease;
+    -o-transition: all 1000ms ease;
+    transition: all 1000ms ease;    
+}
+.poweredBy::after {
+    content: "𝗣𝗼𝘄𝗲𝗿𝗲𝗱 𝗯𝘆";
+    font-size: .8em;
+    letter-spacing: -.25px;
+    display:inline-block;
+    padding: 0px 5px;
+    margin-top:7px;
+    margin-right:-55px;
+    transform: rotate(-5deg);
+    line-height: .5em;
+    vertical-align: top;
+    color:#3399FF;
+    text-shadow: -1px -1px 0 white, 1px -1px 0 white, -1px 1px 0 white, 1px 1px 0 white;
+}
+.badge:hover ~ .poweredBy::after {
+    content: Stuff;
+}
 .unlocked, .restricted {
     font-size: 1.5em;
 }
@@ -189,9 +248,25 @@ DIV.tokengate {
 }
 
 .lvlyBadge::before {
-    content: "𝗹𝘃𝗹𝘆.𝗶𝗼"; 
+    content: "𝘁𝗼𝗸𝗲𝗻𝗚𝟴"; 
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.15);
 }
 
 .hide {
     display:none!important;
 }
+
+.lvlyBadge, .badge:hover::after, .mr-wallet-button:hover, DIV.MenuItem__StyledItem-sc-obisy3-0:hover {
+    background: linear-gradient(to right, #1e5799 0%, #2ce0bf 19%, #76dd2c 40%, #dba62b 60%, #e02cbf 83%, #1e5799 100%);
+    background-size: 10000px 100%;
+    animation: bg 15s linear infinite;
+  }
+  
+  @keyframes bg {
+    0% {
+      background-position-x: 0;
+    }
+    100% {
+      background-position-x: 10000px;
+    }
+  }
