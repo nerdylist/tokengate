@@ -141,7 +141,7 @@ const Home = () => {
         </>
       )}
       <div className="footer">
-        <a href="https://tokeng8.com" target="_blank" rel="noreferrer">
+        <a href="https://tokeng8.com" target="_blank" rel="noopener noreferrer">
           <span className="poweredBy"></span><span className="badge"></span>
         </a>
       </div>
