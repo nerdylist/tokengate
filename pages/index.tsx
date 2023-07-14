@@ -128,7 +128,7 @@ const Home = () => {
           <p className="unlocked">
             UNLOCKED CONTENT<br/>
             <span className="tokenPolicy">key: {token} {policy}</span><br/>
-            <a href="#" onClick={handleHide} className="lock-button">LOCK <span className="lvlyBadge keyhole"></span></a>
+            <a href="#" onClick={handleHide} className="lock-button" rel="noreferrer">LOCK <span className="lvlyBadge keyhole"></span></a>
           </p>
         </>
       )}
@@ -136,12 +136,12 @@ const Home = () => {
         <>
           <p className="restricted">
             RESTRICTED CONTENT<br/>
-            <a href="#" onClick={handleHide} className="lock-button">RETRY <span className="lvlyBadge keyhole"></span></a>
+            <a href="#" onClick={handleHide} className="lock-button" rel="noreferrer">RETRY <span className="lvlyBadge keyhole"></span></a>
           </p>
         </>
       )}
       <div className="footer">
-        <a href="https://tokeng8.com" target="_blank">
+        <a href="https://tokeng8.com" target="_blank" rel="noreferrer">
           <span className="poweredBy"></span><span className="badge"></span>
         </a>
       </div>

@@ -22,7 +22,7 @@ BODY, HTML {
     background: transparent;
     color: #FFF;
     font-size: 12px;
-    padding:0px!important;
+    padding:20px!important;
     margin:0px!important;
 }
 
@@ -61,6 +61,11 @@ BODY, HTML {
     border:0px;
     padding-top: 10px;
     z-index:20;
+    -webkit-transition: all 1000ms ease;
+    -moz-transition: all 1000ms ease;
+    -ms-transition: all 1000ms ease;
+    -o-transition: all 1000ms ease;
+    transition: all 1000ms ease;   
 }
 .mr-menu-list div:nth-child(2) {
     display: none;
@@ -216,6 +221,11 @@ DIV.tokengate {
     margin-top: 10px;
     display:inline-block;
     font-size: 10px;
+    cursor: pointer!important;
+}
+.restricted A:hover {
+    background: linear-gradient(0deg, rgba(255,0,71,1) 0%, rgb(173, 8, 65) 100%);
+    cursor: pointer!important;
 }
 
 .lvlyBadge {
