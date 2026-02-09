@@ -1,0 +1,43 @@
+# Production URL Rewriting for rentahuman.ai
+# Enable rewrite engine
+RewriteEngine On
+
+# Set base directory
+RewriteBase /
+
+# Don't rewrite existing files or directories
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Clean URL routes
+# /browse -> browse.php
+RewriteRule ^browse$ browse.php [L,QSA]
+
+# /bounties -> index.php
+RewriteRule ^bounties$ index.php [L,QSA]
+
+# /hire -> hire.php
+RewriteRule ^hire$ hire.php [L,QSA]
+
+# /connect -> connect.php
+RewriteRule ^connect$ connect.php [L,QSA]
+
+# /bounty/{id} -> detail.php?id={id}
+RewriteRule ^bounty/([0-9]+)$ detail.php?id=$1 [L,QSA]
+
+# Security: Prevent access to .env files
+<FilesMatch "^\.env">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Prevent directory browsing
+Options -Indexes
+
+# Set default charset
+AddDefaultCharset UTF-8
+
+# Enable gzip compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>

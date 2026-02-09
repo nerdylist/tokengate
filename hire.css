@@ -1,0 +1,658 @@
+/* ============================================
+   HIRE PAGE - BOUNTY CREATION FORM STYLES
+   Ultra-dark, modern design matching rentahuman.ai
+   ============================================ */
+
+/* === AUTH SECTION (NOT LOGGED IN) === */
+.auth-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    padding: 48px 0;
+}
+
+.auth-card {
+    background-color: #151515;
+    border: 1px solid #1a1a1a;
+    border-radius: 12px;
+    padding: 48px;
+    max-width: 480px;
+    width: 100%;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.auth-title {
+    font-family: 'Silkscreen', monospace;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 8px;
+    letter-spacing: 0.02em;
+}
+
+.auth-subtitle {
+    font-size: 0.9375rem;
+    color: #9ca3af;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.auth-toggle {
+    margin-top: 24px;
+    text-align: center;
+    padding-top: 24px;
+    border-top: 1px solid #1a1a1a;
+}
+
+.auth-toggle-text {
+    font-size: 0.875rem;
+    color: #9ca3af;
+    margin-right: 8px;
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: #ff6b35;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+}
+
+.btn-link:hover {
+    color: #e55a28;
+}
+
+/* === LOGIN BAR === */
+.login-bar {
+    background-color: #1a1a1a;
+    border: 1px solid #2d2d2d;
+    border-radius: 8px;
+    padding: 12px 20px;
+    margin-bottom: 24px;
+}
+
+.login-bar-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.login-bar-text {
+    font-size: 0.875rem;
+    color: #9ca3af;
+    font-weight: 600;
+}
+
+.login-bar-input {
+    background-color: #0f0f0f;
+    color: #e5e5e5;
+    border: 1px solid #2d2d2d;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-family: 'Share Tech Mono', monospace;
+    transition: border-color 0.2s ease;
+    min-width: 160px;
+}
+
+.login-bar-input:hover {
+    border-color: #3d3d3d;
+}
+
+.login-bar-input:focus {
+    border-color: #ff6b35;
+    outline: none;
+}
+
+.login-bar-input::placeholder {
+    color: #6b7280;
+}
+
+.login-bar-btn {
+    background-color: #ff6b35;
+    color: #ffffff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    font-family: 'Share Tech Mono', monospace;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    letter-spacing: 0.05em;
+}
+
+.login-bar-btn:hover {
+    background-color: #e55a28;
+}
+
+.login-bar-divider {
+    color: #3d3d3d;
+    font-size: 0.875rem;
+}
+
+.login-bar-link {
+    color: #ff6b35;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.login-bar-link:hover {
+    color: #e55a28;
+    text-decoration: underline;
+}
+
+.login-bar-greeting {
+    font-size: 0.9375rem;
+    color: #e5e5e5;
+    font-weight: 600;
+}
+
+#username-display {
+    color: #ff6b35;
+}
+
+.login-bar-nav {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: auto;
+}
+
+.login-bar-nav-link {
+    color: #9ca3af;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    letter-spacing: 0.05em;
+}
+
+.login-bar-nav-link:hover {
+    color: #ff6b35;
+}
+
+.login-bar-nav-divider {
+    color: #3d3d3d;
+    font-size: 0.875rem;
+}
+
+.login-bar-nav-btn {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    font-family: 'Share Tech Mono', monospace;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    letter-spacing: 0.05em;
+}
+
+.login-bar-nav-btn:hover {
+    color: #ff6b35;
+}
+
+.form-note {
+    font-size: 0.875rem;
+    color: #fbbf24;
+    background-color: #1a1a0f;
+    border: 1px solid #2d2d0f;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-top: 12px;
+    font-style: italic;
+}
+
+/* === BOUNTY FORM SECTION (LOGGED IN) === */
+.bounty-form-section {
+    padding: 24px 0 48px;
+}
+
+.hire-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 32px;
+    align-items: start;
+}
+
+/* === FORM COLUMN === */
+.form-column {
+    width: 100%;
+}
+
+.form-card {
+    background-color: #151515;
+    border: 1px solid #1a1a1a;
+    border-radius: 12px;
+    padding: 32px;
+}
+
+.form-header {
+    margin-bottom: 32px;
+}
+
+.form-title {
+    font-family: 'Silkscreen', monospace;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 8px;
+    letter-spacing: 0.02em;
+}
+
+.form-subtitle {
+    font-size: 0.9375rem;
+    color: #9ca3af;
+}
+
+/* === FORM ELEMENTS === */
+.bounty-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #e5e5e5;
+    margin-bottom: 8px;
+    letter-spacing: 0.01em;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    background-color: #1a1a1a;
+    color: #e5e5e5;
+    border: 1px solid #2d2d2d;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    font-family: 'Share Tech Mono', monospace;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    width: 100%;
+}
+
+.form-input:hover,
+.form-select:hover,
+.form-textarea:hover {
+    border-color: #3d3d3d;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    border-color: #ff6b35;
+    outline: none;
+    background-color: #1f1f1f;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: #6b7280;
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-hint {
+    font-size: 0.8125rem;
+    color: #6b7280;
+    margin-top: 6px;
+    font-style: italic;
+}
+
+/* === FORM ROW === */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* === INPUT WITH PREFIX === */
+.input-with-prefix {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-prefix {
+    position: absolute;
+    left: 16px;
+    color: #9ca3af;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    pointer-events: none;
+}
+
+.input-with-prefix-field {
+    padding-left: 32px;
+}
+
+/* === RADIO BUTTONS === */
+.radio-group {
+    display: flex;
+    gap: 24px;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.radio-label input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.radio-custom {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #2d2d2d;
+    border-radius: 50%;
+    margin-right: 10px;
+    position: relative;
+    transition: border-color 0.2s ease;
+}
+
+.radio-label:hover .radio-custom {
+    border-color: #3d3d3d;
+}
+
+.radio-label input[type="radio"]:checked ~ .radio-custom {
+    border-color: #ff6b35;
+}
+
+.radio-label input[type="radio"]:checked ~ .radio-custom::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    background-color: #ff6b35;
+    border-radius: 50%;
+}
+
+.radio-text {
+    font-size: 0.9375rem;
+    color: #e5e5e5;
+}
+
+/* === CHECKBOX === */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.checkbox-label input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.checkbox-custom {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #2d2d2d;
+    border-radius: 4px;
+    margin-right: 10px;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.checkbox-label:hover .checkbox-custom {
+    border-color: #3d3d3d;
+}
+
+.checkbox-label input[type="checkbox"]:checked ~ .checkbox-custom {
+    background-color: #ff6b35;
+    border-color: #ff6b35;
+}
+
+.checkbox-label input[type="checkbox"]:checked ~ .checkbox-custom::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.checkbox-text {
+    font-size: 0.9375rem;
+    color: #e5e5e5;
+}
+
+/* === FORM ACTIONS === */
+.form-actions {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid #1a1a1a;
+}
+
+.btn-primary {
+    background-color: #ff6b35;
+    color: #ffffff;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Share Tech Mono', monospace;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    letter-spacing: 0.05em;
+}
+
+.btn-primary:hover {
+    background-color: #e55a28;
+    transform: translateY(-1px);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* === GUIDELINES COLUMN === */
+.guidelines-column {
+    position: sticky;
+    top: 100px;
+}
+
+.guidelines-card {
+    background-color: #151515;
+    border: 1px solid #1a1a1a;
+    border-radius: 12px;
+    padding: 24px;
+}
+
+.guidelines-title {
+    font-family: 'Silkscreen', monospace;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 24px;
+    letter-spacing: 0.02em;
+}
+
+.guideline-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #1a1a1a;
+}
+
+.guideline-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.guideline-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    background-color: #1a1a1a;
+    border: 2px solid #ff6b35;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ff6b35;
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.guideline-content {
+    flex: 1;
+}
+
+.guideline-heading {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #e5e5e5;
+    margin-bottom: 4px;
+    letter-spacing: 0.01em;
+}
+
+.guideline-text {
+    font-size: 0.8125rem;
+    color: #9ca3af;
+    line-height: 1.5;
+}
+
+/* === SUCCESS MESSAGE === */
+.success-message {
+    background-color: #14532d;
+    border: 1px solid #166534;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.success-message-icon {
+    width: 24px;
+    height: 24px;
+    background-color: #10b981;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.success-message-text {
+    color: #4ade80;
+    font-size: 0.9375rem;
+    font-weight: 600;
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 1024px) {
+    .hire-content {
+        grid-template-columns: 1fr;
+    }
+
+    .guidelines-column {
+        position: static;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .auth-card {
+        padding: 32px 24px;
+    }
+
+    .form-card {
+        padding: 24px;
+    }
+
+    .form-title,
+    .auth-title {
+        font-size: 1.5rem;
+    }
+
+    .guidelines-card {
+        padding: 20px;
+    }
+
+    .login-bar-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .login-bar-input {
+        min-width: 100%;
+    }
+
+    .login-bar-nav {
+        margin-left: 0;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-card {
+        padding: 24px 20px;
+    }
+
+    .form-card {
+        padding: 20px;
+    }
+
+    .form-title,
+    .auth-title {
+        font-size: 1.25rem;
+    }
+
+    .radio-group {
+        flex-direction: column;
+        gap: 16px;
+    }
+}

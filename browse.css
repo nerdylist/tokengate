@@ -1,0 +1,285 @@
+/* ============================================
+   RENTAHUMAN.AI - BROWSE HUMANS PAGE STYLES
+   Ultra-dark, modern design (ShadCN aesthetic)
+   ============================================ */
+
+/* === GOOGLE FONTS (Same as main styles.css) === */
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Silkscreen:wght@400;700&family=Press+Start+2P&display=swap');
+
+/* === PAGE HEADER === */
+.page-header {
+    margin-bottom: 48px;
+}
+
+.page-title {
+    font-family: 'Silkscreen', monospace;
+    font-size: 3rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+    margin-bottom: 12px;
+}
+
+.page-subtitle {
+    font-size: 1.125rem;
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+/* === FILTER TABS === */
+.filters-tabs {
+    margin-bottom: 32px;
+}
+
+.filters-tabs .tabs {
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid #1a1a1a;
+    padding-bottom: 0;
+}
+
+/* === PROFILES GRID === */
+.profiles-section {
+    margin-top: 24px;
+}
+
+.profiles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+/* === PROFILE CARD === */
+.profile-card {
+    background-color: #151515;
+    border: 1px solid #1a1a1a;
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.profile-card:hover {
+    border-color: #2d2d2d;
+    background-color: #171717;
+    transform: translateY(-2px);
+}
+
+/* === PROFILE HEADER === */
+.profile-header {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.profile-avatar {
+    flex-shrink: 0;
+}
+
+.avatar-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff6b35 0%, #e55a28 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Silkscreen', monospace;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.02em;
+}
+
+.profile-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.profile-name {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+}
+
+.verified-icon {
+    width: 18px;
+    height: 18px;
+    color: #3b82f6;
+    flex-shrink: 0;
+}
+
+.profile-rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    color: #9ca3af;
+}
+
+.star-icon {
+    width: 14px;
+    height: 14px;
+    color: #fbbf24;
+    flex-shrink: 0;
+}
+
+.profile-id {
+    color: #6b7280;
+    font-size: 0.8125rem;
+    margin-left: 4px;
+}
+
+/* === PROFILE LOCATION === */
+.profile-location {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    color: #9ca3af;
+}
+
+.pin-icon {
+    width: 14px;
+    height: 14px;
+    color: #6b7280;
+    flex-shrink: 0;
+}
+
+/* === REMOTE BADGE === */
+.badge-remote {
+    display: inline-block;
+    background-color: #14532d;
+    color: #4ade80;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.08em;
+    width: fit-content;
+}
+
+/* === PROFILE BIO === */
+.profile-bio {
+    color: #9ca3af;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* === PROFILE SKILLS === */
+.profile-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.skill-tag {
+    background-color: #1a1a1a;
+    color: #d1d5db;
+    font-size: 0.75rem;
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid #2d2d2d;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.skill-tag:hover {
+    background-color: #252525;
+    border-color: #3d3d3d;
+}
+
+/* === PROFILE FOOTER === */
+.profile-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid #1a1a1a;
+}
+
+.profile-price {
+    font-family: 'Silkscreen', monospace;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #10b981;
+    letter-spacing: 0.02em;
+}
+
+.btn-rent {
+    background-color: #ff6b35;
+    color: #ffffff;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: lowercase;
+    letter-spacing: 0.02em;
+    transition: all 0.2s ease;
+}
+
+.btn-rent:hover {
+    background-color: #e55a28;
+    transform: translateY(-1px);
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 1024px) {
+    .profiles-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .profiles-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .profile-card {
+        padding: 16px;
+    }
+
+    .avatar-circle {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .profile-name {
+        font-size: 1rem;
+    }
+
+    .profile-price {
+        font-size: 1.125rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .btn-rent {
+        width: 100%;
+        text-align: center;
+    }
+}
+
