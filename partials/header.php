@@ -38,6 +38,7 @@ $isAdmin = $isLoggedIn && Auth::isAdmin();
                     </button>
                 <?php else: ?>
                     <a href="connect.php" class="btn-join<?php echo $isConnect ? ' active' : ''; ?>">connect</a>
+                    <a href="register.php" class="btn-join">register</a>
                 <?php endif; ?>
             </div>
         </div>

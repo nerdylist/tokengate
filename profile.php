@@ -52,7 +52,8 @@ if (!$currentStatus) {
         'id' => $profile['available'] ? 1 : 2,
         'slug' => $profile['available'] ? 'available' : 'busy',
         'name' => $profile['available'] ? 'Available' : 'Busy',
-        'color' => $profile['available'] ? '#10b981' : '#f59e0b'
+        'color' => $profile['available'] ? '#10b981' : '#f59e0b',
+        'icon' => null
     ];
 }
 
@@ -84,6 +85,7 @@ $availabilityClass = 'status-' . $currentStatus['slug'];
     <?php if ($isOwnProfile): ?>
     <link rel="stylesheet" href="/assets/css/profile-edit.css">
     <?php endif; ?>
+    <script src="/assets/js/icon-picker.js"></script>
     <script src="/assets/js/profile-skills.js"></script>
     <?php if ($isOwnProfile): ?>
     <script src="/assets/js/profile-edit.js" defer></script>
@@ -140,7 +142,12 @@ $availabilityClass = 'status-' . $currentStatus['slug'];
                                 <?php endif; ?>
                             </div>
                             <div class="profile-status-wrapper editable-field" id="status-display" data-original="<?php echo $currentStatus['id']; ?>">
-                                <span class="profile-status <?php echo $availabilityClass; ?>" style="color: <?php echo htmlspecialchars($currentStatus['color']); ?>"><?php echo $availabilityStatus; ?></span>
+                                <span class="profile-status <?php echo $availabilityClass; ?>" style="color: <?php echo htmlspecialchars($currentStatus['color']); ?>">
+                                    <?php if (!empty($currentStatus['icon'])): ?>
+                                        <span class="status-icon status-icon-hero" data-icon="<?php echo htmlspecialchars($currentStatus['icon']); ?>"></span>
+                                    <?php endif; ?>
+                                    <span><?php echo $availabilityStatus; ?></span>
+                                </span>
                                 <?php if ($isOwnProfile): ?>
                                     <button class="edit-btn" onclick="editField('status')" aria-label="Edit status">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -200,7 +207,7 @@ $availabilityClass = 'status-' . $currentStatus['slug'];
                                     $skillStatus = $skill['status'] ?? 'approved';
                                     $statusClass = $skillStatus === 'pending' ? 'skill-pending' : 'skill-approved';
                                     ?>
-                                    <a href="<?php echo url('search.php?key=' . urlencode($skill['slug'])); ?>" class="skill-badge-profile <?php echo $statusClass; ?>">
+                                    <a href="<?php echo url('search', ['key' => $skill['slug']]); ?>" class="skill-badge-profile <?php echo $statusClass; ?>">
                                         <span class="skill-name">#<?php echo htmlspecialchars($skill['name']); ?></span>
                                         <span class="skill-proficiency"><?php echo htmlspecialchars($skill['proficiency_level']); ?></span>
                                     </a>
@@ -276,7 +283,12 @@ $availabilityClass = 'status-' . $currentStatus['slug'];
                             </div>
                             <div class="stat-item">
                                 <span class="stat-label">availability</span>
-                                <span class="stat-value <?php echo $availabilityClass; ?>" id="status-stat"><?php echo $availabilityStatus; ?></span>
+                                <span class="stat-value <?php echo $availabilityClass; ?>" id="status-stat">
+                                    <?php if (!empty($currentStatus['icon'])): ?>
+                                        <span class="status-icon status-icon-stat" data-icon="<?php echo htmlspecialchars($currentStatus['icon']); ?>"></span>
+                                    <?php endif; ?>
+                                    <span><?php echo $availabilityStatus; ?></span>
+                                </span>
                             </div>
                             <div class="stat-item">
                                 <span class="stat-label">member since</span>
@@ -328,6 +340,21 @@ $availabilityClass = 'status-' . $currentStatus['slug'];
 
     <script>
         const PROFILE_ID = <?php echo json_encode($profile['id']); ?>;
+
+        // Render status icons on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Render hero status icon
+            const heroIcon = document.querySelector('.status-icon-hero');
+            if (heroIcon && heroIcon.dataset.icon) {
+                heroIcon.innerHTML = IconPicker.renderIcon(heroIcon.dataset.icon);
+            }
+
+            // Render sidebar status icon
+            const statIcon = document.querySelector('.status-icon-stat');
+            if (statIcon && statIcon.dataset.icon) {
+                statIcon.innerHTML = IconPicker.renderIcon(statIcon.dataset.icon);
+            }
+        });
     </script>
 </body>
 </html>

@@ -239,6 +239,18 @@ try {
             echo json_encode($result);
             break;
 
+        case 'update_profile_status_icon':
+            $id = $input['id'] ?? null;
+            $icon = $input['icon'] ?? null;
+
+            if ($id === null) {
+                throw new Exception('Missing profile status ID');
+            }
+
+            $result = $controller->updateProfileStatusIcon($id, $icon);
+            echo json_encode($result);
+            break;
+
         default:
             throw new Exception('Invalid action');
     }

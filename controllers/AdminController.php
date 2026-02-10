@@ -503,11 +503,19 @@ class AdminController
                 return ['success' => false, 'message' => 'A status with this slug already exists'];
             }
 
-            $stmt = $this->db->prepare("INSERT INTO profile_statuses (name, slug, color, sort_order, is_active, created_at, updated_at) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
+            // Validate icon format if provided
+            if (!empty($data['icon'])) {
+                if (!$this->validateIcon($data['icon'])) {
+                    return ['success' => false, 'message' => 'Invalid icon format'];
+                }
+            }
+
+            $stmt = $this->db->prepare("INSERT INTO profile_statuses (name, slug, color, icon, sort_order, is_active, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
             $stmt->execute([
                 $data['name'],
                 $data['slug'],
                 $data['color'],
+                $data['icon'] ?? null,
                 $data['sort_order'],
                 $data['is_active']
             ]);
@@ -543,11 +551,19 @@ class AdminController
                 return ['success' => false, 'message' => 'A status with this slug already exists'];
             }
 
-            $stmt = $this->db->prepare("UPDATE profile_statuses SET name = ?, slug = ?, color = ?, sort_order = ?, is_active = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?");
+            // Validate icon format if provided
+            if (!empty($data['icon'])) {
+                if (!$this->validateIcon($data['icon'])) {
+                    return ['success' => false, 'message' => 'Invalid icon format'];
+                }
+            }
+
+            $stmt = $this->db->prepare("UPDATE profile_statuses SET name = ?, slug = ?, color = ?, icon = ?, sort_order = ?, is_active = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?");
             $stmt->execute([
                 $data['name'],
                 $data['slug'],
                 $data['color'],
+                $data['icon'] ?? null,
                 $data['sort_order'],
                 $data['is_active'],
                 $data['id']
@@ -592,5 +608,64 @@ class AdminController
         } catch (PDOException $e) {
             return ['success' => false, 'message' => 'Error deleting profile status: ' . $e->getMessage()];
         }
+    }
+
+    /**
+     * Update profile status icon only
+     * @param int $id Status ID
+     * @param string|null $icon Icon value (svg:name or emoji:value)
+     * @return array Success/error response
+     */
+    public function updateProfileStatusIcon($id, $icon)
+    {
+        try {
+            // Validate icon format if provided
+            if (!empty($icon) && !$this->validateIcon($icon)) {
+                return ['success' => false, 'message' => 'Invalid icon format'];
+            }
+
+            $stmt = $this->db->prepare("UPDATE profile_statuses SET icon = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?");
+            $stmt->execute([$icon, $id]);
+
+            return ['success' => true, 'message' => 'Icon updated successfully'];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Error updating icon: ' . $e->getMessage()];
+        }
+    }
+
+    /**
+     * Validate icon format
+     * @param string $icon Icon value
+     * @return bool True if valid
+     */
+    private function validateIcon($icon)
+    {
+        if (empty($icon)) {
+            return true;
+        }
+
+        // Check SVG icon format
+        if (strpos($icon, 'svg:') === 0) {
+            $iconName = substr($icon, 4);
+            return preg_match('/^[a-z0-9-]+$/', $iconName);
+        }
+
+        // Check emoji format
+        if (strpos($icon, 'emoji:') === 0) {
+            $emojiValue = substr($icon, 6);
+
+            // Count emojis using regex
+            if (function_exists('mb_strlen')) {
+                $length = mb_strlen($emojiValue, 'UTF-8');
+                if ($length > 16) {
+                    return false;
+                }
+            }
+
+            // Basic emoji validation - check if contains valid Unicode emoji ranges
+            return preg_match('/^[\x{1F300}-\x{1F9FF}\x{2600}-\x{26FF}\x{2700}-\x{27BF}\x{FE00}-\x{FE0F}\x{1F000}-\x{1F02F}\x{1F0A0}-\x{1F0FF}\x{1F100}-\x{1F64F}\x{1F680}-\x{1F6FF}\x{1F900}-\x{1F9FF}\x{1FA00}-\x{1FA6F}\x{1FA70}-\x{1FAFF}\x{200D}\x{20E3}\s]*$/u', $emojiValue);
+        }
+
+        return false;
     }
 }

@@ -17,14 +17,32 @@ let selectedIndex = -1;
 function initSkillsManagement() {
     // Load all available skills from API
     loadAvailableSkills();
-    
+
     // Set up search input listener
     const searchInput = document.getElementById('skillSearchInput');
     if (searchInput) {
         searchInput.addEventListener('input', handleSearchInput);
         searchInput.addEventListener('keydown', handleKeyboardNavigation);
     }
-    
+
+    // Set up event delegation for autocomplete (prevents duplicate listeners)
+    const autocomplete = document.getElementById('skillAutocomplete');
+    if (autocomplete) {
+        autocomplete.addEventListener('click', (e) => {
+            // Handle click on autocomplete items
+            if (e.target.classList.contains('autocomplete-item')) {
+                const skillId = parseInt(e.target.getAttribute('data-skill-id'));
+                addSkill(skillId);
+            }
+
+            // Handle click on Add button
+            if (e.target.classList.contains('add-skill-btn')) {
+                const query = document.getElementById('skillSearchInput').value.trim();
+                addNewSkill(query);
+            }
+        });
+    }
+
     // Close modal when clicking outside
     const modal = document.getElementById('skillsModal');
     if (modal) {
@@ -171,27 +189,114 @@ function handleSearchInput(e) {
     );
     
     if (filtered.length === 0) {
-        autocomplete.innerHTML = '<div class="autocomplete-no-results">no matching skills found</div>';
-        autocomplete.classList.add('active');
-        selectedIndex = -1;
+        renderNoResultsWithAddButton(query);
         return;
     }
     
     // Render autocomplete items
-    autocomplete.innerHTML = filtered.map((skill, index) => 
+    autocomplete.innerHTML = filtered.map((skill, index) =>
         `<div class="autocomplete-item" data-skill-id="${skill.id}" data-index="${index}">${skill.name}</div>`
     ).join('');
-    
+
     autocomplete.classList.add('active');
     selectedIndex = -1;
-    
-    // Add click listeners to autocomplete items
-    autocomplete.querySelectorAll('.autocomplete-item').forEach(item => {
-        item.addEventListener('click', () => {
-            const skillId = parseInt(item.getAttribute('data-skill-id'));
-            addSkill(skillId);
+}
+
+/**
+ * Render "no results" message with "Add" button
+ */
+function renderNoResultsWithAddButton(query) {
+    const autocomplete = document.getElementById('skillAutocomplete');
+    if (!autocomplete) return;
+
+    autocomplete.innerHTML = `
+        <div class="autocomplete-no-results-container">
+            <div class="autocomplete-no-results-message">no skills found for '${query}'</div>
+            <button class="add-skill-btn">add '${query}'</button>
+        </div>
+    `;
+
+    autocomplete.classList.add('active');
+    selectedIndex = -1;
+}
+
+/**
+ * Add a new skill that doesn't exist yet (creates as pending)
+ */
+async function addNewSkill(skillName) {
+    try {
+        const response = await fetch('/api/skills.php?action=add_to_profile', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                profile_id: PROFILE_ID,
+                skill_name: skillName
+            })
         });
-    });
+
+        const data = await response.json();
+
+        if (data.success) {
+            // Show success message
+            showToast(data.message || 'Skill submitted for approval', 'success');
+
+            // Clear search input
+            const searchInput = document.getElementById('skillSearchInput');
+            if (searchInput) {
+                searchInput.value = '';
+            }
+
+            // Hide autocomplete
+            const autocomplete = document.getElementById('skillAutocomplete');
+            if (autocomplete) {
+                autocomplete.classList.remove('active');
+                autocomplete.innerHTML = '';
+            }
+
+            // Reload current skills to show the newly added pending skill
+            await loadCurrentSkills();
+        } else {
+            showToast(data.error || 'Failed to add skill', 'error');
+        }
+    } catch (error) {
+        console.error('Error adding new skill:', error);
+        showToast('Failed to add skill. Please try again.', 'error');
+    }
+}
+
+/**
+ * Show toast notification
+ */
+function showToast(message, type = 'success') {
+    // Create toast container if it doesn't exist
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+
+    // Add to container
+    container.appendChild(toast);
+
+    // Remove after 5 seconds
+    setTimeout(() => {
+        toast.classList.add('removing');
+        setTimeout(() => {
+            container.removeChild(toast);
+            // Remove container if empty
+            if (container.children.length === 0) {
+                document.body.removeChild(container);
+            }
+        }, 300); // Wait for animation
+    }, 5000);
 }
 
 /**

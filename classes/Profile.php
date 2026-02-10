@@ -327,7 +327,7 @@ class Profile extends Model
      */
     public function getStatus($profileId)
     {
-        $sql = "SELECT ps.* FROM profile_statuses ps
+        $sql = "SELECT ps.id, ps.name, ps.slug, ps.color, ps.icon FROM profile_statuses ps
                 INNER JOIN profiles p ON p.status_id = ps.id
                 WHERE p.id = ?";
         return $this->db->queryOne($sql, [$profileId]);

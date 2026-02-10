@@ -40,7 +40,11 @@ function renderDataTable($columns, $data, $actions = []) {
                                     $value = $row[$key] ?? '';
 
                                     // Special formatting for common column types
-                                    if ($key === 'profile_id' && strpos($value, '<span') !== false) {
+                                    // Check if this is a pre-formatted display field (ends with _display)
+                                    if (strpos($key, '_display') !== false && strpos($value, '<') !== false) {
+                                        // Already formatted HTML, display as-is
+                                        echo $value;
+                                    } elseif ($key === 'profile_id' && strpos($value, '<span') !== false) {
                                         // Already formatted HTML, display as-is
                                         echo $value;
                                     } elseif ($key === 'is_admin' || $key === 'is_available') {

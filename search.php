@@ -137,12 +137,12 @@ $totalResults = count($bounties) + count($profiles);
             </section>
 
             <section class="filters-section" style="margin-bottom: 48px; margin-top: 32px;">
-                <form method="get" action="search.php" class="search-form" style="display: flex; gap: 12px; max-width: 600px;">
-                    <input 
-                        type="text" 
-                        name="key" 
-                        class="filter-input" 
-                        placeholder="search by skill, keyword, or name..." 
+                <form method="get" action="search" class="search-form" style="display: flex; gap: 12px; max-width: 600px;">
+                    <input
+                        type="text"
+                        name="key"
+                        class="filter-input"
+                        placeholder="search by skill, keyword, or name..."
                         value="<?php echo htmlspecialchars($searchKey); ?>"
                         style="flex: 1;"
                     >

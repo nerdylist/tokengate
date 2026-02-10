@@ -7,7 +7,7 @@
 require_once __DIR__ . '/../middleware/admin.php';
 
 // Fetch all profile statuses ordered by sort_order
-$sql = "SELECT id, name, slug, color, sort_order, is_active, created_at
+$sql = "SELECT id, name, slug, color, icon, sort_order, is_active, created_at
         FROM profile_statuses
         ORDER BY sort_order ASC, name ASC";
 
@@ -22,6 +22,7 @@ $statuses = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Statuses Management - REDOT Admin</title>
     <link rel="stylesheet" href="/assets/css/admin.css">
+    <link rel="stylesheet" href="/assets/css/icon-picker.css">
 </head>
 <body>
     <div class="admin-layout">
@@ -46,6 +47,7 @@ $statuses = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <th class="sortable">Name</th>
                                 <th class="sortable">Slug</th>
                                 <th>Color</th>
+                                <th>Icon</th>
                                 <th class="sortable">Sort Order</th>
                                 <th class="sortable">Active</th>
                                 <th class="sortable">Created At</th>
@@ -55,7 +57,7 @@ $statuses = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <tbody>
                             <?php if (empty($statuses)): ?>
                                 <tr>
-                                    <td colspan="8" class="text-center text-muted">
+                                    <td colspan="9" class="text-center text-muted">
                                         No profile statuses found. Click "Create New Status" to add one.
                                     </td>
                                 </tr>
@@ -63,13 +65,35 @@ $statuses = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <?php foreach ($statuses as $status): ?>
                                     <tr>
                                         <td><?= htmlspecialchars($status['id']) ?></td>
-                                        <td><?= htmlspecialchars($status['name']) ?></td>
+                                        <td>
+                                            <div class="status-name-with-icon">
+                                                <?php if (!empty($status['icon'])): ?>
+                                                    <span class="status-icon-display" id="status-icon-<?= $status['id'] ?>" data-icon="<?= htmlspecialchars($status['icon']) ?>">
+                                                        <script>
+                                                            document.addEventListener('DOMContentLoaded', function() {
+                                                                const iconEl = document.getElementById('status-icon-<?= $status['id'] ?>');
+                                                                const iconValue = iconEl.dataset.icon;
+                                                                iconEl.innerHTML = IconPicker.renderIcon(iconValue);
+                                                            });
+                                                        </script>
+                                                    </span>
+                                                <?php endif; ?>
+                                                <?= htmlspecialchars($status['name']) ?>
+                                            </div>
+                                        </td>
                                         <td><?= htmlspecialchars($status['slug']) ?></td>
                                         <td>
                                             <div style="display: flex; align-items: center; gap: 8px;">
                                                 <span style="display: inline-block; width: 24px; height: 24px; background: <?= htmlspecialchars($status['color']) ?>; border-radius: 4px; border: 1px solid #333;"></span>
                                                 <code style="color: #a0a0a0; font-size: 0.875rem;"><?= htmlspecialchars($status['color']) ?></code>
                                             </div>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-small"
+                                                    onclick='openIconPicker(<?= $status['id'] ?>, "<?= htmlspecialchars($status['icon'] ?? '', ENT_QUOTES) ?>", handleIconSelect)'
+                                                    style="padding: 4px 8px; font-size: 0.875rem;">
+                                                <?= !empty($status['icon']) ? 'Change Icon' : 'Add Icon' ?>
+                                            </button>
                                         </td>
                                         <td><?= htmlspecialchars($status['sort_order']) ?></td>
                                         <td>
@@ -82,7 +106,7 @@ $statuses = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         </td>
                                         <td><?= date('M d, Y', strtotime($status['created_at'])) ?></td>
                                         <td class="actions">
-                                            <div class="btn-group">
+                                            <div class="btn-group" style="display: flex; gap: 6px;">
                                                 <button type="button" class="btn btn-small btn-primary"
                                                         onclick='openEditModal(<?= json_encode($status) ?>)'>
                                                     Edit
@@ -163,6 +187,7 @@ $statuses = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <script src="/assets/js/admin.js"></script>
+    <script src="/assets/js/icon-picker.js"></script>
     <script>
         // Sync color picker and text input
         const colorPicker = document.getElementById('statusColor');
@@ -220,6 +245,32 @@ $statuses = $stmt->fetchAll(PDO::FETCH_ASSOC);
             const modal = document.getElementById('statusModal');
             if (event.target === modal) {
                 closeModal();
+            }
+        }
+
+        async function handleIconSelect(statusId, iconValue) {
+            try {
+                const response = await fetch('/api/admin.php?action=update_profile_status_icon', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: statusId,
+                        icon: iconValue
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    window.location.reload();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
             }
         }
 

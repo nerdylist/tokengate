@@ -5,8 +5,8 @@
 
 .profile-page {
     min-height: 100vh;
-    padding: 30px 0 60px;
-    background: linear-gradient(180deg, #0a0a0a 0%, #151515 100%);
+    padding: 30px 0 40px;
+    background: rgba(255,255,255,.015);
 }
 
 /* === PROFILE HERO === */
@@ -43,7 +43,7 @@
 }
 
 .profile-hero-info {
-    flex: 1;
+    text-align: center;
 }
 
 .profile-badge {
@@ -70,6 +70,7 @@
 .profile-meta {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 16px;
     flex-wrap: wrap;
 }
@@ -88,6 +89,9 @@
     font-weight: 600;
     text-transform: lowercase;
     border: 1px solid;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .profile-status.status-available {
@@ -256,6 +260,35 @@
 
 .stat-value.status-busy {
     color: #ef4444;
+}
+
+/* === STATUS ICONS === */
+.status-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 4px;
+}
+
+.status-icon svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+    stroke: currentColor;
+}
+
+.status-icon-hero {
+    font-size: 1rem;
+}
+
+.status-icon-stat {
+    font-size: 0.9rem;
+}
+
+.stat-value {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
 }
 
 /* === ACTION CARD === */

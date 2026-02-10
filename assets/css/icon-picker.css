@@ -1,0 +1,270 @@
+/**
+ * Icon Picker Component Styles
+ * Ultra-dark theme for icon/emoji selection modal
+ */
+
+.icon-picker-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-picker-content {
+    background-color: #0f0f0f;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.icon-picker-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.icon-picker-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #fff;
+}
+
+.icon-picker-close {
+    font-size: 28px;
+    font-weight: bold;
+    color: #666;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.icon-picker-close:hover {
+    color: #fff;
+}
+
+.icon-picker-tabs {
+    display: flex;
+    border-bottom: 1px solid #2a2a2a;
+    background-color: #0a0a0a;
+}
+
+.icon-picker-tab {
+    flex: 1;
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-bottom: 2px solid transparent;
+}
+
+.icon-picker-tab:hover {
+    color: #fff;
+    background-color: #151515;
+}
+
+.icon-picker-tab.active {
+    color: #fff;
+    border-bottom-color: #3b82f6;
+    background-color: #0f0f0f;
+}
+
+.icon-picker-body {
+    padding: 20px;
+    overflow-y: auto;
+    min-height: 300px;
+    max-height: 50vh;
+}
+
+.icon-picker-tab-content {
+    display: none;
+}
+
+.icon-picker-tab-content.active {
+    display: block;
+}
+
+.icon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    gap: 8px;
+}
+
+.icon-option {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1a1a1a;
+    border: 2px solid #2a2a2a;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 24px;
+    padding: 8px;
+}
+
+.icon-option:hover {
+    background-color: #252525;
+    border-color: #3b82f6;
+    transform: scale(1.05);
+}
+
+.icon-option.selected {
+    background-color: #1e3a8a;
+    border-color: #3b82f6;
+}
+
+.icon-option svg {
+    width: 28px;
+    height: 28px;
+    fill: #fff;
+}
+
+.emoji-input-container {
+    margin-bottom: 16px;
+}
+
+.emoji-input-container label {
+    display: block;
+    margin-bottom: 8px;
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+.emoji-input-wrapper {
+    position: relative;
+}
+
+.emoji-input {
+    width: 100%;
+    padding: 12px;
+    background-color: #1a1a1a;
+    border: 2px solid #2a2a2a;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 1.5rem;
+    text-align: center;
+    transition: border-color 0.2s;
+}
+
+.emoji-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+.emoji-input.invalid {
+    border-color: #dc2626;
+}
+
+.emoji-validation-message {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background-color: #1a1a1a;
+    border-left: 3px solid #dc2626;
+    border-radius: 4px;
+    color: #fca5a5;
+    font-size: 0.875rem;
+    display: none;
+}
+
+.emoji-validation-message.show {
+    display: block;
+}
+
+.emoji-preview {
+    margin-top: 16px;
+    padding: 16px;
+    background-color: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.emoji-preview-label {
+    display: block;
+    margin-bottom: 8px;
+    color: #888;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.emoji-preview-display {
+    font-size: 48px;
+    line-height: 1;
+    min-height: 48px;
+    color: #fff;
+}
+
+.icon-picker-footer {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding: 16px 20px;
+    border-top: 1px solid #2a2a2a;
+    background-color: #0a0a0a;
+}
+
+.icon-picker-clear-btn {
+    margin-right: auto;
+}
+
+.status-icon-display {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 4px;
+    font-size: 18px;
+}
+
+.status-icon-display svg {
+    width: 20px;
+    height: 20px;
+    fill: #fff;
+}
+
+.status-name-with-icon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+@media (max-width: 640px) {
+    .icon-picker-content {
+        width: 95%;
+        max-height: 90vh;
+    }
+
+    .icon-grid {
+        grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+    }
+
+    .icon-option svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .icon-picker-tab {
+        padding: 10px 12px;
+        font-size: 0.875rem;
+    }
+}

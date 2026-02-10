@@ -22,6 +22,9 @@ RewriteRule ^hire$ hire.php [L,QSA]
 # /connect -> connect.php
 RewriteRule ^connect$ connect.php [L,QSA]
 
+# /search -> search.php (with query string)
+RewriteRule ^search$ search.php [L,QSA]
+
 # /bounty/{id} -> detail.php?id={id}
 RewriteRule ^bounty/([0-9]+)$ detail.php?id=$1 [L,QSA]
 
