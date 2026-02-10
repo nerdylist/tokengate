@@ -105,7 +105,7 @@ async function editField(fieldType) {
 
                 // Fetch statuses from API
                 try {
-                    const response = await fetch('api/profile.php?action=get_statuses');
+                    const response = await fetch('/api/profile.php?action=get_statuses');
                     const data = await response.json();
 
                     if (data.success && data.statuses) {
@@ -118,11 +118,13 @@ async function editField(fieldType) {
                         });
                     }
                 } catch (error) {
-                    console.error('Failed to fetch statuses:', error);
+                    console.error('Failed to fetch statuses from API:', error, 'Using fallback options');
                     // Fallback to basic options
                     const fallbackOptions = [
                         { value: '1', label: 'Available' },
-                        { value: '2', label: 'Busy' }
+                        { value: '2', label: 'Busy' },
+                        { value: '3', label: 'Unavailable' },
+                        { value: '4', label: 'Away' }
                     ];
                     fallbackOptions.forEach(opt => {
                         const option = document.createElement('option');
