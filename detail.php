@@ -78,8 +78,8 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="assets/img/token/icon/up-gold.png">
-    <link rel="apple-touch-icon" href="assets/img/token/icon/up-gold.png">
+    <link rel="icon" type="image/png" href="/assets/img/token/icon/up-gold.png">
+    <link rel="apple-touch-icon" href="/assets/img/token/icon/up-gold.png">
     <meta property="og:title" content="<?php echo APP_NAME; ?>">
     <meta property="og:description" content="Post tasks, humans apply">
     <meta property="og:image" content="https://redot.test/assets/img/token/icon/up-gold.png">
@@ -90,8 +90,8 @@ try {
     <meta name="twitter:description" content="Post tasks, humans apply">
     <meta name="twitter:image" content="https://redot.test/assets/img/token/icon/up-gold.png">
     <title>Task Detail - <?php echo APP_NAME; ?></title>
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="assets/css/detail.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/detail.css">
 </head>
 <body>
     <?php include 'partials/header.php'; ?>
@@ -192,6 +192,6 @@ try {
         </div>
     </main>
 
-    <script src="assets/js/app.js"></script>
+    <script src="/assets/js/app.js"></script>
 </body>
 </html>

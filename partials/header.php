@@ -18,7 +18,7 @@ $isAdmin = $isLoggedIn && Auth::isAdmin();
     <div class="container">
         <div class="header-content">
             <div class="logo">
-                <a href="<?php echo url('index'); ?>"><img src="assets/img/token/logo/default.png" alt="<?php echo APP_NAME; ?>" class="site-logo"></a>
+                <a href="<?php echo url('index'); ?>"><img src="/assets/img/token/logo/default.png" alt="<?php echo APP_NAME; ?>" class="site-logo"></a>
             </div>
             <nav class="main-nav">
                 <a href="<?php echo url('browse'); ?>" <?php echo $isBrowse ? 'class="active"' : ''; ?>>browse</a>
@@ -70,4 +70,4 @@ function handleLogout() {
 }
 </script>
 <div id="google_translate_element" style="display:none;"></div>
-<script src="assets/js/language-selector.js"></script>
+<script src="/assets/js/language-selector.js"></script>

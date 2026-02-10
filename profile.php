@@ -70,23 +70,23 @@ $availabilityClass = 'status-' . $currentStatus['slug'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="assets/img/token/icon/up-gold.png">
-    <link rel="apple-touch-icon" href="assets/img/token/icon/up-gold.png">
+    <link rel="icon" type="image/png" href="/assets/img/token/icon/up-gold.png">
+    <link rel="apple-touch-icon" href="/assets/img/token/icon/up-gold.png">
     <meta property="og:title" content="<?php echo htmlspecialchars($user['name']); ?> - <?php echo APP_NAME; ?>">
     <meta property="og:description" content="<?php echo htmlspecialchars(substr($profile['bio'], 0, 155)); ?>">
     <meta property="og:image" content="https://redot.test/assets/img/token/icon/up-gold.png">
     <meta property="og:type" content="profile">
     <title><?php echo htmlspecialchars($user['name']); ?> (<?php echo htmlspecialchars($profile_id); ?>) - <?php echo APP_NAME; ?></title>
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="assets/css/profile.css">
-    <link rel="stylesheet" href="assets/css/guilds.css">
-    <link rel="stylesheet" href="assets/css/profile-skills.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/profile.css">
+    <link rel="stylesheet" href="/assets/css/guilds.css">
+    <link rel="stylesheet" href="/assets/css/profile-skills.css">
     <?php if ($isOwnProfile): ?>
-    <link rel="stylesheet" href="assets/css/profile-edit.css">
+    <link rel="stylesheet" href="/assets/css/profile-edit.css">
     <?php endif; ?>
-    <script src="assets/js/profile-skills.js"></script>
+    <script src="/assets/js/profile-skills.js"></script>
     <?php if ($isOwnProfile): ?>
-    <script src="assets/js/profile-edit.js" defer></script>
+    <script src="/assets/js/profile-edit.js" defer></script>
     <?php endif; ?>
 </head>
 <body>
