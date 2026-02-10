@@ -5,7 +5,7 @@ require_once __DIR__ . '/Model.php';
 class Profile extends Model
 {
     protected $table = 'profiles';
-    protected $fillable = ['user_id', 'profile_id', 'bio', 'hourly_rate', 'available'];
+    protected $fillable = ['user_id', 'profile_id', 'bio', 'hourly_rate', 'available', 'avatar_url', 'status_id'];
 
     /**
      * Get the user for this profile
@@ -168,5 +168,178 @@ class Profile extends Model
         $sql .= " ORDER BY p.created_at DESC";
 
         return $profile->db->query($sql, $params);
+    }
+
+    /**
+     * Get all guilds (categories) with skills, ranks, and XP for this profile
+     * @param int $profileId
+     * @return array Array of guilds with skills, proficiency levels, and XP
+     */
+    public function guilds($profileId)
+    {
+        $sql = "SELECT
+                    c.id as guild_id,
+                    c.name as guild_name,
+                    c.slug as guild_slug,
+                    s.id as skill_id,
+                    s.name as skill_name,
+                    ps.proficiency_level,
+                    ps.xp,
+                    ps.is_primary_guild
+                FROM categories c
+                INNER JOIN skills s ON c.id = s.category_id
+                INNER JOIN profile_skills ps ON s.id = ps.skill_id
+                WHERE ps.profile_id = ?
+                ORDER BY c.name, s.name";
+
+        $results = $this->db->query($sql, [$profileId]);
+
+        // Group by guild
+        $guilds = [];
+        foreach ($results as $row) {
+            $guildId = $row['guild_id'];
+            if (!isset($guilds[$guildId])) {
+                $guilds[$guildId] = [
+                    'id' => $row['guild_id'],
+                    'name' => $row['guild_name'],
+                    'slug' => $row['guild_slug'],
+                    'total_xp' => 0,
+                    'is_primary' => false,
+                    'skills' => []
+                ];
+            }
+
+            $guilds[$guildId]['skills'][] = [
+                'id' => $row['skill_id'],
+                'name' => $row['skill_name'],
+                'proficiency' => $row['proficiency_level'],
+                'xp' => $row['xp']
+            ];
+
+            $guilds[$guildId]['total_xp'] += $row['xp'];
+
+            if ($row['is_primary_guild'] == 1) {
+                $guilds[$guildId]['is_primary'] = true;
+            }
+        }
+
+        return array_values($guilds);
+    }
+
+    /**
+     * Get the primary guild to display for this profile
+     * @param int $profileId
+     * @return array|false Primary guild data or false if none set
+     */
+    public function primaryGuild($profileId)
+    {
+        $guilds = $this->guilds($profileId);
+
+        foreach ($guilds as $guild) {
+            if ($guild['is_primary']) {
+                // Calculate rank based on total XP
+                $guild['rank'] = $this->calculateRank($guild['total_xp']);
+                return $guild;
+            }
+        }
+
+        // If no primary guild set, return the guild with most XP
+        if (!empty($guilds)) {
+            usort($guilds, function($a, $b) {
+                return $b['total_xp'] - $a['total_xp'];
+            });
+            $guilds[0]['rank'] = $this->calculateRank($guilds[0]['total_xp']);
+            return $guilds[0];
+        }
+
+        return false;
+    }
+
+    /**
+     * Award XP to a specific skill (which contributes to guild XP)
+     * @param int $profileId
+     * @param int $skillId
+     * @param int $xp Amount of XP to add
+     * @return bool Success status
+     */
+    public function addGuildExperience($profileId, $skillId, $xp)
+    {
+        $sql = "UPDATE profile_skills
+                SET xp = xp + ?, updated_at = ?
+                WHERE profile_id = ? AND skill_id = ?";
+
+        try {
+            $this->db->execute($sql, [$xp, date('Y-m-d H:i:s'), $profileId, $skillId]);
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Calculate guild rank based on total XP
+     * @param int $xp Total experience points
+     * @return array Rank data with name, level, and color
+     */
+    public function calculateRank($xp)
+    {
+        $ranks = [
+            ['name' => 'Initiate', 'level' => 1, 'min_xp' => 0, 'color' => '#71717a'],
+            ['name' => 'Novice', 'level' => 2, 'min_xp' => 100, 'color' => '#71717a'],
+            ['name' => 'Apprentice', 'level' => 3, 'min_xp' => 500, 'color' => '#ca8a04'],
+            ['name' => 'Journeyman', 'level' => 4, 'min_xp' => 2000, 'color' => '#a1a1aa'],
+            ['name' => 'Specialist', 'level' => 5, 'min_xp' => 5000, 'color' => '#a1a1aa'],
+            ['name' => 'Expert', 'level' => 6, 'min_xp' => 10000, 'color' => '#eab308'],
+            ['name' => 'Master', 'level' => 7, 'min_xp' => 25000, 'color' => '#eab308'],
+            ['name' => 'Grandmaster', 'level' => 8, 'min_xp' => 50000, 'color' => '#a855f7'],
+            ['name' => 'Officer', 'level' => 9, 'min_xp' => 100000, 'color' => '#a855f7'],
+            ['name' => 'Guildmaster', 'level' => 10, 'min_xp' => 250000, 'color' => '#ef4444']
+        ];
+
+        $currentRank = $ranks[0];
+        $nextRank = isset($ranks[1]) ? $ranks[1] : null;
+
+        for ($i = count($ranks) - 1; $i >= 0; $i--) {
+            if ($xp >= $ranks[$i]['min_xp']) {
+                $currentRank = $ranks[$i];
+                $nextRank = isset($ranks[$i + 1]) ? $ranks[$i + 1] : null;
+                break;
+            }
+        }
+
+        return [
+            'name' => $currentRank['name'],
+            'level' => $currentRank['level'],
+            'color' => $currentRank['color'],
+            'current_xp' => $xp,
+            'min_xp' => $currentRank['min_xp'],
+            'next_rank' => $nextRank ? $nextRank['name'] : 'Max Rank',
+            'next_rank_xp' => $nextRank ? $nextRank['min_xp'] : $xp,
+            'progress_percent' => $nextRank ?
+                round((($xp - $currentRank['min_xp']) / ($nextRank['min_xp'] - $currentRank['min_xp'])) * 100) : 100
+        ];
+    }
+
+    /**
+     * Get the current status for a profile from profile_statuses table
+     * @param int $profileId
+     * @return array|false Status data or false if not found
+     */
+    public function getStatus($profileId)
+    {
+        $sql = "SELECT ps.* FROM profile_statuses ps
+                INNER JOIN profiles p ON p.status_id = ps.id
+                WHERE p.id = ?";
+        return $this->db->queryOne($sql, [$profileId]);
+    }
+
+    /**
+     * Get all active statuses from profile_statuses table
+     * @return array List of active statuses ordered by sort_order
+     */
+    public function getAllActiveStatuses()
+    {
+        $sql = "SELECT * FROM profile_statuses WHERE is_active = 1 ORDER BY sort_order";
+        return $this->db->query($sql);
     }
 }

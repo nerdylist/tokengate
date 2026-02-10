@@ -31,7 +31,9 @@ try {
             'remote' => true, // TODO: Add remote field to profiles table
             'bio' => $profile['bio'] ?? '',
             'skills' => $skills,
-            'price' => (int)$profile['hourly_rate'] ?? 0
+            'price' => (int)$profile['hourly_rate'] ?? 0,
+            'avatar_url' => $profile['avatar_url'] ?? null,
+            'profile_db_id' => $profile['id'] // Needed for primaryGuild() lookup in profile-card.php
         ];
     }, $dbProfiles);
 

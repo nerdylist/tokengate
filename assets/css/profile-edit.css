@@ -1,0 +1,379 @@
+/* ============================================
+   PROFILE INLINE EDITING STYLES
+   Ultra-dark theme with smooth transitions
+   ============================================ */
+
+/* === EDIT BUTTONS === */
+.edit-btn {
+    background: transparent;
+    border: 1px solid #27272a;
+    color: #71717a;
+    padding: 6px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.edit-btn:hover {
+    background: #18181b;
+    border-color: #3f3f46;
+    color: #a1a1aa;
+}
+
+.edit-btn:active {
+    transform: scale(0.95);
+}
+
+.edit-btn svg {
+    display: block;
+}
+
+.section-title .edit-btn {
+    margin-left: 12px;
+    vertical-align: middle;
+}
+
+/* === EDITABLE FIELD CONTAINERS === */
+.editable-field {
+    position: relative;
+    display: inline-block;
+}
+
+.editable-field.editing {
+    display: block;
+}
+
+.profile-status-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* === INPUT FIELDS === */
+.edit-input,
+.edit-textarea,
+.edit-select {
+    background: #18181b;
+    border: 1px solid #27272a;
+    color: #e5e5e5;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    width: 100%;
+    transition: all 0.2s ease;
+}
+
+.edit-input:focus,
+.edit-textarea:focus,
+.edit-select:focus {
+    border-color: #22c55e;
+    background: #1a1a1a;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.1);
+}
+
+.edit-textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.6;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.edit-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+}
+
+/* === RATE INPUT === */
+.rate-input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #18181b;
+    border: 1px solid #27272a;
+    border-radius: 6px;
+    padding: 10px 14px;
+    transition: all 0.2s ease;
+    max-width: 200px;
+}
+
+.rate-input-wrapper:focus-within {
+    border-color: #22c55e;
+    background: #1a1a1a;
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.1);
+}
+
+.rate-prefix,
+.rate-suffix {
+    color: #71717a;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.rate-input {
+    background: transparent;
+    border: none;
+    padding: 0;
+    flex: 1;
+    min-width: 60px;
+}
+
+.rate-input:focus {
+    box-shadow: none;
+}
+
+/* Remove number input spinners */
+.rate-input::-webkit-inner-spin-button,
+.rate-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.rate-input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/* === ACTION BUTTONS === */
+.edit-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.btn-save,
+.btn-cancel {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid;
+}
+
+.btn-save {
+    background: #22c55e;
+    color: #0a0a0a;
+    border-color: #22c55e;
+}
+
+.btn-save:hover:not(:disabled) {
+    background: #16a34a;
+    border-color: #16a34a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(34, 197, 94, 0.2);
+}
+
+.btn-save:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn-save:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-cancel {
+    background: transparent;
+    color: #a1a1aa;
+    border-color: #27272a;
+}
+
+.btn-cancel:hover:not(:disabled) {
+    background: #18181b;
+    border-color: #3f3f46;
+    color: #e5e5e5;
+}
+
+.btn-cancel:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* === AVATAR UPLOAD === */
+.profile-avatar-large {
+    position: relative;
+}
+
+.avatar-image-large {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #27272a;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+.avatar-edit-btn {
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #22c55e;
+    border: 2px solid #0a0a0a;
+    color: #0a0a0a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.avatar-edit-btn:hover {
+    background: #16a34a;
+    transform: scale(1.05);
+}
+
+.avatar-edit-btn:active {
+    transform: scale(0.95);
+}
+
+.avatar-edit-btn svg {
+    display: block;
+}
+
+.profile-avatar-large.uploading .avatar-circle-large,
+.profile-avatar-large.uploading .avatar-image-large {
+    opacity: 0.5;
+    position: relative;
+}
+
+.profile-avatar-large.uploading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    border: 3px solid #27272a;
+    border-top-color: #22c55e;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* === TOAST NOTIFICATIONS === */
+.toast {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    padding: 14px 20px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    border: 1px solid;
+    min-width: 280px;
+    max-width: 420px;
+}
+
+.toast.toast-show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.toast-success {
+    background: #18181b;
+    border-color: #22c55e;
+    color: #22c55e;
+}
+
+.toast-error {
+    background: #18181b;
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+    .edit-btn {
+        padding: 4px 6px;
+        margin-left: 6px;
+    }
+
+    .edit-btn svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .section-title .edit-btn {
+        margin-left: 8px;
+    }
+
+    .edit-actions {
+        flex-direction: column;
+    }
+
+    .btn-save,
+    .btn-cancel {
+        width: 100%;
+    }
+
+    .rate-input-wrapper {
+        max-width: 100%;
+    }
+
+    .toast {
+        right: 16px;
+        left: 16px;
+        min-width: auto;
+    }
+
+    .avatar-edit-btn {
+        width: 32px;
+        height: 32px;
+    }
+
+    .avatar-edit-btn svg {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+/* === ACCESSIBILITY === */
+.edit-btn:focus-visible,
+.btn-save:focus-visible,
+.btn-cancel:focus-visible,
+.avatar-edit-btn:focus-visible {
+    outline: 2px solid #22c55e;
+    outline-offset: 2px;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    .edit-btn,
+    .btn-save,
+    .btn-cancel,
+    .avatar-edit-btn,
+    .edit-input,
+    .edit-textarea,
+    .edit-select,
+    .toast {
+        transition: none;
+    }
+
+    .profile-avatar-large.uploading::after {
+        animation: none;
+    }
+}

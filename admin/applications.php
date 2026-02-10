@@ -11,7 +11,7 @@ $statusFilter = $_GET['status'] ?? 'all';
 
 // Fetch applications
 $sql = "SELECT a.id, b.title as bounty_title, a.profile_id, a.status, a.proposed_rate,
-        a.message, a.created_at
+        a.cover_letter, a.created_at
         FROM applications a
         LEFT JOIN bounties b ON a.bounty_id = b.id";
 
@@ -39,8 +39,6 @@ $applications = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="/assets/css/admin.css">
 </head>
 <body>
-    <?php include __DIR__ . '/partials/admin-header.php'; ?>
-
     <div class="admin-layout">
         <?php include __DIR__ . '/partials/admin-sidebar.php'; ?>
 
@@ -73,7 +71,7 @@ $applications = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     'profile_id' => 'Profile ID',
                     'status' => 'Status',
                     'proposed_rate' => 'Proposed Rate',
-                    'message' => 'Message',
+                    'cover_letter' => 'Cover Letter',
                     'created_at' => 'Created At'
                 ];
 

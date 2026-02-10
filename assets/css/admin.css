@@ -62,86 +62,91 @@ input, select, textarea {
 .admin-layout {
     display: grid;
     grid-template-columns: 250px 1fr;
-    grid-template-rows: 60px 1fr auto;
+    grid-template-rows: 1fr auto;
     min-height: 100vh;
 }
 
-.admin-header {
-    grid-column: 1 / -1;
-    grid-row: 1;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
-    background: var(--bg-primary);
-    border-bottom: 1px solid var(--border);
-    box-shadow: 0 2px 4px var(--shadow);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 30px;
-}
-
-.admin-header .logo {
-    font-size: 18px;
-    color: var(--accent);
-    font-weight: bold;
-}
-
-.admin-header .header-right {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.admin-header .admin-email {
-    color: var(--text-secondary);
-    font-size: 14px;
-}
-
-.admin-header .view-site {
-    color: var(--text-primary);
-    padding: 8px 16px;
-    background: var(--bg-secondary);
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.admin-header .view-site:hover {
-    background: var(--bg-tertiary);
-    color: var(--accent);
-}
-
-.admin-header .logout-btn {
-    background: var(--danger);
-    color: var(--text-primary);
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.admin-header .logout-btn:hover {
-    background: #cc0000;
-}
 
 .admin-sidebar {
     grid-column: 1;
-    grid-row: 2 / -1;
+    grid-row: 1 / -1;
     position: fixed;
-    top: 60px;
+    top: 0;
     left: 0;
     width: 250px;
-    height: calc(100vh - 60px);
+    height: 100vh;
     background: var(--bg-primary);
     border-right: 1px solid var(--border);
     overflow-y: auto;
     z-index: 999;
+    display: flex;
+    flex-direction: column;
 }
 
 .admin-sidebar nav {
-    padding: 20px 0;
+    /* No padding - handled by sidebar-nav wrapper */
+}
+
+/* === SIDEBAR SECTIONS === */
+.sidebar-logo {
+    padding: 30px 20px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+}
+
+.sidebar-logo img {
+    display: block;
+    margin: 0 auto;
+    height: 35px;
+    width: auto;
+}
+
+.sidebar-user-info {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+}
+
+.sidebar-user-info .user-name {
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.sidebar-user-info .user-email {
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+.sidebar-view-site {
+    padding: 0 20px 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.sidebar-view-site .btn {
+    width: 100%;
+    text-align: center;
+    display: block;
+}
+
+.sidebar-nav {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.sidebar-logout {
+    padding: 20px;
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+}
+
+.sidebar-logout form {
+    margin: 0;
+}
+
+.sidebar-logout .btn {
+    width: 100%;
 }
 
 .admin-sidebar nav ul {
@@ -173,10 +178,10 @@ input, select, textarea {
 
 .admin-content {
     grid-column: 2;
-    grid-row: 2;
-    margin-top: 60px;
+    grid-row: 1;
+    margin-top: 0;
     padding: 30px;
-    min-height: calc(100vh - 60px - 60px);
+    min-height: calc(100vh - 60px);
 }
 
 .admin-footer {

@@ -40,7 +40,10 @@ function renderDataTable($columns, $data, $actions = []) {
                                     $value = $row[$key] ?? '';
 
                                     // Special formatting for common column types
-                                    if ($key === 'is_admin' || $key === 'is_available') {
+                                    if ($key === 'profile_id' && strpos($value, '<span') !== false) {
+                                        // Already formatted HTML, display as-is
+                                        echo $value;
+                                    } elseif ($key === 'is_admin' || $key === 'is_available') {
                                         echo $value ? '<span class="badge badge-success">Yes</span>' : '<span class="badge badge-secondary">No</span>';
                                     } elseif ($key === 'status') {
                                         $statusClass = '';
@@ -88,6 +91,15 @@ function renderDataTable($columns, $data, $actions = []) {
                                             $onclick = $action['onclick'] ?? '';
                                             $href = $action['href'] ?? '#';
 
+                                            // Check conditional rendering
+                                            if ($type === 'conditional') {
+                                                $condition = $action['condition'] ?? '';
+                                                if (empty($condition) || empty($row[$condition])) {
+                                                    continue; // Skip this action
+                                                }
+                                                $type = 'button'; // Convert to button after condition check
+                                            }
+
                                             // Replace {id} placeholder with actual row ID
                                             if (isset($row['id'])) {
                                                 $onclick = str_replace('{id}', $row['id'], $onclick);
@@ -96,8 +108,8 @@ function renderDataTable($columns, $data, $actions = []) {
 
                                             // Replace other placeholders
                                             foreach ($row as $k => $v) {
-                                                $onclick = str_replace('{' . $k . '}', $v, $onclick);
-                                                $href = str_replace('{' . $k . '}', $v, $href);
+                                                $onclick = str_replace('{' . $k . '}', strip_tags($v ?? ''), $onclick);
+                                                $href = str_replace('{' . $k . '}', strip_tags($v ?? ''), $href);
                                             }
 
                                             if ($type === 'link'):

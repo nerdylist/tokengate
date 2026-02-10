@@ -21,8 +21,6 @@ $activity = $controller->getRecentActivity();
     <link rel="stylesheet" href="/assets/css/admin.css">
 </head>
 <body>
-    <?php include __DIR__ . '/partials/admin-header.php'; ?>
-
     <div class="admin-layout">
         <?php include __DIR__ . '/partials/admin-sidebar.php'; ?>
 

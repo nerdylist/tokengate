@@ -324,3 +324,69 @@ function handleFormSubmit(event, endpoint, successCallback) {
         showToast('Error', 'An error occurred: ' + error.message, 'error');
     });
 }
+
+/**
+ * Approve pending skill request
+ * @param {number} skillId Skill ID
+ * @param {string} skillName Skill name for confirmation
+ */
+function approveSkill(skillId, skillName) {
+    if (confirm(`Approve skill request: "${skillName}"?\n\nThis will add the skill to the system and to the requester's profile.`)) {
+        fetch('/api/admin.php?action=approve_skill', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                skill_id: skillId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showToast('Success', data.message, 'success');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            } else {
+                showToast('Error', data.message, 'error');
+            }
+        })
+        .catch(error => {
+            showToast('Error', 'An error occurred: ' + error.message, 'error');
+        });
+    }
+}
+
+/**
+ * Reject pending skill request
+ * @param {number} skillId Skill ID
+ * @param {string} skillName Skill name for confirmation
+ */
+function rejectSkill(skillId, skillName) {
+    if (confirm(`Reject skill request: "${skillName}"?\n\nThis action cannot be undone.`)) {
+        fetch('/api/admin.php?action=reject_skill', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                skill_id: skillId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showToast('Success', data.message, 'success');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            } else {
+                showToast('Error', data.message, 'error');
+            }
+        })
+        .catch(error => {
+            showToast('Error', 'An error occurred: ' + error.message, 'error');
+        });
+    }
+}

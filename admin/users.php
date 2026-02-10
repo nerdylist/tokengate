@@ -6,8 +6,13 @@
 
 require_once __DIR__ . '/../middleware/admin.php';
 
-// Fetch all users
-$stmt = $db->query("SELECT id, email, COALESCE(first_name, '') || ' ' || COALESCE(last_name, '') as name, is_admin, created_at FROM users ORDER BY created_at DESC");
+// Fetch all users with profile information
+$sql = "SELECT u.id, u.email, u.name, u.is_admin, u.created_at,
+       p.profile_id, p.id as profile_db_id
+FROM users u
+LEFT JOIN profiles p ON u.id = p.user_id
+ORDER BY u.created_at DESC";
+$stmt = $db->query($sql);
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
@@ -20,8 +25,6 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="/assets/css/admin.css">
 </head>
 <body>
-    <?php include __DIR__ . '/partials/admin-header.php'; ?>
-
     <div class="admin-layout">
         <?php include __DIR__ . '/partials/admin-sidebar.php'; ?>
 
@@ -41,8 +44,25 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     'email' => 'Email',
                     'name' => 'Name',
                     'is_admin' => 'Admin',
+                    'profile_id' => 'Profile',
                     'created_at' => 'Created At'
                 ];
+
+                // Store raw profile_id before formatting
+                foreach ($users as &$user) {
+                    $user['profile_id_raw'] = $user['profile_id'] ?? '';
+                }
+                unset($user);
+
+                // Format profile_id display
+                foreach ($users as &$user) {
+                    if (empty($user['profile_id'])) {
+                        $user['profile_id'] = '<span style="color: #71717a;">No Profile</span>';
+                    } else {
+                        $user['profile_id'] = '<span style="color: #22c55e;">' . htmlspecialchars($user['profile_id_raw']) . '</span>';
+                    }
+                }
+                unset($user);
 
                 $actions = [
                     [
@@ -50,6 +70,13 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         'label' => 'Toggle Admin',
                         'class' => 'btn-warning',
                         'onclick' => 'toggleUserAdmin({id}, {is_admin})'
+                    ],
+                    [
+                        'type' => 'conditional',
+                        'condition' => 'profile_db_id',
+                        'label' => 'View Profile',
+                        'class' => 'btn-secondary',
+                        'onclick' => 'window.open("/profile.php?id={profile_id_raw}", "_blank")'
                     ],
                     [
                         'type' => 'button',

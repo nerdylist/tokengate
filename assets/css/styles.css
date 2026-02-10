@@ -246,7 +246,6 @@ input {
 
 .language-dropdown {
     position: absolute;
-    top: calc(100% + 8px);
     right: 0;
     background-color: #1a1a1a;
     border: 1px solid #2d2d2d;
@@ -297,14 +296,28 @@ input {
     flex: 1;
 }
 
+/* Footer Language Selector - Opens Upward */
+.footer-language {
+    display: flex;
+    justify-content: center;
+    margin: 16px 0;
+}
+
+.footer-language .language-dropdown {
+    bottom: calc(100% + 8px);
+    top: auto;
+    right: 50%;
+    transform: translateX(50%);
+}
+
 /* === MAIN CONTENT === */
 .main-content {
-    padding: 48px 0;
+    padding: 20px 0;
 }
 
 /* === PAGE HEADER === */
 .page-header {
-    margin-bottom: 48px;
+/*    margin-bottom: 48px; */
 }
 
 .page-title-wrapper {

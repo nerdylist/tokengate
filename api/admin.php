@@ -128,6 +128,117 @@ try {
             echo json_encode($result);
             break;
 
+        case 'delete_guild':
+            $guildId = $input['guild_id'] ?? null;
+
+            if ($guildId === null) {
+                throw new Exception('Missing guild ID');
+            }
+
+            $result = $controller->deleteGuild($guildId);
+            echo json_encode($result);
+            break;
+
+        case 'delete_rank':
+            $rankId = $input['rank_id'] ?? null;
+
+            if ($rankId === null) {
+                throw new Exception('Missing rank ID');
+            }
+
+            $result = $controller->deleteRank($rankId);
+            echo json_encode($result);
+            break;
+
+        case 'approve_skill':
+            $skillId = $input['skill_id'] ?? null;
+
+            if ($skillId === null) {
+                throw new Exception('Missing skill ID');
+            }
+
+            $result = $controller->approvePendingSkill($skillId, $_SESSION['user_id']);
+            echo json_encode($result);
+            break;
+
+        case 'reject_skill':
+            $skillId = $input['skill_id'] ?? null;
+
+            if ($skillId === null) {
+                throw new Exception('Missing skill ID');
+            }
+
+            $result = $controller->rejectPendingSkill($skillId, $_SESSION['user_id']);
+            echo json_encode($result);
+            break;
+
+        case 'create_profile_status':
+            $name = $input['name'] ?? null;
+            $slug = $input['slug'] ?? null;
+            $color = $input['color'] ?? null;
+            $sortOrder = $input['sort_order'] ?? 0;
+            $isActive = $input['is_active'] ?? 1;
+
+            if (!$name || !$slug || !$color) {
+                throw new Exception('Missing required fields: name, slug, color');
+            }
+
+            $result = $controller->createProfileStatus([
+                'name' => $name,
+                'slug' => $slug,
+                'color' => $color,
+                'sort_order' => $sortOrder,
+                'is_active' => $isActive
+            ]);
+            echo json_encode($result);
+            break;
+
+        case 'update_profile_status':
+            $id = $input['id'] ?? null;
+            $name = $input['name'] ?? null;
+            $slug = $input['slug'] ?? null;
+            $color = $input['color'] ?? null;
+            $sortOrder = $input['sort_order'] ?? 0;
+            $isActive = $input['is_active'] ?? 1;
+
+            if (!$id || !$name || !$slug || !$color) {
+                throw new Exception('Missing required fields: id, name, slug, color');
+            }
+
+            $result = $controller->updateProfileStatus([
+                'id' => $id,
+                'name' => $name,
+                'slug' => $slug,
+                'color' => $color,
+                'sort_order' => $sortOrder,
+                'is_active' => $isActive
+            ]);
+            echo json_encode($result);
+            break;
+
+        case 'toggle_profile_status':
+            $id = $input['id'] ?? null;
+            $isActive = $input['is_active'] ?? null;
+
+            if ($id === null || $isActive === null) {
+                throw new Exception('Missing required parameters: id, is_active');
+            }
+
+            $result = $controller->toggleProfileStatus($id, $isActive);
+            echo json_encode($result);
+            break;
+
+        case 'delete_profile_status':
+            $id = $input['id'] ?? null;
+
+            if ($id === null) {
+                throw new Exception('Missing profile status ID');
+            }
+
+            $result = $controller->deleteProfileStatus($id);
+            echo json_encode($result);
+            break;
+
         default:
             throw new Exception('Invalid action');
     }

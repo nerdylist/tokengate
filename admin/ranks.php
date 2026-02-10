@@ -1,19 +1,17 @@
 <?php
 /**
- * Admin Categories Management
- * List, add, edit, and delete categories
+ * Admin Ranks Management
+ * List, add, edit, and delete ranks
  */
 
 require_once __DIR__ . '/../middleware/admin.php';
 
-// Fetch categories with bounty count
-$sql = "SELECT c.id, c.name, c.slug, COUNT(b.id) as bounty_count, c.created_at
-        FROM categories c
-        LEFT JOIN bounties b ON c.id = b.category_id
-        GROUP BY c.id
-        ORDER BY c.name ASC";
+// Fetch ranks
+$sql = "SELECT id, name, level, type, xp_required, description, created_at
+        FROM ranks
+        ORDER BY type ASC, level ASC";
 $stmt = $db->query($sql);
-$categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$ranks = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 <!DOCTYPE html>
@@ -21,7 +19,7 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Categories Management - RentPeople.io Admin</title>
+    <title>Ranks Management - RentPeople.io Admin</title>
     <link rel="stylesheet" href="/assets/css/admin.css">
 </head>
 <body>
@@ -29,11 +27,11 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php include __DIR__ . '/partials/admin-sidebar.php'; ?>
 
         <main class="admin-content">
-            <h1>Categories Management</h1>
+            <h1>Ranks Management</h1>
 
             <div class="table-container">
                 <div class="table-header">
-                    <h2>All Categories (<?= count($categories) ?>)</h2>
+                    <h2>All Ranks (<?= count($ranks) ?>)</h2>
                 </div>
 
                 <?php
@@ -42,8 +40,10 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 $columns = [
                     'id' => 'ID',
                     'name' => 'Name',
-                    'slug' => 'Slug',
-                    'bounty_count' => 'Bounties',
+                    'level' => 'Level',
+                    'type' => 'Type',
+                    'xp_required' => 'XP Required',
+                    'description' => 'Description',
                     'created_at' => 'Created At'
                 ];
 
@@ -52,11 +52,11 @@ $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         'type' => 'button',
                         'label' => 'Delete',
                         'class' => 'btn-danger',
-                        'onclick' => 'confirmDelete("category", {id}, "{name}")'
+                        'onclick' => 'confirmDelete("rank", {id}, "{name}")'
                     ]
                 ];
 
-                renderDataTable($columns, $categories, $actions);
+                renderDataTable($columns, $ranks, $actions);
                 ?>
             </div>
         </main>

@@ -73,6 +73,9 @@ function url($route, $params = []) {
             case 'bounty':
                 $id = isset($params['id']) ? $params['id'] : '';
                 return 'detail.php?id=' . urlencode($id);
+            case 'profile':
+                $id = isset($params['id']) ? $params['id'] : '';
+                return 'profile.php?id=' . urlencode($id);
             default:
                 // Generic handling
                 if (!empty($params)) {
@@ -96,6 +99,9 @@ function url($route, $params = []) {
             case 'bounty':
                 $id = isset($params['id']) ? $params['id'] : '';
                 return '/bounty/' . urlencode($id);
+            case 'profile':
+                $id = isset($params['id']) ? $params['id'] : '';
+                return '/profile/' . urlencode($id);
             default:
                 // Generic handling
                 $url = '/' . $route;

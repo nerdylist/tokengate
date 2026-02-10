@@ -16,17 +16,32 @@ require_once __DIR__ . '/../config.php';
  *   - skills: Array of skill strings
  *   - price: Hourly rate as integer
  */
+
+// Fetch guild data for this profile
+if (!isset($profileModel)) {
+    require_once __DIR__ . '/../classes/Profile.php';
+    $profileModel = new Profile();
+}
+$cardProfileId = $profile['profile_db_id'] ?? $profile['id'];
+$primaryGuild = $profileModel->primaryGuild($cardProfileId);
 ?>
 <div class="profile-card">
-    <div class="profile-header">
-        <div class="profile-avatar">
-            <div class="avatar-circle">
-                <?php echo strtoupper(substr(htmlspecialchars($profile['name']), 0, 1)); ?>
+    <a href="<?php echo url('profile', ['id' => $profile['id']]); ?>" class="profile-card-link">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <?php if (!empty($profile['avatar_url'])): ?>
+                    <img src="<?php echo htmlspecialchars($profile['avatar_url']); ?>"
+                         alt="<?php echo htmlspecialchars($profile['name']); ?>"
+                         class="avatar-image">
+                <?php else: ?>
+                    <div class="avatar-circle">
+                        <?php echo strtoupper(substr(htmlspecialchars($profile['name']), 0, 1)); ?>
+                    </div>
+                <?php endif; ?>
             </div>
-        </div>
-        <div class="profile-info">
-            <div class="profile-name">
-                <span><?php echo htmlspecialchars($profile['name']); ?></span>
+            <div class="profile-info">
+                <div class="profile-name">
+                    <span><?php echo htmlspecialchars($profile['name']); ?></span>
                 <?php if ($profile['verified']): ?>
                     <svg class="verified-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -40,6 +55,16 @@ require_once __DIR__ . '/../config.php';
                 <span><?php echo number_format($profile['rating'], 1); ?></span>
                 <span class="profile-id"><?php echo htmlspecialchars($profile['id']); ?></span>
             </div>
+                <?php if ($primaryGuild): ?>
+                    <div class="guild-badge-card">
+                        <span class="guild-icon-small">⚔️</span>
+                        <span class="guild-name-small"><?php echo htmlspecialchars($primaryGuild['name']); ?></span>
+                        <span class="guild-divider">·</span>
+                        <span class="guild-rank-small" style="color: <?php echo $primaryGuild['rank']['color']; ?>">
+                            <?php echo htmlspecialchars($primaryGuild['rank']['name']); ?>
+                        </span>
+                    </div>
+                <?php endif; ?>
         </div>
     </div>
 
@@ -63,8 +88,9 @@ require_once __DIR__ . '/../config.php';
         <?php endforeach; ?>
     </div>
 
-    <div class="profile-footer">
-        <div class="profile-price">$<?php echo number_format($profile['price']); ?>/hr</div>
-        <button class="btn-rent">rent</button>
-    </div>
+        <div class="profile-footer">
+            <div class="profile-price">$<?php echo number_format($profile['price']); ?>/hr</div>
+            <span class="btn-rent">view profile</span>
+        </div>
+    </a>
 </div>

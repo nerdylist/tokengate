@@ -10,7 +10,7 @@ require_once __DIR__ . '/../middleware/admin.php';
 $statusFilter = $_GET['status'] ?? 'all';
 
 // Fetch bounties
-$sql = "SELECT b.id, b.title, c.name as category, b.budget, b.status, u.email as user_email, b.created_at
+$sql = "SELECT b.id, b.title, c.name as category, b.budget_min, b.budget_max, b.status, u.email as user_email, b.created_at
         FROM bounties b
         LEFT JOIN categories c ON b.category_id = c.id
         LEFT JOIN users u ON b.user_id = u.id";
@@ -39,8 +39,6 @@ $bounties = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="/assets/css/admin.css">
 </head>
 <body>
-    <?php include __DIR__ . '/partials/admin-header.php'; ?>
-
     <div class="admin-layout">
         <?php include __DIR__ . '/partials/admin-sidebar.php'; ?>
 
@@ -72,7 +70,8 @@ $bounties = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     'id' => 'ID',
                     'title' => 'Title',
                     'category' => 'Category',
-                    'budget' => 'Budget',
+                    'budget_min' => 'Min Budget',
+                    'budget_max' => 'Max Budget',
                     'status' => 'Status',
                     'user_email' => 'Posted By',
                     'created_at' => 'Created At'

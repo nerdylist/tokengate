@@ -30,7 +30,7 @@ class AdminController
         $stats['bounties'] = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
 
         // Total profiles
-        $stmt = $this->db->query("SELECT COUNT(*) as count FROM rent_profiles");
+        $stmt = $this->db->query("SELECT COUNT(*) as count FROM profiles");
         $stats['profiles'] = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
 
         // Total applications
@@ -332,6 +332,265 @@ class AdminController
             return ['success' => true, 'message' => 'Application deleted successfully'];
         } catch (PDOException $e) {
             return ['success' => false, 'message' => 'Error deleting application: ' . $e->getMessage()];
+        }
+    }
+
+    /**
+     * Delete guild
+     * @param int $id Guild ID
+     * @return array Success/error response
+     */
+    public function deleteGuild($id)
+    {
+        try {
+            // Check if guild has profile_guilds (members)
+            $stmt = $this->db->prepare("SELECT COUNT(*) as count FROM profile_guilds WHERE guild_id = ?");
+            $stmt->execute([$id]);
+            $count = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+
+            if ($count > 0) {
+                return ['success' => false, 'message' => 'Cannot delete guild with existing members'];
+            }
+
+            // Check if guild has quests
+            $stmt = $this->db->prepare("SELECT COUNT(*) as count FROM quests WHERE guild_id = ?");
+            $stmt->execute([$id]);
+            $count = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+
+            if ($count > 0) {
+                return ['success' => false, 'message' => 'Cannot delete guild with existing quests'];
+            }
+
+            $stmt = $this->db->prepare("DELETE FROM guilds WHERE id = ?");
+            $stmt->execute([$id]);
+
+            return ['success' => true, 'message' => 'Guild deleted successfully'];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Error deleting guild: ' . $e->getMessage()];
+        }
+    }
+
+    /**
+     * Delete rank
+     * @param int $id Rank ID
+     * @return array Success/error response
+     */
+    public function deleteRank($id)
+    {
+        try {
+            // Check if rank is used in profile_guilds
+            $stmt = $this->db->prepare("SELECT COUNT(*) as count FROM profile_guilds WHERE rank_id = ?");
+            $stmt->execute([$id]);
+            $count = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+
+            if ($count > 0) {
+                return ['success' => false, 'message' => 'Cannot delete rank that is assigned to profiles'];
+            }
+
+            // Check if rank is used as min_rank_id in quests
+            $stmt = $this->db->prepare("SELECT COUNT(*) as count FROM quests WHERE min_rank_id = ?");
+            $stmt->execute([$id]);
+            $count = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+
+            if ($count > 0) {
+                return ['success' => false, 'message' => 'Cannot delete rank that is required by quests'];
+            }
+
+            $stmt = $this->db->prepare("DELETE FROM ranks WHERE id = ?");
+            $stmt->execute([$id]);
+
+            return ['success' => true, 'message' => 'Rank deleted successfully'];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Error deleting rank: ' . $e->getMessage()];
+        }
+    }
+
+    /**
+     * Approve pending skill
+     * @param int $skillId Skill ID
+     * @param int $adminId Admin user ID who approved it
+     * @return array Success/error response
+     */
+    public function approvePendingSkill($skillId, $adminId)
+    {
+        try {
+            $this->db->beginTransaction();
+
+            // Get skill data
+            $stmt = $this->db->prepare("SELECT id, name, slug, category_id, submitted_by_profile_id, status FROM skills WHERE id = ? AND status = 'pending'");
+            $stmt->execute([$skillId]);
+            $skill = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$skill) {
+                throw new Exception('Pending skill not found or already processed');
+            }
+
+            // Update skill status to approved
+            $stmt = $this->db->prepare("UPDATE skills SET status = 'approved', reviewed_at = CURRENT_TIMESTAMP, reviewed_by_admin_id = ? WHERE id = ?");
+            $stmt->execute([$adminId, $skillId]);
+
+            // Add to requester's profile_skills if they submitted it
+            if ($skill['submitted_by_profile_id']) {
+                // Check if already in profile_skills
+                $stmt = $this->db->prepare("SELECT 1 FROM profile_skills WHERE profile_id = ? AND skill_id = ?");
+                $stmt->execute([$skill['submitted_by_profile_id'], $skillId]);
+                $exists = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if (!$exists) {
+                    $stmt = $this->db->prepare("INSERT INTO profile_skills (profile_id, skill_id, proficiency_level) VALUES (?, ?, 'intermediate')");
+                    $stmt->execute([$skill['submitted_by_profile_id'], $skillId]);
+                }
+            }
+
+            $this->db->commit();
+
+            return ['success' => true, 'message' => 'Skill approved and added to system'];
+        } catch (PDOException $e) {
+            $this->db->rollBack();
+            return ['success' => false, 'message' => 'Error approving skill: ' . $e->getMessage()];
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Reject pending skill
+     * @param int $skillId Skill ID
+     * @param int $adminId Admin user ID who rejected it
+     * @return array Success/error response
+     */
+    public function rejectPendingSkill($skillId, $adminId)
+    {
+        try {
+            $stmt = $this->db->prepare("UPDATE skills SET status = 'rejected', reviewed_at = CURRENT_TIMESTAMP, reviewed_by_admin_id = ? WHERE id = ? AND status = 'pending'");
+            $stmt->execute([$adminId, $skillId]);
+
+            if ($stmt->rowCount() === 0) {
+                throw new Exception('Pending skill not found or already processed');
+            }
+
+            return ['success' => true, 'message' => 'Skill request rejected'];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Error rejecting skill: ' . $e->getMessage()];
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Create profile status
+     * @param array $data Status data
+     * @return array Success/error response
+     */
+    public function createProfileStatus($data)
+    {
+        try {
+            // Validate color format
+            if (!preg_match('/^#[0-9A-Fa-f]{6}$/', $data['color'])) {
+                return ['success' => false, 'message' => 'Invalid color format. Use hex color code (e.g., #10b981)'];
+            }
+
+            // Validate slug format
+            if (!preg_match('/^[a-z0-9-]+$/', $data['slug'])) {
+                return ['success' => false, 'message' => 'Invalid slug format. Use lowercase letters, numbers, and hyphens only'];
+            }
+
+            // Check if slug already exists
+            $stmt = $this->db->prepare("SELECT id FROM profile_statuses WHERE slug = ?");
+            $stmt->execute([$data['slug']]);
+            if ($stmt->fetch()) {
+                return ['success' => false, 'message' => 'A status with this slug already exists'];
+            }
+
+            $stmt = $this->db->prepare("INSERT INTO profile_statuses (name, slug, color, sort_order, is_active, created_at, updated_at) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
+            $stmt->execute([
+                $data['name'],
+                $data['slug'],
+                $data['color'],
+                $data['sort_order'],
+                $data['is_active']
+            ]);
+
+            return ['success' => true, 'message' => 'Profile status created successfully'];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Error creating profile status: ' . $e->getMessage()];
+        }
+    }
+
+    /**
+     * Update profile status
+     * @param array $data Status data
+     * @return array Success/error response
+     */
+    public function updateProfileStatus($data)
+    {
+        try {
+            // Validate color format
+            if (!preg_match('/^#[0-9A-Fa-f]{6}$/', $data['color'])) {
+                return ['success' => false, 'message' => 'Invalid color format. Use hex color code (e.g., #10b981)'];
+            }
+
+            // Validate slug format
+            if (!preg_match('/^[a-z0-9-]+$/', $data['slug'])) {
+                return ['success' => false, 'message' => 'Invalid slug format. Use lowercase letters, numbers, and hyphens only'];
+            }
+
+            // Check if slug already exists (excluding current record)
+            $stmt = $this->db->prepare("SELECT id FROM profile_statuses WHERE slug = ? AND id != ?");
+            $stmt->execute([$data['slug'], $data['id']]);
+            if ($stmt->fetch()) {
+                return ['success' => false, 'message' => 'A status with this slug already exists'];
+            }
+
+            $stmt = $this->db->prepare("UPDATE profile_statuses SET name = ?, slug = ?, color = ?, sort_order = ?, is_active = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?");
+            $stmt->execute([
+                $data['name'],
+                $data['slug'],
+                $data['color'],
+                $data['sort_order'],
+                $data['is_active'],
+                $data['id']
+            ]);
+
+            return ['success' => true, 'message' => 'Profile status updated successfully'];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Error updating profile status: ' . $e->getMessage()];
+        }
+    }
+
+    /**
+     * Toggle profile status active state
+     * @param int $id Status ID
+     * @param int $isActive Active state (0 or 1)
+     * @return array Success/error response
+     */
+    public function toggleProfileStatus($id, $isActive)
+    {
+        try {
+            $stmt = $this->db->prepare("UPDATE profile_statuses SET is_active = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?");
+            $stmt->execute([$isActive, $id]);
+
+            return ['success' => true, 'message' => 'Status updated successfully'];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Error updating status: ' . $e->getMessage()];
+        }
+    }
+
+    /**
+     * Delete profile status
+     * @param int $id Status ID
+     * @return array Success/error response
+     */
+    public function deleteProfileStatus($id)
+    {
+        try {
+            $stmt = $this->db->prepare("DELETE FROM profile_statuses WHERE id = ?");
+            $stmt->execute([$id]);
+
+            return ['success' => true, 'message' => 'Profile status deleted successfully'];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Error deleting profile status: ' . $e->getMessage()];
         }
     }
 }

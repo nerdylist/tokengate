@@ -25,6 +25,9 @@ RewriteRule ^connect$ connect.php [L,QSA]
 # /bounty/{id} -> detail.php?id={id}
 RewriteRule ^bounty/([0-9]+)$ detail.php?id=$1 [L,QSA]
 
+# /profile/{profile_id} -> profile.php?id={profile_id}
+RewriteRule ^profile/([a-zA-Z0-9-]+)$ profile.php?id=$1 [L,QSA]
+
 # Security: Prevent access to .env files
 <FilesMatch "^\.env">
     Order allow,deny
