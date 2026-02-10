@@ -81,6 +81,17 @@ input {
     color: #ff6b35;
 }
 
+.site-logo {
+    height: 45px;
+    width: auto;
+    display: block;
+    transition: opacity 0.2s ease;
+}
+
+.site-logo:hover {
+    opacity: 0.85;
+}
+
 .main-nav {
     display: flex;
     gap: 32px;
@@ -131,6 +142,72 @@ input {
     background-color: #e55a28;
 }
 
+.user-email {
+    color: #9ca3af;
+    font-size: 0.875rem;
+    padding: 8px 12px;
+}
+
+.btn-admin {
+    background-color: #151515;
+    color: #60a5fa;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    border: 1px solid #333333;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-admin:hover {
+    background-color: #1a1a1a;
+    border-color: #555555;
+}
+
+.btn-admin img {
+    filter: brightness(0) saturate(100%) invert(68%) sepia(65%) saturate(4820%) hue-rotate(193deg) brightness(100%) contrast(98%);
+}
+
+.btn-admin:hover img {
+    filter: brightness(0) saturate(100%) invert(80%) sepia(12%) saturate(1478%) hue-rotate(189deg) brightness(107%) contrast(98%);
+}
+
+/* Separator styling removed - no longer used */
+/* .separator {
+    color: #4a4a4a;
+    font-size: 0.875rem;
+    padding: 0 8px;
+} */
+
+.btn-logout {
+    background-color: #151515;
+    color: #e0e0e0;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #333333;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.btn-logout:hover {
+    background-color: #1a1a1a;
+    border-color: #555555;
+}
+
+.btn-logout img {
+    filter: brightness(0) invert(0.88);
+}
+
+.btn-logout:hover img {
+    filter: brightness(0) invert(1);
+}
+
 /* Custom Language Selector Styling */
 .language-selector {
     position: relative;
@@ -139,20 +216,20 @@ input {
 }
 
 .language-btn {
-    background-color: #1a1a1a;
-    border: 1px solid #2d2d2d;
+    background-color: #151515;
+    border: 1px solid #333333;
     border-radius: 8px;
     padding: 8px;
     cursor: pointer;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
 }
 
 .language-btn:hover {
-    background-color: #252525;
-    border-color: #3d3d3d;
+    background-color: #1a1a1a;
+    border-color: #555555;
 }
 
 .language-btn:active {
@@ -160,7 +237,7 @@ input {
 }
 
 .flag-icon {
-    width: 24px;
+    width: 20px;
     height: auto;
     display: block;
     border-radius: 4px;
@@ -236,7 +313,7 @@ input {
 
 .page-title {
     font-family: 'Silkscreen', monospace;
-    font-size: 3rem;
+    font-size: 2rem;
     font-weight: 700;
     color: #ffffff;
     letter-spacing: 0.02em;
@@ -389,17 +466,20 @@ input {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
-    min-width: 60px;
+    justify-content: center;
+    gap: 12px;
+    min-width: 80px;
+    padding: 12px 8px;
 }
 
 .vote-btn {
     background-color: transparent;
     color: #6b7280;
-    padding: 4px;
+    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
 
 .vote-btn:hover {
@@ -412,9 +492,37 @@ input {
 }
 
 .vote-count {
-    font-size: 1rem;
+    font-size: 1.25rem;
     font-weight: 700;
     color: #e5e5e5;
+    line-height: 1;
+}
+
+.vote-icon {
+    width: 42px;
+    height: 42px;
+    display: block;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+/* Hover glow effects */
+.vote-btn.vote-up:hover .vote-icon {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 8px rgba(34, 197, 94, 0.6));
+}
+
+.vote-btn.vote-down:hover .vote-icon {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.6));
+}
+
+/* Selected/voted glow effects */
+.vote-btn.vote-up.voted .vote-icon {
+    filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.7));
+}
+
+.vote-btn.vote-down.voted .vote-icon {
+    filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.7));
 }
 
 /* === TASK CONTENT === */

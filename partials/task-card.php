@@ -24,16 +24,12 @@ require_once __DIR__ . '/../config.php';
 ?>
 <article class="task-card">
     <div class="task-vote">
-        <button class="vote-btn vote-up" aria-label="Upvote">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M8 4L12 10H4L8 4Z" fill="currentColor"/>
-            </svg>
+        <button class="vote-btn vote-up" aria-label="Upvote" data-index="<?php echo htmlspecialchars($task['id']); ?>">
+            <img src="assets/img/token/icon/up-silver.png" alt="Upvote" class="vote-icon vote-up-icon" data-default="assets/img/token/icon/up-silver.png" data-hover="assets/img/token/icon/up-green.png" data-selected="assets/img/token/icon/up-gold.png">
         </button>
         <span class="vote-count"><?php echo htmlspecialchars($task['votes']); ?></span>
-        <button class="vote-btn vote-down" aria-label="Downvote">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M8 12L4 6H12L8 12Z" fill="currentColor"/>
-            </svg>
+        <button class="vote-btn vote-down" aria-label="Downvote" data-index="<?php echo htmlspecialchars($task['id']); ?>">
+            <img src="assets/img/token/icon/down-silver.png" alt="Downvote" class="vote-icon vote-down-icon" data-default="assets/img/token/icon/down-silver.png" data-hover="assets/img/token/icon/down-red.png" data-selected="assets/img/token/icon/down-gold.png">
         </button>
     </div>
     <div class="task-content">

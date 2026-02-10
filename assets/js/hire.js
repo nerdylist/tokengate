@@ -11,41 +11,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // === INITIALIZE PAGE STATE ===
 function initializePage() {
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    const userEmail = localStorage.getItem('userEmail');
-
-    // Update login bar visibility
-    updateLoginBarState(isLoggedIn, userEmail);
-
     // Set minimum date for deadline to today
     const deadlineInput = document.getElementById('deadline');
     if (deadlineInput) {
         const today = new Date().toISOString().split('T')[0];
         deadlineInput.setAttribute('min', today);
-    }
-}
-
-// === UPDATE LOGIN BAR STATE ===
-function updateLoginBarState(isLoggedIn, userEmail) {
-    const guestBar = document.getElementById('login-bar-guest');
-    const userBar = document.getElementById('login-bar-user');
-    const guestNote = document.getElementById('guest-note');
-    const usernameDisplay = document.getElementById('username-display');
-
-    if (isLoggedIn && userEmail) {
-        // Show logged-in state
-        guestBar.style.display = 'none';
-        userBar.style.display = 'flex';
-        if (guestNote) guestNote.style.display = 'none';
-
-        // Extract username from email (part before @)
-        const username = userEmail.split('@')[0];
-        if (usernameDisplay) usernameDisplay.textContent = username;
-    } else {
-        // Show guest state
-        guestBar.style.display = 'flex';
-        userBar.style.display = 'none';
-        if (guestNote) guestNote.style.display = 'block';
     }
 }
 
@@ -103,47 +73,71 @@ function handleQuickLogin() {
         return;
     }
 
-    // Simulate AJAX login (in real app, this would be an API call)
-    // TODO: Replace with actual API call to login endpoint
-    localStorage.setItem('isLoggedIn', 'true');
-    localStorage.setItem('userEmail', email);
+    // Show loading state
+    const loginBtn = document.getElementById('quick-login-btn');
+    const originalText = loginBtn.textContent;
+    loginBtn.textContent = 'logging in...';
+    loginBtn.disabled = true;
 
-    // Show success message
-    showMessage('Successfully logged in!', 'success');
-
-    // Update UI
-    updateLoginBarState(true, email);
-
-    // Clear password field
-    document.getElementById('quick-password').value = '';
+    // Make API call to login endpoint
+    fetch('/api/auth.php?action=login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            email: email,
+            password: password
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showMessage(data.message || 'Successfully logged in!', 'success');
+            // Reload page to update login state
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } else {
+            showMessage(data.error || 'Login failed', 'error');
+            loginBtn.textContent = originalText;
+            loginBtn.disabled = false;
+        }
+    })
+    .catch(error => {
+        showMessage('Network error. Please try again.', 'error');
+        loginBtn.textContent = originalText;
+        loginBtn.disabled = false;
+        console.error('Login error:', error);
+    });
 }
 
 function handleLogout() {
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('userEmail');
-
-    showMessage('Successfully logged out', 'success');
-
-    // Update UI
-    updateLoginBarState(false, null);
-
-    // Clear login fields
-    document.getElementById('quick-email').value = '';
-    document.getElementById('quick-password').value = '';
+    // Make API call to logout endpoint
+    fetch('/api/auth.php?action=logout', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showMessage(data.message || 'Successfully logged out', 'success');
+            // Reload page to update login state
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } else {
+            showMessage(data.error || 'Logout failed', 'error');
+        }
+    })
+    .catch(error => {
+        showMessage('Network error. Please try again.', 'error');
+        console.error('Logout error:', error);
+    });
 }
 
 // === BOUNTY FORM HANDLING ===
 function handleBountySubmit(e) {
     e.preventDefault();
-
-    // Check if user is logged in
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    if (!isLoggedIn) {
-        showMessage('Please login to submit a bounty', 'error');
-        // Optionally redirect to connect.php
-        // setTimeout(() => { window.location.href = 'connect.php'; }, 1500);
-        return;
-    }
 
     // Get form values
     const formData = {
@@ -168,17 +162,69 @@ function handleBountySubmit(e) {
         return;
     }
 
-    // Simulate API submission (in real app, this would be a POST request)
-    console.log('Bounty data:', formData);
+    // Show loading state
+    const submitBtn = document.querySelector('.btn-primary');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'posting...';
+    submitBtn.disabled = true;
 
-    // Show success message
-    showSuccessMessage();
+    // Parse skills from comma-separated string to array of skill names
+    const skillNames = formData.skills
+        ? formData.skills.split(',').map(s => s.trim()).filter(s => s.length > 0)
+        : [];
 
-    // Clear form
-    document.getElementById('bounty-form').reset();
+    // Get category ID from category name
+    // For now, we'll need to map category names to IDs
+    const categoryMap = {
+        'documentation': 1,
+        'design': 2,
+        'research': 3,
+        'development': 4,
+        'testing': 5,
+        'devops': 6,
+        'writing': 7,
+        'other': 8
+    };
 
-    // Scroll to top to see success message
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Prepare API data
+    const apiData = {
+        title: formData.title,
+        description: formData.description,
+        category_id: categoryMap[formData.category] || 8,
+        budget_min: parseFloat(formData.budget),
+        budget_max: parseFloat(formData.budget),
+        deadline: formData.deadline || null,
+        skills: [] // TODO: Convert skill names to IDs via API
+    };
+
+    // Make API call to create bounty
+    fetch('/api/bounties.php?action=create', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(apiData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showSuccessMessage();
+            // Clear form
+            document.getElementById('bounty-form').reset();
+            // Scroll to top to see success message
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            showMessage(data.error || 'Failed to create bounty', 'error');
+        }
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+    })
+    .catch(error => {
+        showMessage('Network error. Please try again.', 'error');
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+        console.error('Bounty creation error:', error);
+    });
 }
 
 // === FORM VALIDATION ===

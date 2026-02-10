@@ -1,6 +1,6 @@
 /* ============================================
    CONNECT.JS - AUTH PAGE FUNCTIONALITY
-   Login/Register toggle, validation, localStorage
+   Login/Register toggle, validation, AJAX authentication
    ============================================ */
 
 // === STATE ===
@@ -125,78 +125,71 @@ function handleSubmit(e) {
 
 // === REGISTER HANDLER ===
 function handleRegister(email, password) {
-    // Check if user already exists
-    const existingUser = localStorage.getItem(`user_${email}`);
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Creating account...';
 
-    if (existingUser) {
-        showToast('An account with this email already exists', 'error');
-        return;
-    }
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('password', password);
+    formData.append('confirm_password', confirmPasswordInput.value);
 
-    // Store user data
-    const userData = {
-        email: email,
-        password: password, // In production, this would be hashed
-        createdAt: new Date().toISOString()
-    };
-
-    localStorage.setItem(`user_${email}`, JSON.stringify(userData));
-
-    // Set logged in state
-    localStorage.setItem('isLoggedIn', 'true');
-    localStorage.setItem('userEmail', email);
-
-    showToast('Account created successfully! Redirecting...', 'success');
-
-    // Redirect after 1.5 seconds
-    setTimeout(() => {
-        window.location.href = 'hire.php';
-    }, 1500);
+    fetch('api/auth.php?action=register', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast(data.message, 'success');
+            setTimeout(() => {
+                window.location.href = data.redirect;
+            }, 1500);
+        } else {
+            showToast(data.error, 'error');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'sign up';
+        }
+    })
+    .catch(error => {
+        showToast('An error occurred. Please try again.', 'error');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'sign up';
+    });
 }
 
 // === LOGIN HANDLER ===
 function handleLogin(email, password) {
-    // Check if user exists
-    const userDataStr = localStorage.getItem(`user_${email}`);
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Logging in...';
 
-    if (!userDataStr) {
-        showToast('No account found with this email', 'error');
-        return;
-    }
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('password', password);
 
-    const userData = JSON.parse(userDataStr);
-
-    // Check password
-    if (userData.password !== password) {
-        showToast('Incorrect password', 'error');
-        return;
-    }
-
-    // Set logged in state
-    localStorage.setItem('isLoggedIn', 'true');
-    localStorage.setItem('userEmail', email);
-
-    showToast('Login successful! Redirecting...', 'success');
-
-    // Redirect after 1.5 seconds
-    setTimeout(() => {
-        window.location.href = 'hire.php';
-    }, 1500);
-}
-
-// === CHECK IF ALREADY LOGGED IN ===
-function checkLoginStatus() {
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
-
-    if (isLoggedIn === 'true') {
-        // User is already logged in, redirect to hire page
-        window.location.href = 'hire.php';
-    }
+    fetch('api/auth.php?action=login', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast(data.message, 'success');
+            setTimeout(() => {
+                window.location.href = data.redirect;
+            }, 1500);
+        } else {
+            showToast(data.error, 'error');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'login';
+        }
+    })
+    .catch(error => {
+        showToast('An error occurred. Please try again.', 'error');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'login';
+    });
 }
 
 // === EVENT LISTENERS ===
 toggleBtn.addEventListener('click', toggleMode);
 authForm.addEventListener('submit', handleSubmit);
-
-// === INITIALIZATION ===
-checkLoginStatus();

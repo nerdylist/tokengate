@@ -1,12 +1,31 @@
-<?php require_once 'config.php'; ?>
+<?php
+require_once __DIR__ . '/config/session.php';
+require_once 'config.php';
+require_once 'classes/Auth.php';
+
+// Handle alert messages from POST redirect
+$alertType = $_GET['alert'] ?? null;
+$alertMessage = $_GET['message'] ?? null;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="assets/img/token/icon/up-gold.png">
+    <link rel="apple-touch-icon" href="assets/img/token/icon/up-gold.png">
+    <meta property="og:title" content="<?php echo APP_NAME; ?>">
+    <meta property="og:description" content="Post tasks, humans apply">
+    <meta property="og:image" content="https://redot.test/assets/img/token/icon/up-gold.png">
+    <meta property="og:url" content="https://redot.test">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="<?php echo APP_NAME; ?>">
+    <meta name="twitter:description" content="Post tasks, humans apply">
+    <meta name="twitter:image" content="https://redot.test/assets/img/token/icon/up-gold.png">
     <title>Hire - Post a Bounty - <?php echo APP_NAME; ?></title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="hire.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/hire.css">
 </head>
 <body>
     <?php include 'partials/header.php'; ?>
@@ -23,29 +42,12 @@
             <!-- Bounty Form Section -->
             <section id="bounty-form-section" class="bounty-form-section">
                 <!-- Login Status Bar -->
-                <div id="login-bar" class="login-bar">
-                    <!-- Not Logged In State -->
-                    <div id="login-bar-guest" class="login-bar-content">
-                        <span class="login-bar-text">login to post bounties:</span>
-                        <input type="email" id="quick-email" class="login-bar-input" placeholder="email" />
-                        <input type="password" id="quick-password" class="login-bar-input" placeholder="password" />
-                        <button id="quick-login-btn" class="login-bar-btn">login</button>
-                        <span class="login-bar-divider">|</span>
-                        <a href="<?php echo url('connect'); ?>" class="login-bar-link">need an account? sign up here</a>
-                    </div>
+                <?php include 'partials/login-status.php'; ?>
 
-                    <!-- Logged In State (hidden by default) -->
-                    <div id="login-bar-user" class="login-bar-content" style="display: none;">
-                        <span class="login-bar-greeting">Hi <span id="username-display">User</span>! Welcome back!</span>
-                        <nav class="login-bar-nav">
-                            <a href="profile.php" class="login-bar-nav-link">PROFILE</a>
-                            <span class="login-bar-nav-divider">|</span>
-                            <a href="settings.php" class="login-bar-nav-link">SETTINGS</a>
-                            <span class="login-bar-nav-divider">|</span>
-                            <button id="logout-btn" class="login-bar-nav-btn">LOGOUT</button>
-                        </nav>
-                    </div>
-                </div>
+                <!-- Alert Messages -->
+                <?php if ($alertType && $alertMessage): ?>
+                    <?php include 'partials/alert.php'; ?>
+                <?php endif; ?>
                 <div class="hire-content">
                     <div class="form-column">
                         <div class="form-card">
@@ -270,7 +272,7 @@
         </div>
     </main>
 
-    <script src="hire.js"></script>
+    <script src="assets/js/hire.js"></script>
     <?php include 'partials/footer.php'; ?>
 </body>
 </html>

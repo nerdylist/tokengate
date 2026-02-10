@@ -74,10 +74,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function updateButtonFlag(flagCode) {
-        if (currentFlag) {
-            currentFlag.src = 'https://flagcdn.com/w20/' + flagCode + '.png';
-            currentFlag.alt = flagCode.toUpperCase() + ' Flag';
-        }
+        currentFlag.src = 'https://flagcdn.com/w20/' + flagCode + '.png';
+        currentFlag.alt = flagCode.toUpperCase() + ' Flag';
     }
 
     function changeLanguage(langCode) {
@@ -86,25 +84,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (langCode === 'en') {
             // Reset to English: clear all Google Translate cookies and reload
-            deleteCookie('googtrans');
-            deleteCookie('googtrans', '/');
-            deleteCookie('googtrans', '/', window.location.hostname);
-            // Also clear the specific domain variants
             document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=' + window.location.hostname + ';';
+            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.redot.test;';
+            document.cookie = 'googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=redot.test;';
             // Clear localStorage
             localStorage.removeItem('selectedLanguage');
             localStorage.setItem('selectedLanguage', 'en');
             localStorage.setItem('selectedFlag', 'us');
             // Reload to show original English
-            location.reload();
+            window.location.href = window.location.href;
         } else {
             // Set translation cookie for other languages
             const cookieValue = '/en/' + langCode;
-            document.cookie = 'googtrans=' + cookieValue + '; path=/';
-            document.cookie = 'googtrans=' + cookieValue + '; path=/; domain=' + window.location.hostname + ';';
-            // Reload page to apply translation
-            location.reload();
+            document.cookie = 'googtrans=' + cookieValue + '; path=/;';
+            document.cookie = 'googtrans=' + cookieValue + '; path=/; domain=.redot.test;';
+            document.cookie = 'googtrans=' + cookieValue + '; path=/; domain=redot.test;';
+            // Force reload to apply translation
+            window.location.href = window.location.href;
         }
     }
 

@@ -1,65 +1,123 @@
 <?php
+require_once __DIR__ . '/config/session.php';
 require_once 'config.php';
+require_once 'controllers/BountyController.php';
 
-// Sample task data
-$tasks = [
-    [
-        'id' => 1,
-        'votes' => 42,
-        'category' => 'documentation',
-        'due_days' => 2,
-        'spots_filled' => 0,
-        'spots_total' => 5,
-        'price' => 500,
-        'title' => 'Create comprehensive API documentation for REST endpoints',
-        'description' => 'We need detailed documentation for our REST API including all endpoints, request/response examples, and authentication methods. The documentation should be clear, well-structured, and include code samples in multiple languages.',
-        'tags' => ['technical writing', 'api documentation', 'rest api', 'markdown', 'swagger'],
-        'location' => 'remote',
-        'duration' => '3-5 days',
-        'applications' => 12,
-        'posted_time' => '3 hours ago'
-    ],
-    [
-        'id' => 2,
-        'votes' => 28,
-        'category' => 'design',
-        'due_days' => 5,
-        'spots_filled' => 2,
-        'spots_total' => 3,
-        'price' => 750,
-        'title' => 'Design modern landing page mockups for SaaS product',
-        'description' => 'Looking for talented designers to create sleek, modern landing page designs for our new SaaS product. Need desktop and mobile versions with a focus on conversion optimization. Dark mode preferred with clean aesthetics similar to Linear or Vercel.',
-        'tags' => ['ui design', 'figma', 'landing page', 'dark mode'],
-        'location' => 'remote',
-        'duration' => '5-7 days',
-        'applications' => 8,
-        'posted_time' => '5 hours ago'
-    ],
-    [
-        'id' => 3,
-        'votes' => 35,
-        'category' => 'research',
-        'due_days' => 7,
-        'spots_filled' => 1,
-        'spots_total' => 2,
-        'price' => 1200,
-        'title' => 'Conduct user research and competitive analysis for fintech app',
-        'description' => 'Need experienced UX researchers to conduct user interviews, analyze competitor products, and deliver insights for our new fintech application. Deliverables include research report, user personas, and journey maps. Experience in financial services preferred.',
-        'tags' => ['user research', 'competitive analysis', 'ux research', 'fintech', 'personas'],
-        'location' => 'remote',
-        'duration' => '7-10 days',
-        'applications' => 15,
-        'posted_time' => '1 day ago'
-    ]
-];
+// Initialize controller
+$bountyController = new BountyController();
+
+// Build filters from GET parameters
+$filters = [];
+if (!empty($_GET['category'])) {
+    // Get category ID from slug/name
+    $db = Database::getInstance();
+    $categoryResult = $db->queryOne("SELECT id FROM categories WHERE slug = ? OR name = ?", [$_GET['category'], $_GET['category']]);
+    if ($categoryResult) {
+        $filters['category_id'] = $categoryResult['id'];
+    }
+}
+
+if (!empty($_GET['min_price'])) {
+    $filters['budget_min'] = (float)$_GET['min_price'];
+}
+
+if (!empty($_GET['max_price'])) {
+    $filters['budget_max'] = (float)$_GET['max_price'];
+}
+
+// Default to only open bounties
+$filters['status'] = 'open';
+
+// Get sorting from tabs
+$sort = $_GET['sort'] ?? 'new';
+
+// Fetch bounties from database
+try {
+    $bounties = $bountyController->index($filters);
+
+    // Apply sorting
+    if ($sort === 'top') {
+        // Sort by application count (popularity)
+        usort($bounties, function($a, $b) {
+            return $b['application_count'] - $a['application_count'];
+        });
+    }
+    // 'new' is default (already sorted by created_at DESC)
+
+    // Transform bounties to match task-card.php expected format
+    $tasks = array_map(function($bounty) {
+        // Calculate days until deadline
+        $due_days = 'no deadline';
+        if (!empty($bounty['deadline'])) {
+            $deadline = new DateTime($bounty['deadline']);
+            $now = new DateTime();
+            $diff = $now->diff($deadline);
+            if ($diff->invert) {
+                $due_days = 'overdue';
+            } else {
+                $due_days = $diff->days;
+            }
+        }
+
+        // Calculate time ago
+        $created = new DateTime($bounty['created_at']);
+        $now = new DateTime();
+        $diff = $now->diff($created);
+
+        if ($diff->days > 0) {
+            $posted_time = $diff->days . ' day' . ($diff->days > 1 ? 's' : '') . ' ago';
+        } elseif ($diff->h > 0) {
+            $posted_time = $diff->h . ' hour' . ($diff->h > 1 ? 's' : '') . ' ago';
+        } else {
+            $posted_time = $diff->i . ' minute' . ($diff->i > 1 ? 's' : '') . ' ago';
+        }
+
+        // Convert skills array to tags
+        $tags = array_map(function($skill) {
+            return $skill['name'];
+        }, $bounty['skills'] ?? []);
+
+        return [
+            'id' => $bounty['id'],
+            'votes' => 0, // TODO: Implement bounty voting system
+            'category' => $bounty['category_slug'] ?? $bounty['category_name'] ?? 'other',
+            'due_days' => $due_days,
+            'spots_filled' => 0, // TODO: Implement from applications table
+            'spots_total' => 1, // TODO: Add spots field to bounties table
+            'price' => ($bounty['budget_min'] + $bounty['budget_max']) / 2 ?? $bounty['budget_min'] ?? $bounty['budget_max'] ?? 0,
+            'title' => $bounty['title'],
+            'description' => $bounty['description'],
+            'tags' => $tags,
+            'location' => 'remote', // TODO: Add location field to bounties table
+            'duration' => $due_days !== 'no deadline' && is_numeric($due_days) ? $due_days . ' days' : 'flexible',
+            'applications' => $bounty['application_count'] ?? 0,
+            'posted_time' => $posted_time
+        ];
+    }, $bounties);
+
+} catch (Exception $e) {
+    error_log("Error fetching bounties: " . $e->getMessage());
+    $tasks = [];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="assets/img/token/icon/up-gold.png">
+    <link rel="apple-touch-icon" href="assets/img/token/icon/up-gold.png">
+    <meta property="og:title" content="<?php echo APP_NAME; ?>">
+    <meta property="og:description" content="Post tasks, humans apply">
+    <meta property="og:image" content="https://redot.test/assets/img/token/icon/up-gold.png">
+    <meta property="og:url" content="https://redot.test">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="<?php echo APP_NAME; ?>">
+    <meta name="twitter:description" content="Post tasks, humans apply">
+    <meta name="twitter:image" content="https://redot.test/assets/img/token/icon/up-gold.png">
     <title>Task Bounties - <?php echo APP_NAME; ?></title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
     <?php include 'partials/header.php'; ?>
@@ -80,22 +138,29 @@ $tasks = [
 
             <section class="tabs-section">
                 <div class="tabs">
-                    <button class="tab active" data-tab="new">new</button>
-                    <button class="tab" data-tab="top">top</button>
+                    <a href="<?php echo url('index', array_merge($_GET, ['sort' => 'new'])); ?>" class="tab <?php echo ($sort === 'new' || empty($sort)) ? 'active' : ''; ?>" data-tab="new">new</a>
+                    <a href="<?php echo url('index', array_merge($_GET, ['sort' => 'top'])); ?>" class="tab <?php echo $sort === 'top' ? 'active' : ''; ?>" data-tab="top">top</a>
                 </div>
             </section>
 
             <section class="tasks-section">
                 <div class="tasks-list">
-                    <?php foreach ($tasks as $task): ?>
-                        <?php include 'partials/task-card.php'; ?>
-                    <?php endforeach; ?>
+                    <?php if (empty($tasks)): ?>
+                        <div class="empty-state" style="text-align: center; padding: 60px 20px; color: #71717a;">
+                            <p style="font-size: 1.125rem; margin-bottom: 8px;">no bounties found</p>
+                            <p style="font-size: 0.9375rem;">try adjusting your filters or <a href="<?php echo url('hire'); ?>" style="color: #4ade80; text-decoration: none;">post a new bounty</a></p>
+                        </div>
+                    <?php else: ?>
+                        <?php foreach ($tasks as $task): ?>
+                            <?php include 'partials/task-card.php'; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
             </section>
         </div>
     </main>
 
-    <script src="app.js"></script>
+    <script src="assets/js/app.js"></script>
     <?php include 'partials/footer.php'; ?>
 </body>
 </html>

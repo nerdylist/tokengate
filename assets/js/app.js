@@ -38,18 +38,39 @@ document.addEventListener('DOMContentLoaded', () => {
             const voteCountSpan = card.querySelector('.vote-count');
             const upvoteBtn = card.querySelector('.vote-up');
             const downvoteBtn = card.querySelector('.vote-down');
+            const upIcon = upvoteBtn.querySelector('.vote-icon');
+            const downIcon = downvoteBtn.querySelector('.vote-icon');
 
             // Update vote count if stored
             if (voteData.count !== null) {
                 voteCountSpan.textContent = voteData.count;
             }
 
-            // Apply voted class based on user's previous vote
+            // Apply voted class and icon based on user's previous vote
             if (voteData.userVote === 'up') {
                 upvoteBtn.classList.add('voted');
+                upIcon.src = upIcon.dataset.selected;
             } else if (voteData.userVote === 'down') {
                 downvoteBtn.classList.add('voted');
+                downIcon.src = downIcon.dataset.selected;
             }
+        });
+
+        // Add hover handlers for icon swapping
+        document.querySelectorAll('.vote-btn').forEach(btn => {
+            const icon = btn.querySelector('.vote-icon');
+
+            btn.addEventListener('mouseenter', () => {
+                if (!btn.classList.contains('voted')) {
+                    icon.src = icon.dataset.hover;
+                }
+            });
+
+            btn.addEventListener('mouseleave', () => {
+                if (!btn.classList.contains('voted')) {
+                    icon.src = icon.dataset.default;
+                }
+            });
         });
     };
 
@@ -97,6 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const voteCountSpan = card.querySelector('.vote-count');
         const upvoteBtn = card.querySelector('.vote-up');
         const downvoteBtn = card.querySelector('.vote-down');
+        const upIcon = upvoteBtn.querySelector('.vote-icon');
+        const downIcon = downvoteBtn.querySelector('.vote-icon');
         const isUpvote = voteBtn.classList.contains('vote-up');
 
         // Get current vote data
@@ -111,17 +134,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 newCount--;
                 newUserVote = null;
                 upvoteBtn.classList.remove('voted');
+                upIcon.src = upIcon.dataset.default;
             } else if (newUserVote === 'down') {
                 // Switch from downvote to upvote
                 newCount += 2;
                 newUserVote = 'up';
                 downvoteBtn.classList.remove('voted');
+                downIcon.src = downIcon.dataset.default;
                 upvoteBtn.classList.add('voted');
+                upIcon.src = upIcon.dataset.selected;
             } else {
                 // Add upvote
                 newCount++;
                 newUserVote = 'up';
                 upvoteBtn.classList.add('voted');
+                upIcon.src = upIcon.dataset.selected;
             }
         } else {
             // Downvote
@@ -130,17 +157,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 newCount++;
                 newUserVote = null;
                 downvoteBtn.classList.remove('voted');
+                downIcon.src = downIcon.dataset.default;
             } else if (newUserVote === 'up') {
                 // Switch from upvote to downvote
                 newCount -= 2;
                 newUserVote = 'down';
                 upvoteBtn.classList.remove('voted');
+                upIcon.src = upIcon.dataset.default;
                 downvoteBtn.classList.add('voted');
+                downIcon.src = downIcon.dataset.selected;
             } else {
                 // Add downvote
                 newCount--;
                 newUserVote = 'down';
                 downvoteBtn.classList.add('voted');
+                downIcon.src = downIcon.dataset.selected;
             }
         }
 

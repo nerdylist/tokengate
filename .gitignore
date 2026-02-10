@@ -1,3 +1,14 @@
+# Environment files
 .env
+.env.example
+
+# System files
 .DS_Store
+
+# Logs
 *.log
+
+# Directories
+.claude/
+tests/
+docs/
