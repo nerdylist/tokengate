@@ -12,3 +12,13 @@
 .claude/
 tests/
 docs/
+
+# Database files (should never be version controlled)
+*.db
+*.sqlite
+*.sqlite3
+database/*.db
+
+# User uploads
+uploads/*
+!uploads/.gitkeep
