@@ -13,8 +13,8 @@ RewriteCond %{REQUEST_FILENAME} !-d
 # /browse -> browse.php
 RewriteRule ^browse$ browse.php [L,QSA]
 
-# /bounties -> index.php
-RewriteRule ^bounties$ index.php [L,QSA]
+# /bounties -> bounties.php
+RewriteRule ^bounties$ bounties.php [L,QSA]
 
 # /hire -> hire.php
 RewriteRule ^hire$ hire.php [L,QSA]

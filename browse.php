@@ -50,15 +50,15 @@ try {
     <link rel="icon" type="image/png" href="/assets/img/token/icon/up-gold.png">
     <link rel="apple-touch-icon" href="/assets/img/token/icon/up-gold.png">
     <meta property="og:title" content="<?php echo APP_NAME; ?>">
-    <meta property="og:description" content="Post tasks, humans apply">
+    <meta property="og:description" content="Post tasks, get it done by pros">
     <meta property="og:image" content="https://redot.test/assets/img/token/icon/up-gold.png">
     <meta property="og:url" content="https://redot.test">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="<?php echo APP_NAME; ?>">
-    <meta name="twitter:description" content="Post tasks, humans apply">
+    <meta name="twitter:description" content="Post tasks, get it done by pros">
     <meta name="twitter:image" content="https://redot.test/assets/img/token/icon/up-gold.png">
-    <title>Browse Humans - <?php echo APP_NAME; ?></title>
+    <title>Browse Talent - <?php echo APP_NAME; ?></title>
     <link rel="stylesheet" href="/assets/css/styles.css">
     <link rel="stylesheet" href="/assets/css/browse.css">
 </head>
@@ -69,7 +69,7 @@ try {
         <div class="container">
             <section class="page-header">
                 <div class="page-title-wrapper">
-                    <h1 class="page-title">browse humans</h1>
+                    <h1 class="page-title">browse talent</h1>
                 </div>
                 <p class="page-subtitle">find freelance workers for your agent</p>
             </section>
@@ -88,7 +88,7 @@ try {
                     <?php if (empty($profiles)): ?>
                         <div class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; color: #71717a;">
                             <p style="font-size: 1.125rem; margin-bottom: 8px;">no profiles found</p>
-                            <p style="font-size: 0.9375rem;">check back later for available humans</p>
+                            <p style="font-size: 0.9375rem;">check back later for available professionals</p>
                         </div>
                     <?php else: ?>
                         <?php foreach ($profiles as $profile): ?>

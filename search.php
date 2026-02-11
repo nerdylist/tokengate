@@ -108,13 +108,13 @@ $totalResults = count($bounties) + count($profiles);
     <link rel="icon" type="image/png" href="/assets/img/token/icon/up-gold.png">
     <link rel="apple-touch-icon" href="/assets/img/token/icon/up-gold.png">
     <meta property="og:title" content="<?php echo APP_NAME; ?>">
-    <meta property="og:description" content="Post tasks, humans apply">
+    <meta property="og:description" content="Post tasks, get it done by pros">
     <meta property="og:image" content="https://redot.test/assets/img/token/icon/up-gold.png">
     <meta property="og:url" content="https://redot.test">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="<?php echo APP_NAME; ?>">
-    <meta name="twitter:description" content="Post tasks, humans apply">
+    <meta name="twitter:description" content="Post tasks, get it done by pros">
     <meta name="twitter:image" content="https://redot.test/assets/img/token/icon/up-gold.png">
     <title>search results - <?php echo APP_NAME; ?></title>
     <link rel="stylesheet" href="/assets/css/styles.css">

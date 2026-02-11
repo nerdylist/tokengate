@@ -89,6 +89,11 @@ try {
 
                 $bountyId = $controller->create($data);
 
+                // Save rank association if provided (single rank)
+                if (!empty($_POST['rank_id'])) {
+                    $controller->saveRankAssociations($bountyId, [$_POST['rank_id']]);
+                }
+
                 http_response_code(201);
                 echo json_encode([
                     'success' => true,

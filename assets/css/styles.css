@@ -96,6 +96,8 @@ input {
     display: flex;
     gap: 32px;
     align-items: center;
+    flex: 1;
+    justify-content: center;
 }
 
 .main-nav a {
@@ -125,8 +127,81 @@ input {
 
 .header-actions {
     display: flex;
-    gap: 16px;
+    gap: 12px;
     align-items: center;
+}
+
+/* Icon Buttons */
+.search-icon-btn,
+.user-icon-btn {
+    background-color: #151515;
+    border: 1px solid #333333;
+    border-radius: 8px;
+    padding: 8px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.search-icon-btn:hover,
+.user-icon-btn:hover {
+    background-color: #1a1a1a;
+    border-color: #555555;
+}
+
+.search-icon-btn svg,
+.user-icon-btn svg {
+    width: 20px;
+    height: 20px;
+    color: #9ca3af;
+    transition: color 0.2s ease;
+}
+
+.search-icon-btn:hover svg,
+.user-icon-btn:hover svg {
+    color: #ffffff;
+}
+
+/* User Menu Wrapper */
+.user-menu-wrapper {
+    position: relative;
+}
+
+/* User Dropdown */
+.user-dropdown {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    background-color: #1a1a1a;
+    border: 1px solid #2d2d2d;
+    border-radius: 8px;
+    padding: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    min-width: 180px;
+    z-index: 1000;
+    display: none;
+}
+
+.user-dropdown.active {
+    display: block;
+}
+
+.user-dropdown a {
+    display: block;
+    padding: 10px 12px;
+    color: #e5e5e5;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    font-size: 0.9375rem;
+}
+
+.user-dropdown a:hover {
+    background-color: #252525;
+    color: #ffffff;
 }
 
 .btn-join {
@@ -310,9 +385,100 @@ input {
     transform: translateX(50%);
 }
 
+/* === SEARCH MODAL === */
+.search-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-modal.active {
+    display: flex;
+}
+
+.search-modal-content {
+    position: relative;
+    background-color: #1a1a1a;
+    border: 1px solid #2d2d2d;
+    border-radius: 12px;
+    padding: 32px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+}
+
+.search-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    color: #9ca3af;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    line-height: 1;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+}
+
+.search-modal-close:hover {
+    color: #ffffff;
+}
+
+.search-modal form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.search-modal input[type="text"] {
+    width: 100%;
+    background-color: #0d0d0d;
+    border: 1px solid #2d2d2d;
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: #e5e5e5;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.search-modal input[type="text"]:focus {
+    border-color: #ff6b35;
+}
+
+.search-modal input[type="text"]::placeholder {
+    color: #6b7280;
+}
+
+.search-modal .btn-search {
+    background-color: #ff6b35;
+    color: #ffffff;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.search-modal .btn-search:hover {
+    background-color: #e55a28;
+}
+
 /* === MAIN CONTENT === */
 .main-content {
-    padding: 20px 0;
+    padding: 20px 0 20px 0;
 }
 
 /* === PAGE HEADER === */
@@ -320,8 +486,16 @@ input {
 /*    margin-bottom: 48px; */
 }
 
-.page-title-wrapper {
+.page-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
     margin-bottom: 12px;
+}
+
+.page-title-wrapper {
+    flex: 1;
 }
 
 .page-title {
@@ -334,6 +508,50 @@ input {
     display: inline-flex;
     align-items: center;
     gap: 16px;
+}
+
+.btn-hire {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #ff6b35;
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+}
+
+.btn-hire:hover {
+    background-color: #e55a28;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 107, 53, 0.4);
+}
+
+.btn-hire:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+}
+
+.btn-hire svg {
+    width: 16px;
+    height: 16px;
+    stroke-width: 2.5;
+}
+
+/* Empty state styling */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-state .btn-hire {
+    margin-top: 24px;
 }
 
 .badge-new {
@@ -692,6 +910,18 @@ input {
         order: 3;
         width: 100%;
         justify-content: center;
+        flex: 1 1 100%;
+    }
+
+    .page-header-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .btn-hire {
+        width: 100%;
+        justify-content: center;
     }
 
     .page-title {
@@ -719,6 +949,11 @@ input {
 
     .task-price {
         text-align: left;
+    }
+
+    .search-modal-content {
+        width: 95%;
+        padding: 24px;
     }
 }
 
@@ -821,4 +1056,186 @@ body > .skiptranslate {
 body {
     position: static !important;
     top: 0 !important;
+}
+
+/* === MY BOUNTIES PAGE === */
+
+/* Status Badges for Bounties */
+.badge-status-open {
+    background-color: #14532d;
+    color: #4ade80;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+}
+
+.badge-status-in_progress {
+    background-color: #1e293b;
+    color: #60a5fa;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+}
+
+.badge-status-completed {
+    background-color: #27272a;
+    color: #9ca3af;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+}
+
+.badge-status-closed {
+    background-color: #450a0a;
+    color: #ef4444;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+}
+
+/* Bounty Card Layout */
+.bounty-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 24px;
+    align-items: start;
+    background-color: #151515;
+    border: 1px solid #1a1a1a;
+    border-radius: 12px;
+    padding: 24px;
+    transition: all 0.2s ease;
+    margin-bottom: 16px;
+}
+
+.bounty-card:hover {
+    border-color: #2d2d2d;
+    background-color: #171717;
+}
+
+.bounty-status {
+    display: flex;
+    align-items: flex-start;
+}
+
+.bounty-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.bounty-info .task-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0;
+}
+
+.bounty-info .task-title a {
+    color: #ffffff;
+    transition: color 0.2s ease;
+}
+
+.bounty-info .task-title a:hover {
+    color: #ff6b35;
+}
+
+.bounty-info .task-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 0.875rem;
+    color: #9ca3af;
+}
+
+.bounty-info .task-meta .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.bounty-info .task-meta .meta-item strong {
+    color: #e5e5e5;
+}
+
+.bounty-action {
+    display: flex;
+    align-items: flex-start;
+}
+
+.bounty-action .btn-search {
+    white-space: nowrap;
+    padding: 10px 20px;
+    font-size: 0.875rem;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: #6b7280;
+}
+
+.empty-state svg {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 24px;
+    opacity: 0.3;
+    color: #9ca3af;
+}
+
+.empty-state h3 {
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+    color: #e5e5e5;
+    font-weight: 600;
+}
+
+.empty-state p {
+    font-size: 0.9375rem;
+    margin-bottom: 24px;
+    color: #6b7280;
+}
+
+
+/* Responsive adjustments for My Bounties */
+@media (max-width: 768px) {
+    .bounty-card {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .bounty-status {
+        justify-content: flex-start;
+    }
+
+    .bounty-action {
+        width: 100%;
+    }
+
+    .bounty-action .btn-search {
+        width: 100%;
+        text-align: center;
+    }
 }

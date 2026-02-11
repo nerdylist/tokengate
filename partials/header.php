@@ -5,10 +5,9 @@ require_once __DIR__ . '/../classes/Auth.php';
 
 $currentPage = basename($_SERVER['PHP_SELF']);
 
+$isHome = ($currentPage === 'index.php');
 $isBrowse = ($currentPage === 'browse.php');
-$isBounties = ($currentPage === 'index.php' || $currentPage === 'detail.php');
-$isHire = ($currentPage === 'hire.php');
-$isConnect = ($currentPage === 'connect.php');
+$isBounties = ($currentPage === 'bounties.php');
 
 $isLoggedIn = Auth::check();
 $currentUser = $isLoggedIn ? Auth::user() : null;
@@ -21,39 +20,57 @@ $isAdmin = $isLoggedIn && Auth::isAdmin();
                 <a href="<?php echo url('index'); ?>"><img src="/assets/img/token/logo/default.png" alt="<?php echo APP_NAME; ?>" class="site-logo"></a>
             </div>
             <nav class="main-nav">
+                <a href="<?php echo url('index'); ?>" <?php echo $isHome ? 'class="active"' : ''; ?>>home</a>
                 <a href="<?php echo url('browse'); ?>" <?php echo $isBrowse ? 'class="active"' : ''; ?>>browse</a>
-                <a href="<?php echo url('index'); ?>" <?php echo $isBounties ? 'class="active"' : ''; ?>>bounties</a>
-                <a href="<?php echo url('hire'); ?>" <?php echo $isHire ? 'class="active"' : ''; ?>>hire</a>
+                <a href="<?php echo url('bounties'); ?>" <?php echo $isBounties ? 'class="active"' : ''; ?>>bounties</a>
             </nav>
             <div class="header-actions">
+                <button id="search-icon-btn" class="search-icon-btn" aria-label="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
                 <?php if ($isLoggedIn): ?>
-                    <span class="user-email"><?php echo htmlspecialchars($currentUser['email']); ?></span>
-                    <?php if ($isAdmin): ?>
-                        <a href="/admin/" class="btn-admin" aria-label="Admin">
-                            <img src="https://nerd.biz/assets/fa/svgs/solid/gear.svg" alt="Admin" style="width: 20px; height: 20px;">
-                        </a>
-                    <?php endif; ?>
-                    <button class="btn-logout" onclick="handleLogout()" aria-label="Logout">
-                        <img src="https://nerd.biz/assets/fa/svgs/solid/key.svg" alt="Logout" style="width: 20px; height: 20px;">
-                    </button>
+                    <div class="user-menu-wrapper">
+                        <button id="user-menu-btn" class="user-icon-btn" aria-label="User menu">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </button>
+                        <div id="user-dropdown" class="user-dropdown">
+                            <a href="/profile.php">Profile</a>
+                            <a href="/my-bounties.php">My Bounties</a>
+                            <a href="/my-guilds.php">My Guilds</a>
+                            <a href="/settings.php">Settings</a>
+                            <?php if ($isAdmin): ?>
+                                <a href="/admin/">Admin</a>
+                            <?php endif; ?>
+                            <a href="#" onclick="handleLogout(); return false;">Logout</a>
+                        </div>
+                    </div>
                 <?php else: ?>
-                    <a href="connect.php" class="btn-join<?php echo $isConnect ? ' active' : ''; ?>">connect</a>
+                    <a href="connect.php" class="btn-join">login</a>
                     <a href="register.php" class="btn-join">register</a>
                 <?php endif; ?>
             </div>
         </div>
     </div>
 </header>
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-<script>
-function googleTranslateElementInit() {
-    new google.translate.TranslateElement({
-        pageLanguage: 'en',
-        includedLanguages: 'en,es,fr,de,tl,zh-CN,zh-TW',
-        autoDisplay: false
-    }, 'google_translate_element');
-}
 
+<!-- Search Modal -->
+<div id="search-modal" class="search-modal">
+    <div class="search-modal-content">
+        <button class="search-modal-close" id="search-modal-close" aria-label="Close search">&times;</button>
+        <form action="<?php echo url('search'); ?>" method="GET">
+            <input type="text" name="key" id="search-input" placeholder="Search..." autocomplete="off" />
+            <button type="submit" class="btn-search">Search</button>
+        </form>
+    </div>
+</div>
+
+<script>
 function handleLogout() {
     fetch('api/auth.php?action=logout', {
         method: 'POST'
@@ -70,5 +87,4 @@ function handleLogout() {
     });
 }
 </script>
-<div id="google_translate_element" style="display:none;"></div>
-<script src="/assets/js/language-selector.js"></script>
+<script src="/assets/js/header.js" defer></script>

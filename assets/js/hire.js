@@ -17,6 +17,58 @@ function initializePage() {
         const today = new Date().toISOString().split('T')[0];
         deadlineInput.setAttribute('min', today);
     }
+
+    // Load ranks for rank selection
+    loadRanks();
+}
+
+// === LOAD RANKS FROM API ===
+function loadRanks() {
+    const rankSelect = document.getElementById('rank');
+    if (!rankSelect) return;
+
+    fetch('/api/ranks.php')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.data) {
+                // Clear loading option
+                rankSelect.innerHTML = '';
+
+                // Add default "no requirement" option
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = 'no rank requirement';
+                rankSelect.appendChild(defaultOption);
+
+                // Deduplicate ranks by name (keep first occurrence)
+                const uniqueRanks = [];
+                const seenNames = new Set();
+
+                data.data.forEach(rank => {
+                    if (!seenNames.has(rank.name)) {
+                        seenNames.add(rank.name);
+                        uniqueRanks.push(rank);
+                    }
+                });
+
+                // Sort by level (ascending - lowest first)
+                uniqueRanks.sort((a, b) => a.level - b.level);
+
+                // Add all ranks in a single flat list
+                uniqueRanks.forEach(rank => {
+                    const option = document.createElement('option');
+                    option.value = rank.id;
+                    option.textContent = rank.name;
+                    rankSelect.appendChild(option);
+                });
+            } else {
+                rankSelect.innerHTML = '<option value="">no ranks available</option>';
+            }
+        })
+        .catch(error => {
+            console.error('Error loading ranks:', error);
+            rankSelect.innerHTML = '<option value="">error loading ranks</option>';
+        });
 }
 
 // === SETUP EVENT LISTENERS ===
@@ -186,6 +238,10 @@ function handleBountySubmit(e) {
         'other': 8
     };
 
+    // Get selected rank ID (single selection)
+    const rankSelect = document.getElementById('rank');
+    const selectedRankId = rankSelect.value ? parseInt(rankSelect.value) : null;
+
     // Prepare API data
     const apiData = {
         title: formData.title,
@@ -194,7 +250,8 @@ function handleBountySubmit(e) {
         budget_min: parseFloat(formData.budget),
         budget_max: parseFloat(formData.budget),
         deadline: formData.deadline || null,
-        skills: [] // TODO: Convert skill names to IDs via API
+        skills: [], // TODO: Convert skill names to IDs via API
+        rank_id: selectedRankId
     };
 
     // Make API call to create bounty

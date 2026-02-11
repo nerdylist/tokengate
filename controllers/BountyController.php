@@ -340,4 +340,45 @@ class BountyController
             throw new Exception("Failed to associate skills: " . $e->getMessage());
         }
     }
+
+    /**
+     * Get ranks for a bounty
+     * @param int $bountyId Bounty ID
+     * @return array List of ranks
+     */
+    public function getBountyRanks($bountyId)
+    {
+        try {
+            $sql = "SELECT r.id, r.name, r.level, r.type, r.description
+                    FROM ranks r
+                    INNER JOIN bounty_ranks br ON r.id = br.rank_id
+                    WHERE br.bounty_id = ?
+                    ORDER BY r.type, r.level";
+
+            return $this->db->query($sql, [$bountyId]);
+        } catch (Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Associate ranks with a bounty
+     * @param int $bountyId Bounty ID
+     * @param array $rankIds Array of rank IDs
+     */
+    public function saveRankAssociations($bountyId, $rankIds)
+    {
+        try {
+            if (empty($rankIds) || !is_array($rankIds)) {
+                return;
+            }
+
+            foreach ($rankIds as $rankId) {
+                $sql = "INSERT INTO bounty_ranks (bounty_id, rank_id, created_at) VALUES (?, ?, ?)";
+                $this->db->execute($sql, [$bountyId, $rankId, date('Y-m-d H:i:s')]);
+            }
+        } catch (Exception $e) {
+            throw new Exception("Failed to associate ranks: " . $e->getMessage());
+        }
+    }
 }

@@ -8,7 +8,7 @@ require_once __DIR__ . '/../middleware/admin.php';
 
 // Fetch all users with profile information
 $sql = "SELECT u.id, u.email, u.name, u.is_admin, u.created_at,
-       p.profile_id, p.id as profile_db_id
+       COALESCE(p.profile_id, u.profile_id) as profile_id, p.id as profile_db_id
 FROM users u
 LEFT JOIN profiles p ON u.id = p.user_id
 ORDER BY u.created_at DESC";
@@ -73,7 +73,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     ],
                     [
                         'type' => 'conditional',
-                        'condition' => 'profile_db_id',
+                        'condition' => 'profile_id_raw',
                         'label' => 'View Profile',
                         'class' => 'btn-secondary',
                         'onclick' => 'window.open("/profile.php?id={profile_id_raw}", "_blank")'

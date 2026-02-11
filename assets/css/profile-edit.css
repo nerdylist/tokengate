@@ -203,15 +203,6 @@
     position: relative;
 }
 
-.avatar-image-large {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #27272a;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
-}
-
 .avatar-edit-btn {
     position: absolute;
     bottom: 4px;

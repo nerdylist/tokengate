@@ -1,0 +1,413 @@
+/* ============================================
+   REVIEW APPLICANTS PAGE STYLES
+   Ultra-dark theme matching ShadCN aesthetic
+   ============================================ */
+
+/* === APPLICANTS CONTAINER === */
+.applicants-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-top: 32px;
+    margin-bottom: 48px;
+}
+
+/* === APPLICANT CARD === */
+.applicant-card {
+    background-color: #0d0d0d;
+    border: 1px solid #1a1a1a;
+    border-radius: 12px;
+    padding: 24px;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.applicant-card:hover {
+    border-color: #262626;
+    transform: translateY(-2px);
+}
+
+/* === APPLICANT HEADER === */
+.applicant-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+/* === APPLICANT AVATAR === */
+.applicant-avatar {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #1a1a1a;
+    border: 2px solid #262626;
+}
+
+.applicant-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #71717a;
+    background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+}
+
+/* === APPLICANT INFO === */
+.applicant-info {
+    flex: 1;
+}
+
+.applicant-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0 0 4px 0;
+}
+
+.applicant-profile-id {
+    font-size: 0.875rem;
+    color: #71717a;
+    margin: 0 0 8px 0;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.view-profile-link {
+    display: inline-block;
+    font-size: 0.875rem;
+    color: #4ade80;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.view-profile-link:hover {
+    color: #22c55e;
+}
+
+/* === APPLICANT STATUS === */
+.applicant-status {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.status-pending {
+    background-color: rgba(234, 179, 8, 0.1);
+    color: #eab308;
+    border: 1px solid rgba(234, 179, 8, 0.2);
+}
+
+.status-accepted {
+    background-color: rgba(74, 222, 128, 0.1);
+    color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, 0.2);
+}
+
+.status-rejected {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* === APPLICANT SKILLS === */
+.applicant-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.skill-tag {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #1a1a1a;
+    border: 1px solid #262626;
+    border-radius: 6px;
+    font-size: 0.8125rem;
+    color: #a1a1aa;
+    transition: all 0.2s ease;
+}
+
+.skill-tag:hover {
+    background-color: #262626;
+    color: #e5e5e5;
+}
+
+/* === APPLICANT RATES === */
+.applicant-rates {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 20px;
+    padding: 16px;
+    background-color: #0a0a0a;
+    border-radius: 8px;
+    border: 1px solid #1a1a1a;
+}
+
+.rate-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.rate-label {
+    font-size: 0.75rem;
+    color: #71717a;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.rate-value {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+/* === APPLICANT COVER LETTER === */
+.applicant-cover-letter {
+    margin-bottom: 20px;
+}
+
+.applicant-cover-letter h4 {
+    font-size: 0.875rem;
+    color: #a1a1aa;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 12px 0;
+}
+
+.applicant-cover-letter p {
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: #e5e5e5;
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+/* === APPLICANT META === */
+.applicant-meta {
+    margin-bottom: 20px;
+    padding-top: 12px;
+    border-top: 1px solid #1a1a1a;
+}
+
+.applied-date {
+    font-size: 0.8125rem;
+    color: #71717a;
+}
+
+/* === APPLICANT ACTIONS === */
+.applicant-actions {
+    display: flex;
+    gap: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #1a1a1a;
+}
+
+.btn-accept,
+.btn-decline {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: lowercase;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-accept {
+    background-color: rgba(74, 222, 128, 0.1);
+    color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, 0.3);
+}
+
+.btn-accept:hover {
+    background-color: rgba(74, 222, 128, 0.2);
+    border-color: #4ade80;
+}
+
+.btn-accept:active {
+    transform: scale(0.98);
+}
+
+.btn-decline {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.btn-decline:hover {
+    background-color: rgba(239, 68, 68, 0.2);
+    border-color: #ef4444;
+}
+
+.btn-decline:active {
+    transform: scale(0.98);
+}
+
+.btn-accept svg,
+.btn-decline svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* === BACK BUTTON === */
+.btn-back {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background-color: #1a1a1a;
+    color: #e5e5e5;
+    border: 1px solid #262626;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-back:hover {
+    background-color: #262626;
+    border-color: #404040;
+}
+
+.btn-back svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* === TOAST NOTIFICATION === */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 16px 24px;
+    background-color: #0d0d0d;
+    border: 1px solid #1a1a1a;
+    border-radius: 8px;
+    color: #e5e5e5;
+    font-size: 0.9375rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    animation: slideInUp 0.3s ease;
+    max-width: 400px;
+}
+
+.toast.success {
+    border-color: #4ade80;
+    background-color: rgba(74, 222, 128, 0.1);
+}
+
+.toast.error {
+    border-color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.1);
+}
+
+.toast.info {
+    border-color: #3b82f6;
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.toast.fade-out {
+    animation: fadeOut 0.3s ease forwards;
+}
+
+/* === ERROR MESSAGE === */
+.error-message {
+    background-color: #1a1a1a;
+    border: 1px solid #ef4444;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    color: #ef4444;
+}
+
+.error-message p {
+    margin: 0;
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 768px) {
+    .applicant-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .applicant-status {
+        position: static;
+        margin-top: 12px;
+    }
+
+    .applicant-avatar {
+        width: 64px;
+        height: 64px;
+    }
+
+    .applicant-rates {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .applicant-actions {
+        flex-direction: column;
+    }
+
+    .btn-accept,
+    .btn-decline {
+        width: 100%;
+    }
+
+    .toast {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        max-width: none;
+    }
+}

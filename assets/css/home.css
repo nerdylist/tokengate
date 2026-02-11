@@ -1,0 +1,372 @@
+/* ============================================
+   HOME PAGE STYLES
+   Ultra-dark, modern design (ShadCN aesthetic)
+   ============================================ */
+
+/* === HERO SECTION === */
+.hero-section {
+    padding: 120px 0 100px;
+    border-bottom: 1px solid #1a1a1a;
+}
+
+.hero-content {
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.hero-title {
+    font-family: 'Silkscreen', monospace;
+    font-size: 4rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    margin: 0 0 24px 0;
+    text-transform: lowercase;
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    color: #9ca3af;
+    font-weight: 400;
+    line-height: 1.6;
+    margin: 0 0 48px 0;
+    text-transform: lowercase;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-hero-primary {
+    background-color: #ff6b35;
+    color: #ffffff;
+    padding: 16px 32px;
+    border-radius: 8px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    text-transform: lowercase;
+    transition: all 0.2s ease;
+    border: 2px solid #ff6b35;
+}
+
+.btn-hero-primary:hover {
+    background-color: #e55a28;
+    border-color: #e55a28;
+    transform: translateY(-2px);
+}
+
+.btn-hero-secondary {
+    background-color: transparent;
+    color: #e5e5e5;
+    padding: 16px 32px;
+    border-radius: 8px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    text-transform: lowercase;
+    transition: all 0.2s ease;
+    border: 2px solid #2d2d2d;
+}
+
+.btn-hero-secondary:hover {
+    background-color: #151515;
+    border-color: #3d3d3d;
+    transform: translateY(-2px);
+}
+
+/* === SECTION COMMON STYLES === */
+.featured-bounties-section,
+.how-it-works-section,
+.popular-skills-section {
+    padding: 80px 0;
+    border-bottom: 1px solid #1a1a1a;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 48px;
+}
+
+.section-title {
+    font-family: 'Silkscreen', monospace;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.02em;
+    text-transform: lowercase;
+    margin: 0;
+}
+
+.section-link {
+    font-size: 1rem;
+    color: #9ca3af;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    text-transform: lowercase;
+}
+
+.section-link:hover {
+    color: #ff6b35;
+}
+
+/* === FEATURED BOUNTIES SECTION === */
+.placeholder-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.placeholder-card {
+    background-color: #151515;
+    border: 2px dashed #2d2d2d;
+    border-radius: 12px;
+    padding: 48px 24px;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+.placeholder-shimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 107, 53, 0.1) 50%,
+        transparent 100%
+    );
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+.placeholder-text {
+    font-size: 1rem;
+    color: #6b7280;
+    text-transform: lowercase;
+    font-style: italic;
+    z-index: 1;
+}
+
+/* === HOW IT WORKS SECTION === */
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 32px;
+}
+
+.step-card {
+    background-color: #151515;
+    border: 1px solid #1a1a1a;
+    border-radius: 12px;
+    padding: 40px 32px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.step-card:hover {
+    border-color: #ff6b35;
+    transform: translateY(-4px);
+}
+
+.step-number {
+    font-family: 'Silkscreen', monospace;
+    font-size: 3rem;
+    font-weight: 700;
+    color: #ff6b35;
+    margin: 0 0 24px 0;
+    line-height: 1;
+}
+
+.step-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 16px 0;
+    text-transform: lowercase;
+    letter-spacing: 0.01em;
+}
+
+.step-description {
+    font-size: 1rem;
+    color: #9ca3af;
+    line-height: 1.6;
+    margin: 0;
+    text-transform: lowercase;
+}
+
+/* === POPULAR SKILLS SECTION === */
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+}
+
+.skill-card {
+    background-color: #151515;
+    border: 1px solid #1a1a1a;
+    border-radius: 12px;
+    padding: 32px 24px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.skill-card:hover {
+    border-color: #2d2d2d;
+    background-color: #171717;
+}
+
+.skill-icon-placeholder {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 24px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    border-radius: 12px;
+    border: 2px dashed #3d3d3d;
+}
+
+.skill-name {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 12px 0;
+    text-transform: lowercase;
+    letter-spacing: 0.01em;
+}
+
+.skill-count {
+    font-size: 0.9375rem;
+    color: #6b7280;
+    margin: 0;
+    text-transform: lowercase;
+    font-style: italic;
+}
+
+/* === RESPONSIVE DESIGN === */
+@media (max-width: 1024px) {
+    .hero-title {
+        font-size: 3rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.25rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 60px 0 60px;
+    }
+
+    .hero-title {
+        font-size: 2.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.125rem;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-hero-primary,
+    .btn-hero-secondary {
+        width: 100%;
+        text-align: center;
+    }
+
+    .featured-bounties-section,
+    .how-it-works-section,
+    .popular-skills-section {
+        padding: 60px 0;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 32px;
+    }
+
+    .section-title {
+        font-size: 1.75rem;
+    }
+
+    .placeholder-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .steps-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .skills-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .btn-hero-primary,
+    .btn-hero-secondary {
+        font-size: 1rem;
+        padding: 14px 24px;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+    }
+
+    .step-number {
+        font-size: 2.5rem;
+    }
+
+    .step-title {
+        font-size: 1.25rem;
+    }
+
+    .skill-icon-placeholder {
+        width: 60px;
+        height: 60px;
+    }
+
+    .skill-name {
+        font-size: 1.125rem;
+    }
+}

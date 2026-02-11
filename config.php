@@ -40,7 +40,7 @@ loadEnv();
 
 // Define derived constants
 if (!defined('APP_NAME')) {
-    define('APP_NAME', 'rentahuman.ai');
+    define('APP_NAME', 'redot.pro');
 }
 
 if (!defined('APP_ENV')) {
@@ -64,6 +64,7 @@ function url($route, $params = []) {
             case 'browse':
                 return 'browse.php';
             case 'bounties':
+                return 'bounties.php';
             case 'index':
                 return 'index.php';
             case 'hire':
@@ -90,8 +91,9 @@ function url($route, $params = []) {
             case 'browse':
                 return '/browse';
             case 'bounties':
-            case 'index':
                 return '/bounties';
+            case 'index':
+                return '/';
             case 'hire':
                 return '/hire';
             case 'connect':

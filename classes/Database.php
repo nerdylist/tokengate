@@ -14,7 +14,8 @@ class Database
      */
     private function __construct()
     {
-        $dbPath = __DIR__ . '/../database/rentpeople.db';
+        $dbName = $_ENV['DB_NAME'] ?? 'g8.db';
+        $dbPath = __DIR__ . '/../database/' . $dbName;
 
         try {
             $this->pdo = new PDO('sqlite:' . $dbPath);

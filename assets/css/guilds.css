@@ -1,253 +1,175 @@
-/* ============================================
-   GUILD SYSTEM STYLES
-   Ultra-dark theme with rank-based colors
-   ============================================ */
-
-/* === PRIMARY GUILD BADGE (Profile Hero) === */
-.guild-badge-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background: #18181b;
-    border: 1px solid #27272a;
-    border-radius: 6px;
-    margin-bottom: 12px;
-    font-size: 0.875rem;
+/* Guild Membership Card Styles */
+.guild-membership-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 24px;
+    align-items: start;
+    background-color: #151515;
+    border: 1px solid #1a1a1a;
+    border-radius: 12px;
+    padding: 24px;
+    transition: all 0.2s ease;
+    margin-bottom: 16px;
 }
 
-.guild-icon {
-    font-size: 1rem;
+.guild-membership-card:hover {
+    border-color: #2d2d2d;
+    background-color: #171717;
 }
 
-.guild-name {
-    color: #e5e5e5;
-    font-weight: 600;
-    text-transform: lowercase;
-}
-
-.guild-rank {
-    font-weight: 700;
-    text-transform: lowercase;
-    font-family: 'Share Tech Mono', monospace;
-}
-
-/* === GUILD CARD (Profile Card Partial) === */
-.guild-badge-card {
+.guild-icon-wrapper {
     display: flex;
     align-items: center;
-    gap: 6px;
-    margin-top: 8px;
-    font-size: 0.75rem;
-    color: #a1a1aa;
+    justify-content: center;
 }
 
-.guild-icon-small {
-    font-size: 0.875rem;
+.guild-icon-large {
+    font-size: 3rem;
+    line-height: 1;
 }
 
-.guild-name-small {
-    color: #d4d4d8;
-    font-weight: 600;
-    text-transform: lowercase;
-}
-
-.guild-divider {
-    color: #52525b;
-}
-
-.guild-rank-small {
-    font-weight: 700;
-    text-transform: lowercase;
-    font-family: 'Share Tech Mono', monospace;
-}
-
-/* === GUILD MEMBERSHIPS SECTION === */
-.profile-guilds-section .section-content {
-    padding: 0;
-}
-
-.guilds-list {
+.guild-info {
+    flex: 1;
     display: flex;
     flex-direction: column;
+    gap: 12px;
+}
+
+.guild-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
     gap: 16px;
 }
 
-.guild-card {
-    background: #18181b;
-    border: 1px solid #27272a;
-    border-radius: 8px;
-    padding: 20px;
-    transition: all 0.2s ease;
-}
-
-.guild-card.guild-primary {
-    border-color: #22c55e;
-    background: #1a1a1a;
-}
-
-.guild-card:hover {
-    border-color: #3f3f46;
-    transform: translateX(4px);
-}
-
-.guild-card.guild-primary:hover {
-    border-color: #22c55e;
-}
-
-/* Guild Card Header */
-.guild-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #27272a;
-}
-
-.guild-card-title {
+.guild-name {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0;
+    color: #ffffff;
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.guild-card-title h3 {
-    font-size: 1.125rem;
-    font-family: 'Silkscreen', monospace;
-    color: #e5e5e5;
-    margin: 0;
-    text-transform: lowercase;
+.guild-rank {
+    display: flex;
+    align-items: center;
+}
+
+.rank-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 6px;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+    border: 1px solid;
 }
 
 .badge-primary {
-    padding: 4px 10px;
-    background: rgba(34, 197, 94, 0.15);
-    border: 1px solid #22c55e;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    color: #22c55e;
-    font-weight: 600;
-    text-transform: lowercase;
-}
-
-/* Rank Badge */
-.rank-badge {
-    padding: 6px 14px;
-    border: 1px solid;
+    font-family: 'Share Tech Mono', monospace;
+    background-color: #ff6b35;
+    color: #ffffff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 4px 8px;
     border-radius: 6px;
-    font-size: 0.875rem;
-    font-weight: 700;
-    text-transform: lowercase;
-    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 0.08em;
 }
 
-/* Guild Card XP Progress */
-.guild-card-xp {
-    margin-bottom: 16px;
+.guild-description {
+    color: #9ca3af;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin: 0;
 }
 
-.xp-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-}
-
-.xp-current {
-    font-size: 1rem;
-    font-weight: 700;
-    color: #e5e5e5;
-    font-family: 'Share Tech Mono', monospace;
-}
-
-.xp-next {
-    font-size: 0.75rem;
-    color: #71717a;
-    text-transform: lowercase;
-}
-
-/* XP Progress Bar */
-.xp-progress-bar {
-    width: 100%;
-    height: 8px;
-    background: #27272a;
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-.xp-progress-fill {
-    height: 100%;
-    border-radius: 4px;
-    transition: width 0.3s ease;
-    box-shadow: 0 0 8px currentColor;
-}
-
-/* Guild Skills Tags */
-.guild-card-skills {
+.guild-meta {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 16px;
+    font-size: 0.875rem;
+    color: #9ca3af;
 }
 
-.guild-skill-tag {
-    display: inline-flex;
+.guild-meta .meta-item {
+    display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: #0a0a0a;
-    border: 1px solid #27272a;
-    border-radius: 4px;
-    font-size: 0.8125rem;
-    color: #d4d4d8;
+    gap: 4px;
+}
+
+.guild-meta .meta-item strong {
+    color: #e5e5e5;
+}
+
+.guild-meta .meta-time {
+    color: #6b7280;
+    font-style: italic;
+}
+
+.guild-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+}
+
+.guild-actions .btn-search,
+.guild-actions .btn-secondary {
+    white-space: nowrap;
+    padding: 10px 20px;
+    font-size: 0.875rem;
+}
+
+.btn-secondary {
+    background-color: #1a1a1a;
+    color: #e5e5e5;
+    border: 1px solid #2d2d2d;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
     transition: all 0.2s ease;
 }
 
-.guild-skill-tag:hover {
-    border-color: #3f3f46;
-    background: #151515;
+.btn-secondary:hover {
+    background-color: #252525;
+    border-color: #3d3d3d;
 }
 
-.guild-skill-tag .skill-xp {
-    font-size: 0.75rem;
-    color: #71717a;
-    font-family: 'Share Tech Mono', monospace;
-}
-
-/* === RESPONSIVE DESIGN === */
+/* Responsive adjustments for My Guilds */
 @media (max-width: 768px) {
-    .guild-card-header {
+    .guild-membership-card {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .guild-icon-wrapper {
+        justify-content: flex-start;
+    }
+
+    .guild-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 12px;
     }
 
-    .xp-info {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
+    .guild-actions {
+        width: 100%;
+        align-items: stretch;
     }
 
-    .guild-badge-primary {
-        flex-wrap: wrap;
-    }
-}
-
-@media (max-width: 480px) {
-    .guild-card {
-        padding: 16px;
-    }
-
-    .guild-card-title {
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-
-    .guild-card-title h3 {
-        font-size: 1rem;
-    }
-
-    .guild-skill-tag {
-        font-size: 0.75rem;
-        padding: 4px 10px;
+    .guild-actions .btn-search,
+    .guild-actions .btn-secondary {
+        width: 100%;
+        text-align: center;
     }
 }

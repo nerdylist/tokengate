@@ -15,13 +15,13 @@ $alertMessage = $_GET['message'] ?? null;
     <link rel="icon" type="image/png" href="/assets/img/token/icon/up-gold.png">
     <link rel="apple-touch-icon" href="/assets/img/token/icon/up-gold.png">
     <meta property="og:title" content="<?php echo APP_NAME; ?>">
-    <meta property="og:description" content="Post tasks, humans apply">
+    <meta property="og:description" content="Post tasks, get it done by pros">
     <meta property="og:image" content="https://redot.test/assets/img/token/icon/up-gold.png">
     <meta property="og:url" content="https://redot.test">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="<?php echo APP_NAME; ?>">
-    <meta name="twitter:description" content="Post tasks, humans apply">
+    <meta name="twitter:description" content="Post tasks, get it done by pros">
     <meta name="twitter:image" content="https://redot.test/assets/img/token/icon/up-gold.png">
     <title>Hire - Post a Bounty - <?php echo APP_NAME; ?></title>
     <link rel="stylesheet" href="/assets/css/styles.css">
@@ -36,7 +36,7 @@ $alertMessage = $_GET['message'] ?? null;
                 <div class="page-title-wrapper">
                     <h1 class="page-title">post a bounty</h1>
                 </div>
-                <p class="page-subtitle">hire humans to complete your tasks</p>
+                <p class="page-subtitle">hire skilled professionals to complete your tasks</p>
             </section>
 
             <!-- Bounty Form Section -->
@@ -70,19 +70,28 @@ $alertMessage = $_GET['message'] ?? null;
                                     >
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="category">category *</label>
-                                    <select id="category" name="category" class="form-select" required>
-                                        <option value="">select a category</option>
-                                        <option value="documentation">DOCUMENTATION</option>
-                                        <option value="design">DESIGN</option>
-                                        <option value="research">RESEARCH</option>
-                                        <option value="development">DEVELOPMENT</option>
-                                        <option value="testing">TESTING</option>
-                                        <option value="devops">DEVOPS</option>
-                                        <option value="writing">WRITING</option>
-                                        <option value="other">OTHER</option>
-                                    </select>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="category">category *</label>
+                                        <select id="category" name="category" class="form-select" required>
+                                            <option value="">select a category</option>
+                                            <option value="documentation">DOCUMENTATION</option>
+                                            <option value="design">DESIGN</option>
+                                            <option value="research">RESEARCH</option>
+                                            <option value="development">DEVELOPMENT</option>
+                                            <option value="testing">TESTING</option>
+                                            <option value="devops">DEVOPS</option>
+                                            <option value="writing">WRITING</option>
+                                            <option value="other">OTHER</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="rank">rank requirements (optional)</label>
+                                        <select id="rank" name="rank" class="form-select">
+                                            <option value="">loading ranks...</option>
+                                        </select>
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
@@ -230,7 +239,7 @@ $alertMessage = $_GET['message'] ?? null;
                                 <div class="guideline-icon">✓</div>
                                 <div class="guideline-content">
                                     <h4 class="guideline-heading">write clear descriptions</h4>
-                                    <p class="guideline-text">be specific about requirements, deliverables, and expectations to attract the right humans</p>
+                                    <p class="guideline-text">be specific about requirements, deliverables, and expectations to attract the right professionals</p>
                                 </div>
                             </div>
 
@@ -246,7 +255,7 @@ $alertMessage = $_GET['message'] ?? null;
                                 <div class="guideline-icon">✓</div>
                                 <div class="guideline-content">
                                     <h4 class="guideline-heading">add relevant skills</h4>
-                                    <p class="guideline-text">list specific skills and technologies to help qualified humans find your bounty</p>
+                                    <p class="guideline-text">list specific skills and technologies to help qualified professionals find your bounty</p>
                                 </div>
                             </div>
 

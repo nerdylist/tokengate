@@ -187,7 +187,6 @@ $availabilityClass = 'status-' . $currentStatus['slug'];
                     </section>
 
                     <!-- Skills Section -->
-                    <?php if (!empty($skills)): ?>
                     <section class="profile-section profile-skills-section">
                         <h2 class="section-title">
                             skills
@@ -201,70 +200,85 @@ $availabilityClass = 'status-' . $currentStatus['slug'];
                             <?php endif; ?>
                         </h2>
                         <div class="section-content">
-                            <div class="skills-grid-profile">
-                                <?php foreach ($skills as $skill): ?>
-                                    <?php
-                                    $skillStatus = $skill['status'] ?? 'approved';
-                                    $statusClass = $skillStatus === 'pending' ? 'skill-pending' : 'skill-approved';
-                                    ?>
-                                    <a href="<?php echo url('search', ['key' => $skill['slug']]); ?>" class="skill-badge-profile <?php echo $statusClass; ?>">
-                                        <span class="skill-name">#<?php echo htmlspecialchars($skill['name']); ?></span>
-                                        <span class="skill-proficiency"><?php echo htmlspecialchars($skill['proficiency_level']); ?></span>
-                                    </a>
-                                <?php endforeach; ?>
-                            </div>
+                            <?php if (!empty($skills)): ?>
+                                <div class="skills-grid-profile">
+                                    <?php foreach ($skills as $skill): ?>
+                                        <?php
+                                        $skillStatus = $skill['status'] ?? 'approved';
+                                        $statusClass = $skillStatus === 'pending' ? 'skill-pending' : 'skill-approved';
+                                        ?>
+                                        <a href="<?php echo url('search', ['key' => $skill['slug']]); ?>" class="skill-badge-profile <?php echo $statusClass; ?>">
+                                            <span class="skill-name">#<?php echo htmlspecialchars($skill['name']); ?></span>
+                                            <span class="skill-proficiency"><?php echo htmlspecialchars($skill['proficiency_level']); ?></span>
+                                        </a>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php else: ?>
+                                <div class="empty-state-small">
+                                    <p class="empty-message">no skills added yet</p>
+                                    <?php if ($isOwnProfile): ?>
+                                        <button class="btn-search" onclick="openSkillsModal()">add a skill</button>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </section>
-                    <?php endif; ?>
 
                     <!-- Guild Memberships Section -->
-                    <?php if (!empty($guilds)): ?>
                     <section class="profile-section profile-guilds-section">
                         <h2 class="section-title">guild memberships</h2>
                         <div class="section-content">
-                            <div class="guilds-list">
-                                <?php foreach ($guilds as $guild): ?>
-                                    <div class="guild-card <?php echo $guild['is_primary'] ? 'guild-primary' : ''; ?>">
-                                        <div class="guild-card-header">
-                                            <div class="guild-card-title">
-                                                <span class="guild-icon">⚔️</span>
-                                                <h3><?php echo htmlspecialchars($guild['name']); ?></h3>
-                                                <?php if ($guild['is_primary']): ?>
-                                                    <span class="badge-primary">primary</span>
-                                                <?php endif; ?>
+                            <?php if (!empty($guilds)): ?>
+                                <div class="guilds-list">
+                                    <?php foreach ($guilds as $guild): ?>
+                                        <div class="guild-card <?php echo $guild['is_primary'] ? 'guild-primary' : ''; ?>">
+                                            <div class="guild-card-header">
+                                                <div class="guild-card-title">
+                                                    <span class="guild-icon">⚔️</span>
+                                                    <h3><?php echo htmlspecialchars($guild['name']); ?></h3>
+                                                    <?php if ($guild['is_primary']): ?>
+                                                        <span class="badge-primary">primary</span>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <div class="guild-card-rank">
+                                                    <?php
+                                                    $rank = $profileModel->calculateRank($guild['total_xp']);
+                                                    ?>
+                                                    <span class="rank-badge" style="background: <?php echo $rank['color']; ?>20; color: <?php echo $rank['color']; ?>; border-color: <?php echo $rank['color']; ?>">
+                                                        <?php echo htmlspecialchars($rank['name']); ?>
+                                                    </span>
+                                                </div>
                                             </div>
-                                            <div class="guild-card-rank">
-                                                <?php
-                                                $rank = $profileModel->calculateRank($guild['total_xp']);
-                                                ?>
-                                                <span class="rank-badge" style="background: <?php echo $rank['color']; ?>20; color: <?php echo $rank['color']; ?>; border-color: <?php echo $rank['color']; ?>">
-                                                    <?php echo htmlspecialchars($rank['name']); ?>
-                                                </span>
+                                            <div class="guild-card-xp">
+                                                <div class="xp-info">
+                                                    <span class="xp-current"><?php echo number_format($guild['total_xp']); ?> XP</span>
+                                                    <span class="xp-next">Next: <?php echo htmlspecialchars($rank['next_rank']); ?> (<?php echo number_format($rank['next_rank_xp']); ?> XP)</span>
+                                                </div>
+                                                <div class="xp-progress-bar">
+                                                    <div class="xp-progress-fill" style="width: <?php echo $rank['progress_percent']; ?>%; background: <?php echo $rank['color']; ?>"></div>
+                                                </div>
+                                            </div>
+                                            <div class="guild-card-skills">
+                                                <?php foreach ($guild['skills'] as $skill): ?>
+                                                    <span class="guild-skill-tag">
+                                                        <?php echo htmlspecialchars($skill['name']); ?>
+                                                        <span class="skill-xp"><?php echo number_format($skill['xp']); ?> XP</span>
+                                                    </span>
+                                                <?php endforeach; ?>
                                             </div>
                                         </div>
-                                        <div class="guild-card-xp">
-                                            <div class="xp-info">
-                                                <span class="xp-current"><?php echo number_format($guild['total_xp']); ?> XP</span>
-                                                <span class="xp-next">Next: <?php echo htmlspecialchars($rank['next_rank']); ?> (<?php echo number_format($rank['next_rank_xp']); ?> XP)</span>
-                                            </div>
-                                            <div class="xp-progress-bar">
-                                                <div class="xp-progress-fill" style="width: <?php echo $rank['progress_percent']; ?>%; background: <?php echo $rank['color']; ?>"></div>
-                                            </div>
-                                        </div>
-                                        <div class="guild-card-skills">
-                                            <?php foreach ($guild['skills'] as $skill): ?>
-                                                <span class="guild-skill-tag">
-                                                    <?php echo htmlspecialchars($skill['name']); ?>
-                                                    <span class="skill-xp"><?php echo number_format($skill['xp']); ?> XP</span>
-                                                </span>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php else: ?>
+                                <div class="empty-state-small">
+                                    <p class="empty-message">no guild memberships yet</p>
+                                    <?php if ($isOwnProfile): ?>
+                                        <button class="btn-search" onclick="alert('Join Guild feature coming soon!')">join a guild</button>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </section>
-                    <?php endif; ?>
                 </div>
 
                 <!-- Right Column: Stats & Actions -->
@@ -299,10 +313,10 @@ $availabilityClass = 'status-' . $currentStatus['slug'];
 
                     <!-- Action Card -->
                     <div class="action-card">
-                        <h3 class="action-title">hire this human</h3>
+                        <h3 class="action-title">hire this professional</h3>
                         <p class="action-description">browse bounties and connect with <?php echo htmlspecialchars($user['name']); ?></p>
                         <a href="<?php echo url('bounties'); ?>" class="btn btn-primary btn-full">view bounties</a>
-                        <a href="<?php echo url('browse'); ?>" class="btn btn-secondary btn-full">browse more humans</a>
+                        <a href="<?php echo url('browse'); ?>" class="btn btn-secondary btn-full">browse more talent</a>
                     </div>
                 </aside>
             </div>
