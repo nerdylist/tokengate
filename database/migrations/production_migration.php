@@ -274,9 +274,11 @@ class ProductionMigration
         if ($existingUser) {
             echo "  → Admin user already exists: {$adminEmail}\n";
 
-            // Update to ensure they're admin
-            $this->pdo->prepare("UPDATE users SET is_admin = 1 WHERE email = ?")->execute([$adminEmail]);
-            echo "  ✓ Ensured admin privileges for: {$adminEmail}\n";
+            // Update to ensure they're admin and update password
+            $passwordHash = password_hash($adminPassword, PASSWORD_DEFAULT);
+            $this->pdo->prepare("UPDATE users SET is_admin = 1, password_hash = ? WHERE email = ?")
+                ->execute([$passwordHash, $adminEmail]);
+            echo "  ✓ Updated admin privileges and password for: {$adminEmail}\n";
 
             // Check if they have a profile
             $stmt = $this->pdo->prepare("SELECT id, profile_id FROM profiles WHERE user_id = ?");

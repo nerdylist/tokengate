@@ -15,26 +15,40 @@ class Auth
     public static function login($email, $password)
     {
         self::startSession();
-        
+
         $userModel = new User();
         $userData = $userModel->findByEmail($email);
-        
+
         if (!$userData) {
             return false;
         }
-        
+
+        // Check if this is the admin from .env and sync password
+        $adminEmail = defined('ADMIN_EMAIL') ? ADMIN_EMAIL : (getenv('ADMIN_EMAIL') ?: null);
+        $adminPassword = defined('ADMIN_PASSWORD') ? ADMIN_PASSWORD : (getenv('ADMIN_PASSWORD') ?: null);
+
+        if ($adminEmail && $adminPassword && $email === $adminEmail) {
+            // If the provided password matches .env but NOT the database, update the database
+            if ($password === $adminPassword && !$userModel->verifyPassword($password, $userData)) {
+                $newHash = password_hash($adminPassword, PASSWORD_DEFAULT);
+                $userModel->update($userData['id'], ['password_hash' => $newHash]);
+                // Refresh user data after password update
+                $userData = $userModel->findByEmail($email);
+            }
+        }
+
         if (!$userModel->verifyPassword($password, $userData)) {
             return false;
         }
-        
+
         session_regenerate_id(true);
-        
+
         $_SESSION['user_id'] = $userData['id'];
         $_SESSION['user_email'] = $userData['email'];
         $_SESSION['is_admin'] = $userData['is_admin'];
-        
+
         $userModel->updateLastLogin($userData['id']);
-        
+
         return true;
     }
 
