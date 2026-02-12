@@ -12,7 +12,7 @@
  *   - 8 categories (Web Dev, Mobile, Design, Writing, Marketing, Data Science, Business, Photography)
  *   - 30 skills across all categories
  *   - 4 guilds with gamification ranks
- *   - 20 ranks (5 per guild type)
+ *   - 20 ranks (10 modern + 10 traditional from data files)
  *   - 10 user profiles with bios and hourly rates
  *   - 33 profile skills with XP
  *   - 10 profile guild memberships
@@ -237,44 +237,57 @@ try {
     echo "  ✓ Created " . count($guilds) . " guilds\n\n";
 
     // ========================================
-    // SEED RANKS
+    // SEED RANKS (from data/modern.md and data/traditional.md)
     // ========================================
     echo "Seeding ranks...\n";
-    $ranks = [
-        // Code Warriors ranks
-        ['name' => 'Novice Coder', 'level' => 1, 'type' => 'development', 'xp_required' => 0, 'description' => 'Just starting the journey'],
-        ['name' => 'Junior Developer', 'level' => 2, 'type' => 'development', 'xp_required' => 100, 'description' => 'Learning the ropes'],
-        ['name' => 'Developer', 'level' => 3, 'type' => 'development', 'xp_required' => 500, 'description' => 'Confident and capable'],
-        ['name' => 'Senior Developer', 'level' => 4, 'type' => 'development', 'xp_required' => 1500, 'description' => 'Experienced professional'],
-        ['name' => 'Code Master', 'level' => 5, 'type' => 'development', 'xp_required' => 5000, 'description' => 'Elite coding expert'],
 
-        // Design Dragons ranks
-        ['name' => 'Apprentice Designer', 'level' => 1, 'type' => 'design', 'xp_required' => 0, 'description' => 'Beginning the creative path'],
-        ['name' => 'Junior Designer', 'level' => 2, 'type' => 'design', 'xp_required' => 100, 'description' => 'Developing style'],
-        ['name' => 'Designer', 'level' => 3, 'type' => 'design', 'xp_required' => 500, 'description' => 'Established creative'],
-        ['name' => 'Senior Designer', 'level' => 4, 'type' => 'design', 'xp_required' => 1500, 'description' => 'Design leader'],
-        ['name' => 'Design Grandmaster', 'level' => 5, 'type' => 'design', 'xp_required' => 5000, 'description' => 'Legendary designer'],
+    // Parse ranks from markdown files
+    function parseRanks($file, $type) {
+        $content = file_get_contents($file);
+        $lines = explode("\n", $content);
+        $ranks = [];
+        $xpLevels = [0, 100, 500, 1500, 3500, 7000, 12000, 20000, 35000, 60000];
+        $inRankSection = false;
+        $rankIndex = 0;
 
-        // Word Wizards ranks
-        ['name' => 'Wordsmith', 'level' => 1, 'type' => 'writing', 'xp_required' => 0, 'description' => 'Crafting first sentences'],
-        ['name' => 'Scribe', 'level' => 2, 'type' => 'writing', 'xp_required' => 100, 'description' => 'Finding voice'],
-        ['name' => 'Author', 'level' => 3, 'type' => 'writing', 'xp_required' => 500, 'description' => 'Published writer'],
-        ['name' => 'Master Writer', 'level' => 4, 'type' => 'writing', 'xp_required' => 1500, 'description' => 'Acclaimed wordsmith'],
-        ['name' => 'Legendary Bard', 'level' => 5, 'type' => 'writing', 'xp_required' => 5000, 'description' => 'Epic storyteller'],
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if ($type === 'modern' && strpos($line, 'UNIVERSAL GUILD RANK SYSTEM') !== false) {
+                $inRankSection = true;
+                continue;
+            }
+            if ($type === 'traditional' && strpos($line, 'GUILD RANK STRUCTURE') !== false) {
+                $inRankSection = true;
+                continue;
+            }
+            if ($inRankSection && strpos($line, '===') !== false) {
+                continue;
+            }
+            if ($inRankSection && strpos($line, 'GUILDS') !== false) {
+                break;
+            }
+            if ($inRankSection && !empty($line) && strpos($line, '===') === false) {
+                $ranks[] = [
+                    'name' => $line,
+                    'level' => $rankIndex + 1,
+                    'type' => $type,
+                    'xp_required' => $xpLevels[$rankIndex] ?? 0
+                ];
+                $rankIndex++;
+            }
+        }
+        return $ranks;
+    }
 
-        // Data Druids ranks
-        ['name' => 'Data Seeker', 'level' => 1, 'type' => 'data', 'xp_required' => 0, 'description' => 'Starting to analyze'],
-        ['name' => 'Analyst', 'level' => 2, 'type' => 'data', 'xp_required' => 100, 'description' => 'Finding patterns'],
-        ['name' => 'Data Scientist', 'level' => 3, 'type' => 'data', 'xp_required' => 500, 'description' => 'Scientific approach'],
-        ['name' => 'Senior Analyst', 'level' => 4, 'type' => 'data', 'xp_required' => 1500, 'description' => 'Expert insights'],
-        ['name' => 'Data Sage', 'level' => 5, 'type' => 'data', 'xp_required' => 5000, 'description' => 'Wisdom from data']
-    ];
+    $modernRanks = parseRanks(__DIR__ . '/../data/modern.md', 'modern');
+    $traditionalRanks = parseRanks(__DIR__ . '/../data/traditional.md', 'traditional');
+    $ranks = array_merge($modernRanks, $traditionalRanks);
 
     foreach ($ranks as $rank) {
-        $pdo->prepare("INSERT INTO ranks (name, level, type, xp_required, description) VALUES (?, ?, ?, ?, ?)")
-            ->execute([$rank['name'], $rank['level'], $rank['type'], $rank['xp_required'], $rank['description']]);
+        $pdo->prepare("INSERT INTO ranks (name, level, type, xp_required) VALUES (?, ?, ?, ?)")
+            ->execute([$rank['name'], $rank['level'], $rank['type'], $rank['xp_required']]);
     }
-    echo "  ✓ Created " . count($ranks) . " ranks\n\n";
+    echo "  ✓ Created " . count($ranks) . " ranks (modern + traditional)\n\n";
 
     // ========================================
     // SEED PROFILES
@@ -345,17 +358,26 @@ try {
     // SEED PROFILE GUILDS
     // ========================================
     echo "Seeding profile_guilds...\n";
+
+    // Get rank IDs for assignment (using modern ranks for simplicity)
+    $ranksByLevel = [];
+    $rankResult = $pdo->query("SELECT id, level, type FROM ranks WHERE type = 'modern' ORDER BY level");
+    while ($row = $rankResult->fetch(PDO::FETCH_ASSOC)) {
+        $ranksByLevel[$row['level']] = $row['id'];
+    }
+
+    // Assign profiles to guilds with appropriate ranks based on XP
     $profileGuilds = [
-        ['profile_id' => 1, 'guild_id' => 1, 'rank_id' => 5, 'xp' => 5500, 'is_primary' => 1],
-        ['profile_id' => 2, 'guild_id' => 1, 'rank_id' => 4, 'xp' => 2200, 'is_primary' => 1],
-        ['profile_id' => 3, 'guild_id' => 2, 'rank_id' => 9, 'xp' => 2800, 'is_primary' => 1],
-        ['profile_id' => 4, 'guild_id' => 3, 'rank_id' => 13, 'xp' => 1200, 'is_primary' => 1],
-        ['profile_id' => 5, 'guild_id' => 1, 'rank_id' => 5, 'xp' => 6200, 'is_primary' => 1],
-        ['profile_id' => 6, 'guild_id' => 2, 'rank_id' => 8, 'xp' => 800, 'is_primary' => 1],
-        ['profile_id' => 7, 'guild_id' => 3, 'rank_id' => 12, 'xp' => 350, 'is_primary' => 1],
-        ['profile_id' => 8, 'guild_id' => 1, 'rank_id' => 3, 'xp' => 650, 'is_primary' => 1],
-        ['profile_id' => 9, 'guild_id' => 1, 'rank_id' => 2, 'xp' => 180, 'is_primary' => 1],
-        ['profile_id' => 10, 'guild_id' => 4, 'rank_id' => 19, 'xp' => 3200, 'is_primary' => 1]
+        ['profile_id' => 1, 'guild_id' => 1, 'rank_id' => $ranksByLevel[6] ?? 1, 'xp' => 8500, 'is_primary' => 1],  // Expert level
+        ['profile_id' => 2, 'guild_id' => 1, 'rank_id' => $ranksByLevel[4] ?? 1, 'xp' => 2200, 'is_primary' => 1],  // Journeyman
+        ['profile_id' => 3, 'guild_id' => 2, 'rank_id' => $ranksByLevel[5] ?? 1, 'xp' => 4800, 'is_primary' => 1],  // Specialist
+        ['profile_id' => 4, 'guild_id' => 3, 'rank_id' => $ranksByLevel[4] ?? 1, 'xp' => 1800, 'is_primary' => 1],  // Journeyman
+        ['profile_id' => 5, 'guild_id' => 1, 'rank_id' => $ranksByLevel[6] ?? 1, 'xp' => 9200, 'is_primary' => 1],  // Expert
+        ['profile_id' => 6, 'guild_id' => 2, 'rank_id' => $ranksByLevel[3] ?? 1, 'xp' => 800, 'is_primary' => 1],   // Apprentice
+        ['profile_id' => 7, 'guild_id' => 3, 'rank_id' => $ranksByLevel[3] ?? 1, 'xp' => 650, 'is_primary' => 1],   // Apprentice
+        ['profile_id' => 8, 'guild_id' => 1, 'rank_id' => $ranksByLevel[4] ?? 1, 'xp' => 1750, 'is_primary' => 1],  // Journeyman
+        ['profile_id' => 9, 'guild_id' => 1, 'rank_id' => $ranksByLevel[2] ?? 1, 'xp' => 180, 'is_primary' => 1],   // Novice
+        ['profile_id' => 10, 'guild_id' => 4, 'rank_id' => $ranksByLevel[5] ?? 1, 'xp' => 4200, 'is_primary' => 1]  // Specialist
     ];
 
     foreach ($profileGuilds as $pg) {
