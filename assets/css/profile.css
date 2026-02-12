@@ -71,24 +71,24 @@
 .guild-badge-primary {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
+    gap: 6px;
+    padding: 6px 12px;
     background: linear-gradient(135deg, rgba(255, 204, 0, 0.1) 0%, rgba(255, 153, 0, 0.1) 100%);
     border: 1px solid rgba(255, 204, 0, 0.3);
-    border-radius: 6px;
+    border-radius: 4px;
     margin-bottom: 12px;
     font-family: 'Share Tech Mono', monospace;
 }
 
 .guild-badge-primary .guild-icon {
-    font-size: 1.2rem;
+    font-size: 0.875rem;
     line-height: 1;
 }
 
 .guild-badge-primary .guild-name {
     font-weight: 600;
     color: #FFCC00;
-    font-size: 0.95rem;
+    font-size: 0.875rem;
 }
 
 .guild-badge-primary .guild-rank {
