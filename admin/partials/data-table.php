@@ -102,10 +102,10 @@ function renderDataTable($columns, $data, $actions = []) {
 
                                             // Replace {row} placeholder with entire row as JSON
                                             if (strpos($onclick, '{row}') !== false) {
-                                                $onclick = str_replace('{row}', htmlspecialchars(json_encode($row), ENT_QUOTES, 'UTF-8'), $onclick);
+                                                $onclick = str_replace('{row}', json_encode($row), $onclick);
                                             }
                                             if (strpos($href, '{row}') !== false) {
-                                                $href = str_replace('{row}', htmlspecialchars(json_encode($row), ENT_QUOTES, 'UTF-8'), $href);
+                                                $href = str_replace('{row}', json_encode($row), $href);
                                             }
 
                                             // Replace {id} placeholder with actual row ID
