@@ -50,6 +50,12 @@ $guilds = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 $actions = [
                     [
+                        'type' => 'link',
+                        'label' => 'Open',
+                        'class' => 'btn-success',
+                        'href' => '/guild.php?id={id}'
+                    ],
+                    [
                         'type' => 'button',
                         'label' => 'Edit',
                         'class' => 'btn-primary',

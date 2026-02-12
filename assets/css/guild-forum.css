@@ -1,0 +1,676 @@
+/* ============================================
+   GUILD FORUM STYLES
+   Ultra-dark theme, Share Tech Mono font
+   ============================================ */
+
+/* === IMPORT FONTS === */
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+/* === CSS VARIABLES === */
+:root {
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #151515;
+    --bg-tertiary: #1a1a1a;
+    --accent: #FFCC00;
+    --text-primary: #ffffff;
+    --text-secondary: #999999;
+    --text-muted: #666666;
+    --danger: #ff4444;
+    --success: #44ff44;
+    --warning: #ffaa00;
+    --border: #333333;
+    --shadow: rgba(0, 0, 0, 0.5);
+}
+
+/* === GUILD FORUM HEADER === */
+.guild-forum-header {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.guild-forum-header h1 {
+    font-size: 28px;
+    color: var(--accent);
+    margin-bottom: 10px;
+}
+
+.guild-forum-header p {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin: 0;
+}
+
+/* === FORUM CONTROLS === */
+.forum-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 15px;
+}
+
+.forum-controls .search-box {
+    flex: 1;
+    max-width: 400px;
+}
+
+.forum-controls .search-box input {
+    width: 100%;
+    padding: 12px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.forum-controls .search-box input:focus {
+    border-color: var(--accent);
+    outline: none;
+}
+
+.forum-controls .btn-create-thread {
+    background: var(--accent);
+    color: #000000;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    white-space: nowrap;
+}
+
+.forum-controls .btn-create-thread:hover {
+    background: #e6b800;
+    transform: translateY(-1px);
+}
+
+/* === THREAD LIST TABLE === */
+.thread-list-table {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+.thread-list-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.thread-list-table thead {
+    background: var(--bg-tertiary);
+}
+
+.thread-list-table thead th {
+    padding: 15px;
+    text-align: left;
+    font-weight: normal;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.thread-list-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s ease;
+}
+
+.thread-list-table tbody tr:nth-child(odd) {
+    background: var(--bg-primary);
+}
+
+.thread-list-table tbody tr:nth-child(even) {
+    background: var(--bg-secondary);
+}
+
+.thread-list-table tbody tr:hover {
+    background: var(--bg-tertiary);
+}
+
+.thread-list-table tbody td {
+    padding: 15px;
+    color: var(--text-primary);
+}
+
+.thread-list-table .thread-title {
+    font-weight: bold;
+    color: var(--accent);
+}
+
+.thread-list-table .thread-title a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.thread-list-table .thread-title a:hover {
+    color: #e6b800;
+}
+
+.thread-list-table .thread-author {
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.thread-list-table .thread-stats {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.thread-list-table .thread-date {
+    color: var(--text-muted);
+    font-size: 13px;
+    text-align: right;
+}
+
+/* === THREAD DETAIL VIEW === */
+.thread-detail-view {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+.thread-detail-header {
+    padding: 25px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-tertiary);
+}
+
+.thread-detail-header h1 {
+    font-size: 24px;
+    color: var(--accent);
+    margin-bottom: 15px;
+}
+
+.thread-meta {
+    display: flex;
+    gap: 20px;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.thread-meta .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.thread-meta strong {
+    color: var(--text-primary);
+}
+
+/* === THREAD CONTENT === */
+.thread-content {
+    padding: 25px;
+}
+
+.original-post {
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 20px;
+}
+
+.post-author {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.post-author-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border);
+}
+
+.post-author-info {
+    flex: 1;
+}
+
+.post-author-name {
+    font-weight: bold;
+    color: var(--accent);
+    font-size: 16px;
+}
+
+.post-author-role {
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.post-content {
+    color: var(--text-primary);
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 15px;
+}
+
+.post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+/* === COMMENTS SECTION === */
+.comments-section {
+    padding: 25px;
+    border-top: 1px solid var(--border);
+}
+
+.comments-section h3 {
+    font-size: 18px;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+}
+
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+/* === COMMENT ITEM === */
+.comment-item {
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    transition: all 0.2s ease;
+}
+
+.comment-item:hover {
+    border-color: var(--accent);
+    background: var(--bg-tertiary);
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.comment-author {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.comment-author-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg-tertiary);
+    border: 2px solid var(--border);
+}
+
+.comment-author-name {
+    font-weight: bold;
+    color: var(--accent);
+    font-size: 14px;
+}
+
+.comment-date {
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.comment-content {
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+/* === COMMENT FORM === */
+.comment-form {
+    background: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.comment-form h4 {
+    font-size: 16px;
+    color: var(--text-primary);
+    margin-bottom: 15px;
+}
+
+.comment-form .form-group {
+    margin-bottom: 15px;
+}
+
+.comment-form .form-group label {
+    display: block;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.comment-form .form-group textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-family: 'Share Tech Mono', monospace;
+    resize: vertical;
+}
+
+.comment-form .form-group textarea:focus {
+    border-color: var(--accent);
+    outline: none;
+}
+
+.comment-form .btn-submit {
+    background: var(--accent);
+    color: #000000;
+    padding: 12px 24px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.comment-form .btn-submit:hover {
+    background: #e6b800;
+}
+
+/* === MODAL CREATE THREAD === */
+.modal-create-thread {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-create-thread.active {
+    display: flex;
+}
+
+.modal-create-thread .modal {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px var(--shadow);
+}
+
+.modal-create-thread .modal-header {
+    padding: 20px 25px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-create-thread .modal-header h3 {
+    margin: 0;
+    color: var(--accent);
+    font-size: 20px;
+}
+
+.modal-create-thread .modal-close {
+    background: none;
+    color: var(--text-secondary);
+    font-size: 24px;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+}
+
+.modal-create-thread .modal-close:hover {
+    color: var(--danger);
+}
+
+.modal-create-thread .modal-body {
+    padding: 25px;
+}
+
+.modal-create-thread .form-group {
+    margin-bottom: 20px;
+}
+
+.modal-create-thread .form-group label {
+    display: block;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.modal-create-thread .form-group input,
+.modal-create-thread .form-group textarea {
+    width: 100%;
+    padding: 12px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.modal-create-thread .form-group input:focus,
+.modal-create-thread .form-group textarea:focus {
+    border-color: var(--accent);
+    outline: none;
+}
+
+.modal-create-thread .form-group textarea {
+    resize: vertical;
+    min-height: 150px;
+}
+
+.modal-create-thread .modal-footer {
+    padding: 20px 25px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.modal-create-thread .btn-cancel {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.modal-create-thread .btn-cancel:hover {
+    background: var(--bg-secondary);
+    border-color: var(--accent);
+}
+
+.modal-create-thread .btn-primary {
+    background: var(--accent);
+    color: #000000;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.modal-create-thread .btn-primary:hover {
+    background: #e6b800;
+}
+
+/* === BADGES === */
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.badge-pinned {
+    background: var(--accent);
+    color: #000000;
+}
+
+.badge-locked {
+    background: var(--danger);
+    color: var(--text-primary);
+}
+
+.badge-sticky {
+    background: var(--success);
+    color: #000000;
+}
+
+/* === EMPTY STATE === */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+}
+
+.empty-state h3 {
+    font-size: 20px;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* === PAGINATION === */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.pagination .page-btn {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pagination .page-btn:hover {
+    background: var(--bg-tertiary);
+    border-color: var(--accent);
+}
+
+.pagination .page-btn.active {
+    background: var(--accent);
+    color: #000000;
+    border-color: var(--accent);
+}
+
+.pagination .page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+    .forum-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .forum-controls .search-box {
+        max-width: 100%;
+    }
+
+    .forum-controls .btn-create-thread {
+        width: 100%;
+    }
+
+    .thread-list-table {
+        overflow-x: auto;
+    }
+
+    .thread-list-table table {
+        min-width: 600px;
+    }
+
+    .thread-meta {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .post-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .comment-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+
+/* === UTILITIES === */
+.text-center {
+    text-align: center;
+}
+
+.text-muted {
+    color: var(--text-muted);
+}
+
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: 10px; }
+.mb-2 { margin-bottom: 20px; }
+.mb-3 { margin-bottom: 30px; }
+
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: 10px; }
+.mt-2 { margin-top: 20px; }
+.mt-3 { margin-top: 30px; }
