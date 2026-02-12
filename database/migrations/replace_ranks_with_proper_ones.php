@@ -12,7 +12,7 @@
 
 require_once __DIR__ . '/../../config.php';
 
-$dbPath = __DIR__ . '/../g8.db';
+$dbPath = __DIR__ . '/../' . DB_NAME;
 
 if (!file_exists($dbPath)) {
     echo "Error: Database file not found at {$dbPath}\n";

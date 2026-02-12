@@ -14,7 +14,7 @@ class Database
      */
     private function __construct()
     {
-        $dbName = $_ENV['DB_NAME'] ?? 'g8.db';
+        $dbName = defined('DB_NAME') ? DB_NAME : 'g8.db';
         $dbPath = __DIR__ . '/../database/' . $dbName;
 
         try {

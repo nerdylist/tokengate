@@ -49,15 +49,11 @@ if (strlen(ADMIN_PASSWORD) < 8) {
 
 // Connect to database
 try {
-    $dbPath = ROOT_DIR . '/database/rentpeople.db';
+    $dbPath = ROOT_DIR . '/database/' . DB_NAME;
 
     // Check if database file exists
     if (!file_exists($dbPath)) {
-        // Try alternate database path
-        $dbPath = ROOT_DIR . '/database/redot.db';
-        if (!file_exists($dbPath)) {
-            die("Error: Database file not found at /database/rentpeople.db or /database/redot.db\n");
-        }
+        die("Error: Database file not found at /database/" . DB_NAME . "\n");
     }
 
     echo "Connecting to database: " . basename($dbPath) . "\n";

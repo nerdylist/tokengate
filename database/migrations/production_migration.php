@@ -21,7 +21,7 @@ class ProductionMigration
     public function __construct()
     {
         $this->backupDir = __DIR__ . '/../backups';
-        $this->dbPath = __DIR__ . '/../g8.db';
+        $this->dbPath = __DIR__ . '/../' . DB_NAME;
 
         // Create backups directory if it doesn't exist
         if (!is_dir($this->backupDir)) {
@@ -50,7 +50,7 @@ class ProductionMigration
             $this->seedAdminUser();
 
             echo "\n✓ Migration completed successfully!\n";
-            echo "✓ Database: g8.db\n";
+            echo "✓ Database: " . DB_NAME . "\n";
             echo "✓ Backups saved to: {$this->backupDir}\n\n";
 
         } catch (Exception $e) {
@@ -65,7 +65,7 @@ class ProductionMigration
         echo "Step 1: Backing up existing databases...\n";
 
         $timestamp = date('Y-m-d_H-i-s');
-        $databases = ['rentpeople.db', 'redot.db', 'g8.db'];
+        $databases = ['rentpeople.db', 'redot.db', DB_NAME];
 
         foreach ($databases as $db) {
             $dbFile = __DIR__ . '/../' . $db;
@@ -81,9 +81,9 @@ class ProductionMigration
 
     private function createNewDatabase()
     {
-        echo "Step 2: Creating new g8.db with updated schema...\n";
+        echo "Step 2: Creating new " . DB_NAME . " with updated schema...\n";
 
-        // Remove existing g8.db if it exists
+        // Remove existing database if it exists
         if (file_exists($this->dbPath)) {
             unlink($this->dbPath);
         }
@@ -97,7 +97,7 @@ class ProductionMigration
         $schema = file_get_contents(__DIR__ . '/../schema.sql');
         $this->pdo->exec($schema);
 
-        echo "  ✓ Created g8.db with base schema\n\n";
+        echo "  ✓ Created " . DB_NAME . " with base schema\n\n";
     }
 
     private function migrateData()
@@ -120,7 +120,7 @@ class ProductionMigration
         }
 
         if (!$sourceDb) {
-            echo "  ⚠ No source database found (rentpeople.db or redot.db)\n";
+            echo "  ⚠ No source database found (legacy rentpeople.db or redot.db)\n";
             echo "  ✓ Starting with fresh database\n\n";
             return;
         }

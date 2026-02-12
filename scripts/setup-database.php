@@ -46,7 +46,7 @@ if (strlen(ADMIN_PASSWORD) < 8) {
 
 // Setup database connection
 try {
-    $dbPath = ROOT_DIR . '/database/redot.db';
+    $dbPath = ROOT_DIR . '/database/' . DB_NAME;
     $schemaPath = ROOT_DIR . '/database/schema.sql';
 
     // Check if schema file exists

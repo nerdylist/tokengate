@@ -4,7 +4,7 @@
 
 The `production_migration.php` script handles the complete database migration for production deployment, including:
 
-1. **Database Consolidation** - Merges `rentpeople.db` and `redot.db` into `g8.db`
+1. **Database Consolidation** - Merges legacy `rentpeople.db` and `redot.db` into the database specified in .env (DB_NAME)
 2. **Schema Updates** - Adds columns for guild/skill hierarchy system
 3. **Admin User Seeding** - Creates admin user from `.env` credentials
 
@@ -36,8 +36,8 @@ php database/migrations/production_migration.php
 - Creates fresh `g8.db` with base schema from `database/schema.sql`
 
 ### Step 3: Migrate Data
-- Automatically detects which source database exists (`rentpeople.db` or `redot.db`)
-- Migrates all data from source to new `g8.db`
+- Automatically detects which legacy source database exists (`rentpeople.db` or `redot.db`)
+- Migrates all data from source to new database (specified by DB_NAME in .env)
 - Uses `INSERT OR IGNORE` to prevent duplicate entries
 
 ### Step 4: Update Schema
@@ -89,9 +89,10 @@ If anything goes wrong:
 1. Backups are stored in `database/backups/`
 2. Restore from backup:
    ```bash
-   cp database/backups/rentpeople_backup_YYYY-MM-DD_HH-MM-SS.db database/rentpeople.db
+   # Replace YYYY-MM-DD_HH-MM-SS with your backup timestamp
+   cp database/backups/{database}_backup_YYYY-MM-DD_HH-MM-SS.db database/{DB_NAME}
    ```
-3. Update `.env` to point to restored database
+3. Verify `.env` points to correct database
 
 ## Troubleshooting
 

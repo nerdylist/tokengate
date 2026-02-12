@@ -55,7 +55,7 @@ nano .env
 php scripts/setup-database.php
 
 # 3. Verify the database was created
-ls -lh database/redot.db
+ls -lh database/g8.db
 ```
 
 ### Output
@@ -130,8 +130,8 @@ php scripts/reset-admin-password.php
 ### Requirements
 
 - PHP CLI access
-- Valid `.env` file with `ADMIN_EMAIL` and `ADMIN_PASSWORD` defined
-- Writable database at `/database/rentpeople.db` or `/database/redot.db`
+- Valid `.env` file with `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and `DB_NAME` defined
+- Writable database directory (`/database/`)
 
 ### Example
 

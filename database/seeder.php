@@ -33,7 +33,7 @@
 require_once __DIR__ . '/../config.php';
 
 // Get the database path
-$dbPath = __DIR__ . '/g8.db';
+$dbPath = __DIR__ . '/' . DB_NAME;
 
 // Check if database exists
 if (!file_exists($dbPath)) {
