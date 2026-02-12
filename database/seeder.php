@@ -12,7 +12,7 @@
  *   - 8 categories (Web Dev, Mobile, Design, Writing, Marketing, Data Science, Business, Photography)
  *   - 30 skills across all categories
  *   - 4 guilds with gamification ranks
- *   - 20 ranks (10 modern + 10 traditional from data files)
+ *   - 14 unified ranks (merged from modern + traditional, duplicates removed)
  *   - 10 user profiles with bios and hourly rates
  *   - 33 profile skills with XP
  *   - 10 profile guild memberships
@@ -237,57 +237,54 @@ try {
     echo "  ✓ Created " . count($guilds) . " guilds\n\n";
 
     // ========================================
-    // SEED RANKS (from data/modern.md and data/traditional.md)
+    // SEED RANKS (from data/ranks.md - unified rank system)
     // ========================================
     echo "Seeding ranks...\n";
 
-    // Parse ranks from markdown files
-    function parseRanks($file, $type) {
+    // Parse ranks from unified ranks.md file
+    function parseRanks($file) {
         $content = file_get_contents($file);
         $lines = explode("\n", $content);
         $ranks = [];
-        $xpLevels = [0, 100, 500, 1500, 3500, 7000, 12000, 20000, 35000, 60000];
         $inRankSection = false;
-        $rankIndex = 0;
 
         foreach ($lines as $line) {
             $line = trim($line);
-            if ($type === 'modern' && strpos($line, 'UNIVERSAL GUILD RANK SYSTEM') !== false) {
+
+            if (strpos($line, 'UNIVERSAL GUILD RANK SYSTEM') !== false) {
                 $inRankSection = true;
                 continue;
             }
-            if ($type === 'traditional' && strpos($line, 'GUILD RANK STRUCTURE') !== false) {
-                $inRankSection = true;
-                continue;
-            }
+
             if ($inRankSection && strpos($line, '===') !== false) {
                 continue;
             }
-            if ($inRankSection && strpos($line, 'GUILDS') !== false) {
-                break;
-            }
+
             if ($inRankSection && !empty($line) && strpos($line, '===') === false) {
-                $ranks[] = [
-                    'name' => $line,
-                    'level' => $rankIndex + 1,
-                    'type' => $type,
-                    'xp_required' => $xpLevels[$rankIndex] ?? 0
-                ];
-                $rankIndex++;
+                $ranks[] = $line;
             }
         }
         return $ranks;
     }
 
-    $modernRanks = parseRanks(__DIR__ . '/../data/modern.md', 'modern');
-    $traditionalRanks = parseRanks(__DIR__ . '/../data/traditional.md', 'traditional');
-    $ranks = array_merge($modernRanks, $traditionalRanks);
+    $rankNames = parseRanks(__DIR__ . '/../data/ranks.md');
+    $xpLevels = [0, 100, 500, 1500, 3500, 7000, 12000, 20000, 35000, 60000, 100000, 150000, 250000, 400000];
+
+    $ranks = [];
+    foreach ($rankNames as $index => $rankName) {
+        $ranks[] = [
+            'name' => $rankName,
+            'level' => $index + 1,
+            'type' => 'universal',
+            'xp_required' => $xpLevels[$index] ?? ($xpLevels[count($xpLevels) - 1] * 2)
+        ];
+    }
 
     foreach ($ranks as $rank) {
         $pdo->prepare("INSERT INTO ranks (name, level, type, xp_required) VALUES (?, ?, ?, ?)")
             ->execute([$rank['name'], $rank['level'], $rank['type'], $rank['xp_required']]);
     }
-    echo "  ✓ Created " . count($ranks) . " ranks (modern + traditional)\n\n";
+    echo "  ✓ Created " . count($ranks) . " unified ranks\n\n";
 
     // ========================================
     // SEED PROFILES
@@ -359,9 +356,9 @@ try {
     // ========================================
     echo "Seeding profile_guilds...\n";
 
-    // Get rank IDs for assignment (using modern ranks for simplicity)
+    // Get rank IDs for assignment (using universal ranks)
     $ranksByLevel = [];
-    $rankResult = $pdo->query("SELECT id, level, type FROM ranks WHERE type = 'modern' ORDER BY level");
+    $rankResult = $pdo->query("SELECT id, level FROM ranks ORDER BY level");
     while ($row = $rankResult->fetch(PDO::FETCH_ASSOC)) {
         $ranksByLevel[$row['level']] = $row['id'];
     }

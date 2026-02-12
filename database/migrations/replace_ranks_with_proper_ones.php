@@ -19,8 +19,8 @@ if (!file_exists($dbPath)) {
     exit(1);
 }
 
-// Parse ranks from markdown files
-function parseRanks($file, $type) {
+// Parse ranks from ranks.md file
+function parseRanks($file) {
     $content = file_get_contents($file);
     $lines = explode("\n", $content);
     $ranks = [];
@@ -28,20 +28,16 @@ function parseRanks($file, $type) {
 
     foreach ($lines as $line) {
         $line = trim($line);
-        if ($type === 'modern' && strpos($line, 'UNIVERSAL GUILD RANK SYSTEM') !== false) {
+
+        if (strpos($line, 'UNIVERSAL GUILD RANK SYSTEM') !== false) {
             $inRankSection = true;
             continue;
         }
-        if ($type === 'traditional' && strpos($line, 'GUILD RANK STRUCTURE') !== false) {
-            $inRankSection = true;
-            continue;
-        }
+
         if ($inRankSection && strpos($line, '===') !== false) {
             continue;
         }
-        if ($inRankSection && strpos($line, 'GUILDS') !== false) {
-            break;
-        }
+
         if ($inRankSection && !empty($line) && strpos($line, '===') === false) {
             $ranks[] = $line;
         }
@@ -68,36 +64,11 @@ try {
     $deletedCount = $pdo->exec("DELETE FROM ranks");
     echo "  ✓ Deleted {$deletedCount} incorrect ranks\n\n";
 
-    // Parse ranks from both files
-    echo "Parsing ranks from data files...\n";
-    $modernRanks = parseRanks(__DIR__ . '/../../data/modern.md', 'modern');
-    $traditionalRanks = parseRanks(__DIR__ . '/../../data/traditional.md', 'traditional');
+    // Parse ranks from unified ranks.md file
+    echo "Parsing ranks from data/ranks.md...\n";
+    $mergedRanks = parseRanks(__DIR__ . '/../../data/ranks.md');
 
-    echo "  ✓ Found " . count($modernRanks) . " modern ranks\n";
-    echo "  ✓ Found " . count($traditionalRanks) . " traditional ranks\n\n";
-
-    // Merge and remove duplicates (case-insensitive)
-    echo "Merging ranks and removing duplicates...\n";
-    $mergedRanks = [];
-    $seen = [];
-
-    foreach ($modernRanks as $rank) {
-        $key = strtolower($rank);
-        if (!isset($seen[$key])) {
-            $mergedRanks[] = $rank;
-            $seen[$key] = true;
-        }
-    }
-
-    foreach ($traditionalRanks as $rank) {
-        $key = strtolower($rank);
-        if (!isset($seen[$key])) {
-            $mergedRanks[] = $rank;
-            $seen[$key] = true;
-        }
-    }
-
-    echo "  ✓ Merged to " . count($mergedRanks) . " unique ranks\n\n";
+    echo "  ✓ Found " . count($mergedRanks) . " unique ranks\n\n";
 
     // Assign XP levels based on position
     $xpLevels = [0, 100, 500, 1500, 3500, 7000, 12000, 20000, 35000, 60000, 100000, 150000, 250000, 400000];
