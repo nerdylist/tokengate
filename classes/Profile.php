@@ -184,8 +184,7 @@ class Profile extends Model
                     s.id as skill_id,
                     s.name as skill_name,
                     ps.proficiency_level,
-                    ps.xp,
-                    ps.is_primary_guild
+                    ps.xp
                 FROM categories c
                 INNER JOIN skills s ON c.id = s.category_id
                 INNER JOIN profile_skills ps ON s.id = ps.skill_id
@@ -217,10 +216,6 @@ class Profile extends Model
             ];
 
             $guilds[$guildId]['total_xp'] += $row['xp'];
-
-            if ($row['is_primary_guild'] == 1) {
-                $guilds[$guildId]['is_primary'] = true;
-            }
         }
 
         return array_values($guilds);
