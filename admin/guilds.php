@@ -53,7 +53,7 @@ $guilds = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         'type' => 'button',
                         'label' => 'Edit',
                         'class' => 'btn-primary',
-                        'onclick' => 'openEditModal(' . json_encode('{row}') . ')'
+                        'onclick' => 'openEditModal({row})'
                     ],
                     [
                         'type' => 'button',
@@ -248,7 +248,7 @@ $guilds = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </script>
 
     <style>
-        .modal {
+        #guildModal.modal {
             display: none;
             position: fixed;
             z-index: 1000;
@@ -259,6 +259,10 @@ $guilds = $stmt->fetchAll(PDO::FETCH_ASSOC);
             background-color: rgba(0, 0, 0, 0.7);
             align-items: center;
             justify-content: center;
+            max-width: none;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
         }
 
         .modal-content {
