@@ -214,7 +214,7 @@ try {
     ];
 
     foreach ($skills as $skill) {
-        $pdo->prepare("INSERT INTO skills (name, slug, category_id, description) VALUES (?, ?, ?, ?)")
+        $pdo->prepare("INSERT INTO skills (name, slug, category_id, description, status) VALUES (?, ?, ?, ?, 'approved')")
             ->execute([$skill['name'], $skill['slug'], $skill['category_id'], $skill['description']]);
     }
     echo "  ✓ Created " . count($skills) . " skills\n\n";

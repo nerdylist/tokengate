@@ -37,13 +37,17 @@ CREATE TABLE IF NOT EXISTS skills (
     name VARCHAR(100) NOT NULL,
     slug VARCHAR(100) NOT NULL UNIQUE,
     category_id INTEGER NOT NULL,
+    status VARCHAR(50) DEFAULT 'approved',
+    submitted_by_profile_id INTEGER,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE CASCADE,
+    FOREIGN KEY (submitted_by_profile_id) REFERENCES profiles(id) ON DELETE SET NULL
 );
 
 CREATE INDEX idx_skills_slug ON skills(slug);
 CREATE INDEX idx_skills_category ON skills(category_id);
+CREATE INDEX idx_skills_status ON skills(status);
 
 -- Pending Skills Table
 CREATE TABLE IF NOT EXISTS pending_skills (
