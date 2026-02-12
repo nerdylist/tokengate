@@ -128,6 +128,26 @@ try {
             echo json_encode($result);
             break;
 
+        case 'create_guild':
+            $data = json_decode(file_get_contents('php://input'), true);
+            if (empty($data['name']) || empty($data['slug']) || empty($data['type'])) {
+                echo json_encode(['success' => false, 'message' => 'Missing required fields']);
+                exit;
+            }
+            $result = $controller->createGuild($data);
+            echo json_encode($result);
+            break;
+
+        case 'update_guild':
+            $data = json_decode(file_get_contents('php://input'), true);
+            if (empty($data['id']) || empty($data['name']) || empty($data['slug']) || empty($data['type'])) {
+                echo json_encode(['success' => false, 'message' => 'Missing required fields']);
+                exit;
+            }
+            $result = $controller->updateGuild($data);
+            echo json_encode($result);
+            break;
+
         case 'delete_guild':
             $guildId = $input['guild_id'] ?? null;
 

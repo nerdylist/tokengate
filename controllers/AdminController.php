@@ -593,4 +593,97 @@ class AdminController
             return ['success' => false, 'message' => 'Error deleting profile status: ' . $e->getMessage()];
         }
     }
+
+    /**
+     * Create guild
+     * @param array $data Guild data
+     * @return array Success/error response
+     */
+    public function createGuild($data)
+    {
+        try {
+            // Validate required fields
+            if (empty($data['name']) || empty($data['slug']) || empty($data['type'])) {
+                return ['success' => false, 'message' => 'Name, slug, and type are required'];
+            }
+
+            // Validate slug format
+            if (!preg_match('/^[a-z0-9-]+$/', $data['slug'])) {
+                return ['success' => false, 'message' => 'Invalid slug format. Use lowercase letters, numbers, and hyphens only'];
+            }
+
+            // Check if slug already exists
+            $stmt = $this->db->prepare("SELECT id FROM guilds WHERE slug = ?");
+            $stmt->execute([$data['slug']]);
+            if ($stmt->fetch()) {
+                return ['success' => false, 'message' => 'A guild with this slug already exists'];
+            }
+
+            // Validate type
+            $validTypes = ['modern', 'traditional', 'universal', 'development', 'design', 'writing'];
+            if (!in_array($data['type'], $validTypes)) {
+                return ['success' => false, 'message' => 'Invalid type. Must be one of: ' . implode(', ', $validTypes)];
+            }
+
+            $stmt = $this->db->prepare("INSERT INTO guilds (name, slug, type, description, icon, created_at, updated_at) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
+            $stmt->execute([
+                $data['name'],
+                $data['slug'],
+                $data['type'],
+                $data['description'] ?? null,
+                $data['icon'] ?? null
+            ]);
+
+            return ['success' => true, 'message' => 'Guild created successfully'];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Error creating guild: ' . $e->getMessage()];
+        }
+    }
+
+    /**
+     * Update guild
+     * @param array $data Guild data
+     * @return array Success/error response
+     */
+    public function updateGuild($data)
+    {
+        try {
+            // Validate required fields
+            if (empty($data['id']) || empty($data['name']) || empty($data['slug']) || empty($data['type'])) {
+                return ['success' => false, 'message' => 'ID, name, slug, and type are required'];
+            }
+
+            // Validate slug format
+            if (!preg_match('/^[a-z0-9-]+$/', $data['slug'])) {
+                return ['success' => false, 'message' => 'Invalid slug format. Use lowercase letters, numbers, and hyphens only'];
+            }
+
+            // Check if slug already exists (excluding current record)
+            $stmt = $this->db->prepare("SELECT id FROM guilds WHERE slug = ? AND id != ?");
+            $stmt->execute([$data['slug'], $data['id']]);
+            if ($stmt->fetch()) {
+                return ['success' => false, 'message' => 'A guild with this slug already exists'];
+            }
+
+            // Validate type
+            $validTypes = ['modern', 'traditional', 'universal', 'development', 'design', 'writing'];
+            if (!in_array($data['type'], $validTypes)) {
+                return ['success' => false, 'message' => 'Invalid type. Must be one of: ' . implode(', ', $validTypes)];
+            }
+
+            $stmt = $this->db->prepare("UPDATE guilds SET name = ?, slug = ?, type = ?, description = ?, icon = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?");
+            $stmt->execute([
+                $data['name'],
+                $data['slug'],
+                $data['type'],
+                $data['description'] ?? null,
+                $data['icon'] ?? null,
+                $data['id']
+            ]);
+
+            return ['success' => true, 'message' => 'Guild updated successfully'];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Error updating guild: ' . $e->getMessage()];
+        }
+    }
 }
