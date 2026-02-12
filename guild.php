@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/middleware/guild_member.php';
+require_once __DIR__ . '/classes/Database.php';
 require_once __DIR__ . '/classes/Guild.php';
 require_once __DIR__ . '/classes/User.php';
 
@@ -21,7 +22,7 @@ $members = $guildModel->members($guild_id);
 $memberCount = count($members);
 
 // Fetch threads or thread detail
-$db = $guildModel->getDb();
+$db = Database::getInstance();
 
 if ($thread_id) {
     // Thread detail view

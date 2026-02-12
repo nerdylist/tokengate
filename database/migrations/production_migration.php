@@ -3,7 +3,7 @@
  * Production Migration Script
  *
  * This script handles:
- * 1. Database consolidation (rentpeople.db + redot.db → g8.db)
+ * 1. Database g8.db
  * 2. Schema updates for guild/skill hierarchy
  * 3. Admin user creation from .env
  *

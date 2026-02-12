@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../config/session.php';
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../classes/Auth.php';
+require_once __DIR__ . '/../classes/Profile.php';
 
 $currentPage = basename($_SERVER['PHP_SELF']);
 
@@ -12,6 +13,13 @@ $isBounties = ($currentPage === 'bounties.php');
 $isLoggedIn = Auth::check();
 $currentUser = $isLoggedIn ? Auth::user() : null;
 $isAdmin = $isLoggedIn && Auth::isAdmin();
+
+// Get user's profile for the Profile link
+$userProfile = null;
+if ($isLoggedIn) {
+    $profileModel = new Profile();
+    $userProfile = $profileModel->where('user_id', '=', Auth::id())->first();
+}
 ?>
 <header class="site-header">
     <div class="container">
@@ -40,7 +48,11 @@ $isAdmin = $isLoggedIn && Auth::isAdmin();
                             </svg>
                         </button>
                         <div id="user-dropdown" class="user-dropdown">
-                            <a href="/profile.php">Profile</a>
+                            <?php if ($userProfile): ?>
+                                <a href="<?php echo url('profile', ['id' => $userProfile['profile_id']]); ?>">Profile</a>
+                            <?php else: ?>
+                                <a href="/profile.php">Profile</a>
+                            <?php endif; ?>
                             <a href="/my-bounties.php">My Bounties</a>
                             <a href="/my-guilds.php">My Guilds</a>
                             <a href="/settings.php">Settings</a>
