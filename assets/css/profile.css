@@ -18,7 +18,7 @@
 .profile-hero-content {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 32px;
 }
 
@@ -52,7 +52,7 @@
 }
 
 .profile-hero-info {
-    text-align: center;
+    text-align: left;
 }
 
 .profile-badge {
