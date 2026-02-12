@@ -14,12 +14,12 @@ function slugify($text) {
     return $text;
 }
 
-function parseRanks($file, $type) {
+function parseRanks($file) {
     $content = file_get_contents($file);
     $lines = explode("\n", $content);
 
     $ranks = [];
-    $xpLevels = [0, 100, 500, 1500, 3500, 7000, 12000, 20000, 35000, 60000];
+    $xpLevels = [0, 100, 500, 1500, 3500, 7000, 12000, 20000, 35000, 60000, 100000, 150000, 250000, 400000];
 
     $inRankSection = false;
     $rankIndex = 0;
@@ -27,12 +27,7 @@ function parseRanks($file, $type) {
     foreach ($lines as $line) {
         $line = trim($line);
 
-        if ($type === 'modern' && strpos($line, 'UNIVERSAL GUILD RANK SYSTEM') !== false) {
-            $inRankSection = true;
-            continue;
-        }
-
-        if ($type === 'traditional' && strpos($line, 'GUILD RANK STRUCTURE') !== false) {
+        if (strpos($line, 'UNIVERSAL GUILD RANK SYSTEM') !== false) {
             $inRankSection = true;
             continue;
         }
@@ -41,7 +36,7 @@ function parseRanks($file, $type) {
             continue;
         }
 
-        if ($inRankSection && strpos($line, 'GUILDS') !== false) {
+        if ($inRankSection && empty($line)) {
             break;
         }
 
@@ -49,7 +44,7 @@ function parseRanks($file, $type) {
             $ranks[] = [
                 'name' => $line,
                 'level' => $rankIndex + 1,
-                'type' => $type,
+                'type' => 'universal',
                 'xp_required' => $xpLevels[$rankIndex] ?? 0
             ];
             $rankIndex++;
@@ -129,13 +124,9 @@ try {
     echo "Starting guild and rank seeding...\n\n";
 
     // Parse ranks
-    echo "Parsing modern ranks...\n";
-    $modernRanks = parseRanks(__DIR__ . '/../data/modern.md', 'modern');
-    echo "Found " . count($modernRanks) . " modern ranks\n";
-
-    echo "Parsing traditional ranks...\n";
-    $traditionalRanks = parseRanks(__DIR__ . '/../data/traditional.md', 'traditional');
-    echo "Found " . count($traditionalRanks) . " traditional ranks\n\n";
+    echo "Parsing universal ranks...\n";
+    $universalRanks = parseRanks(__DIR__ . '/../data/ranks.md');
+    echo "Found " . count($universalRanks) . " universal ranks\n\n";
 
     // Parse guilds
     echo "Parsing modern guilds...\n";
@@ -150,7 +141,7 @@ try {
     echo "Inserting ranks...\n";
     $rankStmt = $pdo->prepare("INSERT INTO ranks (name, level, type, xp_required, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)");
 
-    foreach (array_merge($modernRanks, $traditionalRanks) as $rank) {
+    foreach ($universalRanks as $rank) {
         $now = date('Y-m-d H:i:s');
         $rankStmt->execute([
             $rank['name'],
@@ -161,7 +152,7 @@ try {
             $now
         ]);
     }
-    echo "Inserted " . (count($modernRanks) + count($traditionalRanks)) . " ranks\n\n";
+    echo "Inserted " . count($universalRanks) . " ranks\n\n";
 
     // Insert guilds
     echo "Inserting guilds...\n";
@@ -180,7 +171,7 @@ try {
     echo "Inserted " . (count($modernGuilds) + count($traditionalGuilds)) . " guilds\n\n";
 
     echo "Seeding complete!\n";
-    echo "Total: " . (count($modernRanks) + count($traditionalRanks)) . " ranks, " .
+    echo "Total: " . count($universalRanks) . " ranks, " .
          (count($modernGuilds) + count($traditionalGuilds)) . " guilds\n";
 
 } catch (PDOException $e) {

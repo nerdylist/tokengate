@@ -4,8 +4,11 @@
  * Executes the schema.sql file to create the database structure
  */
 
+// Load configuration
+require_once __DIR__ . '/../config.php';
+
 // Get the database path
-$dbPath = __DIR__ . '/rentpeople.db';
+$dbPath = __DIR__ . '/' . DB_NAME;
 $schemaFile = __DIR__ . '/schema.sql';
 
 // Check if schema file exists

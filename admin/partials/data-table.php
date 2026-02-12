@@ -104,6 +104,14 @@ function renderDataTable($columns, $data, $actions = []) {
                                                 $type = 'button'; // Convert to button after condition check
                                             }
 
+                                            // Replace {row} placeholder with entire row as JSON
+                                            if (strpos($onclick, '{row}') !== false) {
+                                                $onclick = str_replace('{row}', json_encode($row), $onclick);
+                                            }
+                                            if (strpos($href, '{row}') !== false) {
+                                                $href = str_replace('{row}', json_encode($row), $href);
+                                            }
+
                                             // Replace {id} placeholder with actual row ID
                                             if (isset($row['id'])) {
                                                 $onclick = str_replace('{id}', $row['id'], $onclick);
