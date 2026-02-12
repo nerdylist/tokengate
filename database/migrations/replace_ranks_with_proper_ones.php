@@ -1,10 +1,11 @@
 <?php
 /**
- * Replace incorrect ranks with proper universal ranks
+ * Replace incorrect ranks with proper merged universal ranks
  *
  * This migration:
  * - Deletes existing incorrect ranks
- * - Inserts proper 20 ranks (10 modern + 10 traditional) from data files
+ * - Merges modern and traditional ranks, removing duplicates
+ * - Creates single unified rank progression
  *
  * Usage: php database/migrations/replace_ranks_with_proper_ones.php
  */
@@ -23,9 +24,7 @@ function parseRanks($file, $type) {
     $content = file_get_contents($file);
     $lines = explode("\n", $content);
     $ranks = [];
-    $xpLevels = [0, 100, 500, 1500, 3500, 7000, 12000, 20000, 35000, 60000];
     $inRankSection = false;
-    $rankIndex = 0;
 
     foreach ($lines as $line) {
         $line = trim($line);
@@ -44,13 +43,7 @@ function parseRanks($file, $type) {
             break;
         }
         if ($inRankSection && !empty($line) && strpos($line, '===') === false) {
-            $ranks[] = [
-                'name' => $line,
-                'level' => $rankIndex + 1,
-                'type' => $type,
-                'xp_required' => $xpLevels[$rankIndex] ?? 0
-            ];
-            $rankIndex++;
+            $ranks[] = $line;
         }
     }
     return $ranks;
@@ -75,34 +68,55 @@ try {
     $deletedCount = $pdo->exec("DELETE FROM ranks");
     echo "  ✓ Deleted {$deletedCount} incorrect ranks\n\n";
 
-    // Parse and insert correct ranks
+    // Parse ranks from both files
     echo "Parsing ranks from data files...\n";
     $modernRanks = parseRanks(__DIR__ . '/../../data/modern.md', 'modern');
     $traditionalRanks = parseRanks(__DIR__ . '/../../data/traditional.md', 'traditional');
-    $ranks = array_merge($modernRanks, $traditionalRanks);
 
     echo "  ✓ Found " . count($modernRanks) . " modern ranks\n";
     echo "  ✓ Found " . count($traditionalRanks) . " traditional ranks\n\n";
 
-    echo "Inserting correct ranks...\n";
-    $stmt = $pdo->prepare("INSERT INTO ranks (name, level, type, xp_required) VALUES (?, ?, ?, ?)");
+    // Merge and remove duplicates (case-insensitive)
+    echo "Merging ranks and removing duplicates...\n";
+    $mergedRanks = [];
+    $seen = [];
 
-    foreach ($ranks as $rank) {
-        $stmt->execute([$rank['name'], $rank['level'], $rank['type'], $rank['xp_required']]);
+    foreach ($modernRanks as $rank) {
+        $key = strtolower($rank);
+        if (!isset($seen[$key])) {
+            $mergedRanks[] = $rank;
+            $seen[$key] = true;
+        }
     }
-    echo "  ✓ Inserted " . count($ranks) . " ranks\n\n";
+
+    foreach ($traditionalRanks as $rank) {
+        $key = strtolower($rank);
+        if (!isset($seen[$key])) {
+            $mergedRanks[] = $rank;
+            $seen[$key] = true;
+        }
+    }
+
+    echo "  ✓ Merged to " . count($mergedRanks) . " unique ranks\n\n";
+
+    // Assign XP levels based on position
+    $xpLevels = [0, 100, 500, 1500, 3500, 7000, 12000, 20000, 35000, 60000, 100000, 150000, 250000, 400000];
+
+    echo "Inserting merged ranks...\n";
+    $stmt = $pdo->prepare("INSERT INTO ranks (name, level, type, xp_required) VALUES (?, ?, 'universal', ?)");
+
+    foreach ($mergedRanks as $index => $rankName) {
+        $level = $index + 1;
+        $xpRequired = $xpLevels[$index] ?? ($xpLevels[count($xpLevels) - 1] * 2);
+        $stmt->execute([$rankName, $level, $xpRequired]);
+    }
+    echo "  ✓ Inserted " . count($mergedRanks) . " ranks\n\n";
 
     // Show the inserted ranks
-    echo "Modern Ranks:\n";
-    $result = $pdo->query("SELECT id, name, level, xp_required FROM ranks WHERE type = 'modern' ORDER BY level");
+    echo "Universal Rank Progression:\n";
+    $result = $pdo->query("SELECT id, name, level, xp_required FROM ranks ORDER BY level");
     while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-        echo "  {$row['id']}. {$row['name']} (Level {$row['level']}, {$row['xp_required']} XP)\n";
-    }
-
-    echo "\nTraditional Ranks:\n";
-    $result = $pdo->query("SELECT id, name, level, xp_required FROM ranks WHERE type = 'traditional' ORDER BY level");
-    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-        echo "  {$row['id']}. {$row['name']} (Level {$row['level']}, {$row['xp_required']} XP)\n";
+        echo "  {$row['level']}. {$row['name']} (ID: {$row['id']}, {$row['xp_required']} XP)\n";
     }
 
     if ($profileGuildCount > 0) {
@@ -111,6 +125,7 @@ try {
     }
 
     echo "\n✅ Migration completed successfully!\n";
+    echo "Total unique ranks: " . count($mergedRanks) . "\n";
     exit(0);
 
 } catch (Exception $e) {
