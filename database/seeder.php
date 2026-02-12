@@ -4,8 +4,11 @@
  * Populates the database with sample data from seeds.sql
  */
 
+// Load configuration
+require_once __DIR__ . '/../config.php';
+
 // Get the database path
-$dbPath = __DIR__ . '/rentpeople.db';
+$dbPath = __DIR__ . '/' . DB_NAME;
 $seedsFile = __DIR__ . '/seeds.sql';
 
 // Check if seeds file exists

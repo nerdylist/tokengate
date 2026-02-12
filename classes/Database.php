@@ -14,7 +14,12 @@ class Database
      */
     private function __construct()
     {
-        $dbPath = __DIR__ . '/../database/rentpeople.db';
+        // Load configuration if not already loaded
+        if (!defined('DB_NAME')) {
+            require_once __DIR__ . '/../config.php';
+        }
+
+        $dbPath = __DIR__ . '/../database/' . DB_NAME;
 
         try {
             $this->pdo = new PDO('sqlite:' . $dbPath);

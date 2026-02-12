@@ -4,8 +4,11 @@
  * PDO SQLite Connection Configuration
  */
 
+// Load configuration
+require_once __DIR__ . '/../config.php';
+
 // Database file path
-$dbPath = __DIR__ . '/rentpeople.db';
+$dbPath = __DIR__ . '/' . DB_NAME;
 
 try {
     // Create PDO instance for SQLite
