@@ -120,13 +120,13 @@ $availabilityClass = 'status-' . $currentStatus['slug'];
                     <div class="profile-hero-info">
                         <div class="profile-badge"><?php echo htmlspecialchars($profile_id); ?></div>
                         <?php if ($primaryGuild): ?>
-                        <div class="guild-badge-primary">
-                            <span class="guild-icon">⚔️</span>
-                            <span class="guild-name"><?php echo htmlspecialchars($primaryGuild['name']); ?></span>
-                            <span class="guild-rank" style="color: <?php echo $primaryGuild['rank']['color']; ?>">
-                                <?php echo htmlspecialchars($primaryGuild['rank']['name']); ?>
-                            </span>
-                        </div>
+                        <?php
+                            $guildName = $primaryGuild['name'];
+                            $guildColor = $primaryGuild['color'];
+                            $rankName = $primaryGuild['rank']['name'];
+                            $guildIcon = '⚔️';
+                            include __DIR__ . '/partials/guild-badge.php';
+                        ?>
                         <?php endif; ?>
                         <h1 class="profile-name-large"><?php echo htmlspecialchars($user['name']); ?></h1>
                         <div class="profile-meta">
@@ -141,21 +141,13 @@ $availabilityClass = 'status-' . $currentStatus['slug'];
                                     </button>
                                 <?php endif; ?>
                             </div>
-                            <div class="profile-status-wrapper editable-field" id="status-display" data-original="<?php echo $currentStatus['id']; ?>">
+                            <div class="profile-status-wrapper editable-field<?php echo $isOwnProfile ? ' clickable-status' : ''; ?>" id="status-display" data-original="<?php echo $currentStatus['id']; ?>">
                                 <span class="profile-status <?php echo $availabilityClass; ?>" style="color: <?php echo htmlspecialchars($currentStatus['color']); ?>">
                                     <?php if (!empty($currentStatus['icon'])): ?>
                                         <span class="status-icon status-icon-hero" data-icon="<?php echo htmlspecialchars($currentStatus['icon']); ?>"></span>
                                     <?php endif; ?>
                                     <span><?php echo $availabilityStatus; ?></span>
                                 </span>
-                                <?php if ($isOwnProfile): ?>
-                                    <button class="edit-btn" onclick="editField('status')" aria-label="Edit status">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-                                        </svg>
-                                    </button>
-                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -231,28 +223,19 @@ $availabilityClass = 'status-' . $currentStatus['slug'];
                             <?php if (!empty($guilds)): ?>
                                 <div class="guilds-list">
                                     <?php foreach ($guilds as $guild): ?>
+                                        <?php $rank = $profileModel->calculateRank($guild['total_xp']); ?>
                                         <div class="guild-card <?php echo $guild['is_primary'] ? 'guild-primary' : ''; ?>">
-                                            <div class="guild-card-header">
-                                                <div class="guild-card-title">
-                                                    <span class="guild-icon">⚔️</span>
-                                                    <h3><?php echo htmlspecialchars($guild['name']); ?></h3>
-                                                    <?php if ($guild['is_primary']): ?>
-                                                        <span class="badge-primary">primary</span>
-                                                    <?php endif; ?>
-                                                </div>
-                                                <div class="guild-card-rank">
-                                                    <?php
-                                                    $rank = $profileModel->calculateRank($guild['total_xp']);
-                                                    ?>
-                                                    <span class="rank-badge" style="background: <?php echo $rank['color']; ?>20; color: <?php echo $rank['color']; ?>; border-color: <?php echo $rank['color']; ?>">
-                                                        <?php echo htmlspecialchars($rank['name']); ?>
-                                                    </span>
-                                                </div>
-                                            </div>
+                                            <?php
+                                                $guildName = $guild['name'];
+                                                $guildColor = $guild['color'];
+                                                $rankName = $rank['name'];
+                                                $guildIcon = '⚔️';
+                                                include __DIR__ . '/partials/guild-badge.php';
+                                            ?>
                                             <div class="guild-card-xp">
                                                 <div class="xp-info">
-                                                    <span class="xp-current"><?php echo number_format($guild['total_xp']); ?> XP</span>
-                                                    <span class="xp-next">Next: <?php echo htmlspecialchars($rank['next_rank']); ?> (<?php echo number_format($rank['next_rank_xp']); ?> XP)</span>
+                                                    <span class="xp-current"><?php echo number_format((float)$guild['total_xp']); ?> XP</span>
+                                                    <span class="xp-next">Next: <?php echo htmlspecialchars($rank['next_rank']); ?> (<?php echo number_format((float)$rank['next_rank_xp']); ?> XP)</span>
                                                 </div>
                                                 <div class="xp-progress-bar">
                                                     <div class="xp-progress-fill" style="width: <?php echo $rank['progress_percent']; ?>%; background: <?php echo $rank['color']; ?>"></div>
@@ -262,7 +245,7 @@ $availabilityClass = 'status-' . $currentStatus['slug'];
                                                 <?php foreach ($guild['skills'] as $skill): ?>
                                                     <span class="guild-skill-tag">
                                                         <?php echo htmlspecialchars($skill['name']); ?>
-                                                        <span class="skill-xp"><?php echo number_format($skill['xp']); ?> XP</span>
+                                                        <span class="skill-xp"><?php echo number_format((float)$skill['xp']); ?> XP</span>
                                                     </span>
                                                 <?php endforeach; ?>
                                             </div>
@@ -296,8 +279,8 @@ $availabilityClass = 'status-' . $currentStatus['slug'];
                                 <span class="stat-value" id="rate-stat">$<?php echo number_format($profile['hourly_rate']); ?></span>
                             </div>
                             <div class="stat-item">
-                                <span class="stat-label">availability</span>
-                                <span class="stat-value <?php echo $availabilityClass; ?>" id="status-stat">
+                                <span class="stat-label">status</span>
+                                <span class="stat-value <?php echo $availabilityClass; ?>" id="status-stat" style="color: <?php echo htmlspecialchars($currentStatus['color']); ?>">
                                     <?php if (!empty($currentStatus['icon'])): ?>
                                         <span class="status-icon status-icon-stat" data-icon="<?php echo htmlspecialchars($currentStatus['icon']); ?>"></span>
                                     <?php endif; ?>
@@ -356,17 +339,17 @@ $availabilityClass = 'status-' . $currentStatus['slug'];
         const PROFILE_ID = <?php echo json_encode($profile['id']); ?>;
 
         // Render status icons on page load
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             // Render hero status icon
             const heroIcon = document.querySelector('.status-icon-hero');
             if (heroIcon && heroIcon.dataset.icon) {
-                heroIcon.innerHTML = IconPicker.renderIcon(heroIcon.dataset.icon);
+                heroIcon.innerHTML = await IconPicker.renderIcon(heroIcon.dataset.icon);
             }
 
             // Render sidebar status icon
             const statIcon = document.querySelector('.status-icon-stat');
             if (statIcon && statIcon.dataset.icon) {
-                statIcon.innerHTML = IconPicker.renderIcon(statIcon.dataset.icon);
+                statIcon.innerHTML = await IconPicker.renderIcon(statIcon.dataset.icon);
             }
         });
     </script>

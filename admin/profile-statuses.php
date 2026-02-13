@@ -70,10 +70,10 @@ $statuses = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 <?php if (!empty($status['icon'])): ?>
                                                     <span class="status-icon-display" id="status-icon-<?= $status['id'] ?>" data-icon="<?= htmlspecialchars($status['icon']) ?>">
                                                         <script>
-                                                            document.addEventListener('DOMContentLoaded', function() {
+                                                            document.addEventListener('DOMContentLoaded', async function() {
                                                                 const iconEl = document.getElementById('status-icon-<?= $status['id'] ?>');
                                                                 const iconValue = iconEl.dataset.icon;
-                                                                iconEl.innerHTML = IconPicker.renderIcon(iconValue);
+                                                                iconEl.innerHTML = await IconPicker.renderIcon(iconValue);
                                                             });
                                                         </script>
                                                     </span>

@@ -1,4 +1,4 @@
--- RentPeople.io Seed Data
+-- TokenG8.com Seed Data
 -- Sample data for testing and development
 
 -- Insert Admin User

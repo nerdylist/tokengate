@@ -1,4 +1,4 @@
--- RentPeople.io Database Schema
+-- TokenG8.com Database Schema
 -- SQLite Database Schema
 
 -- Enable foreign key constraints

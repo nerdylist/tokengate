@@ -5,7 +5,7 @@ require_once __DIR__ . '/Model.php';
 class Guild extends Model
 {
     protected $table = 'guilds';
-    protected $fillable = ['name', 'slug', 'type', 'description', 'icon'];
+    protected $fillable = ['name', 'slug', 'type', 'description', 'icon', 'color'];
 
     /**
      * Find guild by slug

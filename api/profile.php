@@ -1,11 +1,22 @@
 <?php
 
+// Aggressive error suppression to prevent any warnings/notices from corrupting JSON
+error_reporting(0);
+ini_set('display_errors', '0');
+
+// Start output buffering to ensure clean JSON response
+ob_start();
+
 require_once __DIR__ . '/../config/session.php';
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../classes/Auth.php';
 require_once __DIR__ . '/../classes/Profile.php';
 require_once __DIR__ . '/../classes/Database.php';
 
+// Clean any output that may have been generated
+ob_clean();
+
+// Set Content-Type header early
 header('Content-Type: application/json');
 
 $action = $_GET['action'] ?? '';
@@ -130,7 +141,8 @@ switch ($action) {
                 'statusId' => $statusCheck['id'],
                 'statusName' => strtolower($statusCheck['name']),
                 'statusSlug' => $statusCheck['slug'],
-                'statusColor' => $statusCheck['color']
+                'statusColor' => $statusCheck['color'],
+                'statusIcon' => $statusCheck['icon']
             ]);
         } catch (Exception $e) {
             echo json_encode(['success' => false, 'error' => 'Failed to update status']);
@@ -138,17 +150,35 @@ switch ($action) {
         break;
 
     case 'upload_avatar':
-        if (!isset($_FILES['avatar']) || $_FILES['avatar']['error'] !== UPLOAD_ERR_OK) {
-            echo json_encode(['success' => false, 'error' => 'No file uploaded or upload error occurred']);
+        if (!isset($_FILES['avatar'])) {
+            echo json_encode(['success' => false, 'error' => 'No file was selected']);
+            exit;
+        }
+
+        // Check for upload errors with specific messages
+        $uploadError = $_FILES['avatar']['error'];
+        if ($uploadError !== UPLOAD_ERR_OK) {
+            $errorMessages = [
+                UPLOAD_ERR_INI_SIZE => 'File is too large. Maximum size is 2MB.',
+                UPLOAD_ERR_FORM_SIZE => 'File exceeds the maximum allowed size.',
+                UPLOAD_ERR_PARTIAL => 'File was only partially uploaded. Please try again.',
+                UPLOAD_ERR_NO_FILE => 'No file was uploaded.',
+                UPLOAD_ERR_NO_TMP_DIR => 'Server error: Missing temporary folder.',
+                UPLOAD_ERR_CANT_WRITE => 'Server error: Failed to write file to disk.',
+                UPLOAD_ERR_EXTENSION => 'Upload was stopped by a server extension.'
+            ];
+
+            $errorMessage = $errorMessages[$uploadError] ?? 'An unknown error occurred during upload.';
+            echo json_encode(['success' => false, 'error' => $errorMessage]);
             exit;
         }
 
         $file = $_FILES['avatar'];
-        $maxFileSize = 5 * 1024 * 1024; // 5MB
+        $maxFileSize = 2 * 1024 * 1024; // 2MB (matches PHP upload_max_filesize)
 
         // Validate file size
         if ($file['size'] > $maxFileSize) {
-            echo json_encode(['success' => false, 'error' => 'File is too large (max 5MB)']);
+            echo json_encode(['success' => false, 'error' => 'File is too large (max 2MB)']);
             exit;
         }
 
@@ -201,6 +231,10 @@ switch ($action) {
             $sql = "UPDATE profiles SET avatar_url = ?, updated_at = ? WHERE id = ?";
             $db->execute($sql, [$avatarUrl, date('Y-m-d H:i:s'), $profile['id']]);
 
+            // Clear any buffered output to ensure clean JSON
+            ob_end_clean();
+            ob_start();
+
             echo json_encode([
                 'success' => true,
                 'message' => 'Avatar uploaded successfully',
@@ -211,6 +245,11 @@ switch ($action) {
             if (file_exists($uploadPath)) {
                 unlink($uploadPath);
             }
+
+            // Clear any buffered output to ensure clean JSON
+            ob_end_clean();
+            ob_start();
+
             echo json_encode(['success' => false, 'error' => 'Failed to update avatar']);
         }
         break;

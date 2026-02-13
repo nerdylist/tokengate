@@ -178,20 +178,24 @@ class Profile extends Model
     public function guilds($profileId)
     {
         $sql = "SELECT
-                    c.id as guild_id,
-                    c.name as guild_name,
-                    c.slug as guild_slug,
+                    g.id as guild_id,
+                    g.name as guild_name,
+                    g.slug as guild_slug,
+                    g.color as guild_color,
+                    pg.xp as total_xp,
+                    pg.is_primary,
                     s.id as skill_id,
                     s.name as skill_name,
                     ps.proficiency_level,
-                    ps.xp
-                FROM categories c
-                INNER JOIN skills s ON c.id = s.category_id
-                INNER JOIN profile_skills ps ON s.id = ps.skill_id
-                WHERE ps.profile_id = ?
-                ORDER BY c.name, s.name";
+                    ps.xp as skill_xp
+                FROM profile_guilds pg
+                INNER JOIN guilds g ON pg.guild_id = g.id
+                LEFT JOIN skills s ON s.category_id = g.id
+                LEFT JOIN profile_skills ps ON s.id = ps.skill_id AND ps.profile_id = ?
+                WHERE pg.profile_id = ?
+                ORDER BY g.name, s.name";
 
-        $results = $this->db->query($sql, [$profileId]);
+        $results = $this->db->query($sql, [$profileId, $profileId]);
 
         // Group by guild
         $guilds = [];
@@ -202,20 +206,21 @@ class Profile extends Model
                     'id' => $row['guild_id'],
                     'name' => $row['guild_name'],
                     'slug' => $row['guild_slug'],
-                    'total_xp' => 0,
-                    'is_primary' => false,
+                    'color' => $row['guild_color'],
+                    'total_xp' => $row['total_xp'] ?? 0,
+                    'is_primary' => (bool)$row['is_primary'],
                     'skills' => []
                 ];
             }
 
-            $guilds[$guildId]['skills'][] = [
-                'id' => $row['skill_id'],
-                'name' => $row['skill_name'],
-                'proficiency' => $row['proficiency_level'],
-                'xp' => $row['xp']
-            ];
-
-            $guilds[$guildId]['total_xp'] += $row['xp'];
+            if ($row['skill_id']) {
+                $guilds[$guildId]['skills'][] = [
+                    'id' => $row['skill_id'],
+                    'name' => $row['skill_name'],
+                    'proficiency' => $row['proficiency_level'],
+                    'xp' => $row['skill_xp']
+                ];
+            }
         }
 
         return array_values($guilds);

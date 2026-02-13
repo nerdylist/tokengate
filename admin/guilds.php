@@ -7,7 +7,7 @@
 require_once __DIR__ . '/../middleware/admin.php';
 
 // Fetch guilds
-$sql = "SELECT id, name, slug, type, created_at
+$sql = "SELECT id, name, slug, type, color, created_at
         FROM guilds
         ORDER BY name ASC";
 $stmt = $db->query($sql);
@@ -19,7 +19,7 @@ $guilds = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guilds Management - RentPeople.io Admin</title>
+    <title>Guilds Management - TokenG8.com Admin</title>
     <link rel="stylesheet" href="/assets/css/admin.css">
 </head>
 <body>
@@ -45,6 +45,7 @@ $guilds = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     'name' => 'Name',
                     'slug' => 'Slug',
                     'type' => 'Type',
+                    'color' => 'Color',
                     'created_at' => 'Created At'
                 ];
 
@@ -125,6 +126,13 @@ $guilds = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <small style="color: #888; font-size: 0.875rem;">Font Awesome class or emoji</small>
                 </div>
 
+                <div class="form-group">
+                    <label for="guildColor">Color *</label>
+                    <input type="color" id="guildColor" name="color" value="#FFCC00" required
+                           style="width: 100%; height: 50px; padding: 5px; background: #0a0a0a; border: 1px solid #333; border-radius: 4px; cursor: pointer;">
+                    <small style="color: #888; font-size: 0.875rem;">Guild theme color</small>
+                </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
                     <button type="submit" class="btn btn-primary" id="saveBtn">Create Guild</button>
@@ -162,6 +170,7 @@ $guilds = $stmt->fetchAll(PDO::FETCH_ASSOC);
             document.getElementById('guildType').value = guild.type;
             document.getElementById('guildDescription').value = guild.description || '';
             document.getElementById('guildIcon').value = guild.icon || '';
+            document.getElementById('guildColor').value = guild.color || '#FFCC00';
             document.getElementById('guildModal').style.display = 'flex';
         }
 
@@ -189,7 +198,8 @@ $guilds = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 slug: formData.get('slug'),
                 type: formData.get('type'),
                 description: formData.get('description'),
-                icon: formData.get('icon')
+                icon: formData.get('icon'),
+                color: formData.get('color')
             };
 
             if (isEdit) {

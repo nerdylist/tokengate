@@ -4,14 +4,22 @@
  * Handles AJAX requests for guild forum operations (threads and comments)
  */
 
+// Start output buffering and suppress error output
+ob_start();
+error_reporting(E_ALL);
+ini_set('display_errors', '0');
+ini_set('log_errors', '1');
+
 require_once __DIR__ . '/../middleware/auth.php';
 require_once __DIR__ . '/../classes/Database.php';
 require_once __DIR__ . '/../classes/Profile.php';
 require_once __DIR__ . '/../classes/ProfileGuild.php';
 
+// Clear any output that might have occurred
+ob_clean();
 header('Content-Type: application/json');
 
-$db = Database::getInstance()->getConnection();
+$db = Database::getInstance();
 $action = $_GET['action'] ?? '';
 
 try {
@@ -226,6 +234,107 @@ try {
             ]);
             break;
 
+        case 'vote_comment':
+            $commentId = $input['comment_id'] ?? null;
+            $voteType = $input['vote_type'] ?? null;
+
+            if ($commentId === null || $voteType === null) {
+                throw new Exception('Missing required parameters: comment_id, vote_type');
+            }
+
+            if (!in_array($voteType, ['up', 'down'])) {
+                throw new Exception('Invalid vote_type. Must be "up" or "down"');
+            }
+
+            // Get user's profile
+            $profile = getUserProfile($db);
+
+            // Get comment and verify guild membership
+            $sql = "SELECT gc.id, gc.votes, gt.guild_id
+                    FROM guild_comments gc
+                    INNER JOIN guild_threads gt ON gc.thread_id = gt.id
+                    WHERE gc.id = ?";
+            $comment = $db->queryOne($sql, [$commentId]);
+
+            if (!$comment) {
+                throw new Exception('Comment not found');
+            }
+
+            // Verify guild membership
+            verifyGuildMembership($db, $profile['id'], $comment['guild_id']);
+
+            // Check if user has already voted
+            $sql = "SELECT id, vote_type FROM guild_comment_votes
+                    WHERE comment_id = ? AND profile_id = ?";
+            $existingVote = $db->queryOne($sql, [$commentId, $profile['id']]);
+
+            $newVotes = $comment['votes'];
+            $userVote = null;
+
+            if ($existingVote) {
+                if ($existingVote['vote_type'] === $voteType) {
+                    // User is removing their vote
+                    $sql = "DELETE FROM guild_comment_votes WHERE id = ?";
+                    $db->execute($sql, [$existingVote['id']]);
+
+                    // Adjust vote count
+                    if ($voteType === 'up') {
+                        $newVotes--;
+                    } else {
+                        $newVotes++;
+                    }
+                } else {
+                    // User is changing their vote
+                    $sql = "UPDATE guild_comment_votes
+                            SET vote_type = ?, updated_at = ?
+                            WHERE id = ?";
+                    $db->execute($sql, [$voteType, date('Y-m-d H:i:s'), $existingVote['id']]);
+
+                    // Adjust vote count (reverse old vote and apply new vote)
+                    if ($voteType === 'up') {
+                        $newVotes += 2; // Remove -1 from down and add +1 for up
+                    } else {
+                        $newVotes -= 2; // Remove +1 from up and add -1 for down
+                    }
+
+                    $userVote = $voteType;
+                }
+            } else {
+                // User is casting a new vote
+                $sql = "INSERT INTO guild_comment_votes (comment_id, profile_id, vote_type, created_at, updated_at)
+                        VALUES (?, ?, ?, ?, ?)";
+                $db->execute($sql, [
+                    $commentId,
+                    $profile['id'],
+                    $voteType,
+                    date('Y-m-d H:i:s'),
+                    date('Y-m-d H:i:s')
+                ]);
+
+                // Adjust vote count
+                if ($voteType === 'up') {
+                    $newVotes++;
+                } else {
+                    $newVotes--;
+                }
+
+                $userVote = $voteType;
+            }
+
+            // Update comment votes
+            $sql = "UPDATE guild_comments SET votes = ? WHERE id = ?";
+            $db->execute($sql, [$newVotes, $commentId]);
+
+            echo json_encode([
+                'success' => true,
+                'message' => 'Vote recorded successfully',
+                'data' => [
+                    'votes' => $newVotes,
+                    'user_vote' => $userVote
+                ]
+            ]);
+            break;
+
         default:
             throw new Exception('Invalid action');
     }
@@ -233,6 +342,7 @@ try {
 } catch (Exception $e) {
     // Determine appropriate status code
     $errorMessage = $e->getMessage();
+    $errorTrace = $e->getTraceAsString();
 
     if (strpos($errorMessage, 'Authentication required') !== false) {
         http_response_code(401);
@@ -246,8 +356,13 @@ try {
         http_response_code(500);
     }
 
+    // Log error for debugging
+    error_log("Guild Forum API Error: " . $errorMessage);
+    error_log("Stack trace: " . $errorTrace);
+
     echo json_encode([
         'success' => false,
-        'message' => $errorMessage
+        'message' => $errorMessage,
+        'debug' => IS_DEV ? $errorTrace : null
     ]);
 }

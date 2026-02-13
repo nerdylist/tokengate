@@ -12,7 +12,7 @@ require_once __DIR__ . '/../middleware/admin.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings - RentPeople.io Admin</title>
+    <title>Settings - TokenG8.com Admin</title>
     <link rel="stylesheet" href="/assets/css/admin.css">
 </head>
 <body>
@@ -30,7 +30,7 @@ require_once __DIR__ . '/../middleware/admin.php';
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="site-name">Site Name</label>
-                        <input type="text" id="site-name" placeholder="RentPeople.io" disabled>
+                        <input type="text" id="site-name" placeholder="TokenG8.com" disabled>
                         <p class="help-text">The name of your site displayed throughout the application</p>
                     </div>
 
@@ -42,13 +42,13 @@ require_once __DIR__ . '/../middleware/admin.php';
 
                     <div class="form-group">
                         <label for="site-url">Site URL</label>
-                        <input type="text" id="site-url" placeholder="https://rentpeople.io" disabled>
+                        <input type="text" id="site-url" placeholder="https://TokenG8.com" disabled>
                         <p class="help-text">The primary URL for your site</p>
                     </div>
 
                     <div class="form-group">
                         <label for="contact-email">Contact Email</label>
-                        <input type="email" id="contact-email" placeholder="contact@rentpeople.io" disabled>
+                        <input type="email" id="contact-email" placeholder="contact@TokenG8.com" disabled>
                         <p class="help-text">Primary contact email for support and inquiries</p>
                     </div>
 

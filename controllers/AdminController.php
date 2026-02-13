@@ -371,6 +371,95 @@ class AdminController
     }
 
     /**
+     * Create guild
+     * @param array $data Guild data
+     * @return array Success/error response
+     */
+    public function createGuild($data)
+    {
+        try {
+            // Validate color format if provided
+            if (!empty($data['color'])) {
+                if (!preg_match('/^#[0-9A-Fa-f]{6}$/', $data['color'])) {
+                    return ['success' => false, 'message' => 'Invalid color format. Use hex color code (e.g., #10b981)'];
+                }
+            }
+
+            // Validate slug format
+            if (!preg_match('/^[a-z0-9-]+$/', $data['slug'])) {
+                return ['success' => false, 'message' => 'Invalid slug format. Use lowercase letters, numbers, and hyphens only'];
+            }
+
+            // Check if slug already exists
+            $stmt = $this->db->prepare("SELECT id FROM guilds WHERE slug = ?");
+            $stmt->execute([$data['slug']]);
+            if ($stmt->fetch()) {
+                return ['success' => false, 'message' => 'A guild with this slug already exists'];
+            }
+
+            // Insert guild
+            $stmt = $this->db->prepare("INSERT INTO guilds (name, slug, type, description, icon, color, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
+            $stmt->execute([
+                $data['name'],
+                $data['slug'],
+                $data['type'],
+                $data['description'] ?? null,
+                $data['icon'] ?? null,
+                $data['color'] ?? null
+            ]);
+
+            return ['success' => true, 'message' => 'Guild created successfully'];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Error creating guild: ' . $e->getMessage()];
+        }
+    }
+
+    /**
+     * Update guild
+     * @param array $data Guild data
+     * @return array Success/error response
+     */
+    public function updateGuild($data)
+    {
+        try {
+            // Validate color format if provided
+            if (!empty($data['color'])) {
+                if (!preg_match('/^#[0-9A-Fa-f]{6}$/', $data['color'])) {
+                    return ['success' => false, 'message' => 'Invalid color format. Use hex color code (e.g., #10b981)'];
+                }
+            }
+
+            // Validate slug format
+            if (!preg_match('/^[a-z0-9-]+$/', $data['slug'])) {
+                return ['success' => false, 'message' => 'Invalid slug format. Use lowercase letters, numbers, and hyphens only'];
+            }
+
+            // Check if slug already exists (excluding current record)
+            $stmt = $this->db->prepare("SELECT id FROM guilds WHERE slug = ? AND id != ?");
+            $stmt->execute([$data['slug'], $data['id']]);
+            if ($stmt->fetch()) {
+                return ['success' => false, 'message' => 'A guild with this slug already exists'];
+            }
+
+            // Update guild
+            $stmt = $this->db->prepare("UPDATE guilds SET name = ?, slug = ?, type = ?, description = ?, icon = ?, color = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?");
+            $stmt->execute([
+                $data['name'],
+                $data['slug'],
+                $data['type'],
+                $data['description'] ?? null,
+                $data['icon'] ?? null,
+                $data['color'] ?? null,
+                $data['id']
+            ]);
+
+            return ['success' => true, 'message' => 'Guild updated successfully'];
+        } catch (PDOException $e) {
+            return ['success' => false, 'message' => 'Error updating guild: ' . $e->getMessage()];
+        }
+    }
+
+    /**
      * Delete rank
      * @param int $id Rank ID
      * @return array Success/error response

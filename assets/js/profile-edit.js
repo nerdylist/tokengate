@@ -95,64 +95,6 @@ async function editField(fieldType) {
                 if (statEl) statEl.textContent = `$${response.rate}`;
             },
             successMessage: 'Hourly rate updated successfully'
-        },
-        status: {
-            displayId: 'status-display',
-            getData: (el) => el.dataset.original,
-            createInput: async (value) => {
-                const select = document.createElement('select');
-                select.className = 'edit-select';
-
-                // Fetch statuses from API
-                try {
-                    const response = await fetch('/api/profile.php?action=get_statuses');
-                    const data = await response.json();
-
-                    if (data.success && data.statuses) {
-                        data.statuses.forEach(status => {
-                            const option = document.createElement('option');
-                            option.value = status.id;
-                            option.textContent = status.name;
-                            option.selected = status.id == value;
-                            select.appendChild(option);
-                        });
-                    }
-                } catch (error) {
-                    console.error('Failed to fetch statuses from API:', error, 'Using fallback options');
-                    // Fallback to basic options
-                    const fallbackOptions = [
-                        { value: '1', label: 'Available' },
-                        { value: '2', label: 'Busy' },
-                        { value: '3', label: 'Unavailable' },
-                        { value: '4', label: 'Away' }
-                    ];
-                    fallbackOptions.forEach(opt => {
-                        const option = document.createElement('option');
-                        option.value = opt.value;
-                        option.textContent = opt.label;
-                        option.selected = opt.value == value;
-                        select.appendChild(option);
-                    });
-                }
-
-                return select;
-            },
-            apiAction: 'update_status',
-            getPostData: (input) => ({ status_id: input.value }),
-            updateDisplay: (container, response) => {
-                const editBtn = container.querySelector('.edit-btn');
-                container.innerHTML = `<span class="profile-status status-${response.statusSlug}" style="color: ${response.statusColor}">${response.statusName}</span>`;
-                if (editBtn) container.appendChild(editBtn);
-                container.dataset.original = response.statusId;
-
-                // Update stats card
-                const statEl = document.getElementById('status-stat');
-                if (statEl) {
-                    statEl.textContent = response.statusName;
-                    statEl.className = `stat-value status-${response.statusSlug}`;
-                }
-            },
-            successMessage: 'Status updated successfully'
         }
     };
 
@@ -255,6 +197,163 @@ async function saveField(fieldType, config, container, input, originalHTML) {
     }
 }
 
+// Status dropdown functionality (replaces inline select editor)
+function initStatusDropdown() {
+    const statusDisplay = document.getElementById('status-display');
+    if (!statusDisplay || !statusDisplay.classList.contains('clickable-status')) return;
+
+    statusDisplay.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        // Prevent opening dropdown if already open
+        if (document.getElementById('status-dropdown')) return;
+
+        await showStatusDropdown();
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        const dropdown = document.getElementById('status-dropdown');
+        const statusDisplay = document.getElementById('status-display');
+
+        if (dropdown && !dropdown.contains(e.target) && !statusDisplay.contains(e.target)) {
+            dropdown.remove();
+        }
+    });
+}
+
+async function showStatusDropdown() {
+    const statusDisplay = document.getElementById('status-display');
+    const currentStatusId = statusDisplay.dataset.original;
+
+    // Fetch statuses from API
+    let statuses = [];
+    try {
+        const response = await fetch('/api/profile.php?action=get_statuses');
+        const data = await response.json();
+        if (data.success && data.statuses) {
+            statuses = data.statuses;
+        }
+    } catch (error) {
+        console.error('Failed to fetch statuses:', error);
+        Toast.error('Failed to load status options');
+        return;
+    }
+
+    // Create dropdown
+    const dropdown = document.createElement('div');
+    dropdown.id = 'status-dropdown';
+    dropdown.className = 'status-dropdown';
+
+    for (const status of statuses) {
+        const option = document.createElement('div');
+        option.className = 'status-dropdown-item';
+        if (status.id == currentStatusId) {
+            option.classList.add('active');
+        }
+
+        let optionHTML = '<span class="status-option-content" style="color: ' + status.color + '">';
+
+        if (status.icon) {
+            optionHTML += '<span class="status-icon status-icon-dropdown" data-icon="' + status.icon + '"></span>';
+        }
+
+        optionHTML += '<span class="status-option-name">' + status.name.toLowerCase() + '</span></span>';
+
+        option.innerHTML = optionHTML;
+        option.onclick = () => selectStatus(status.id);
+
+        dropdown.appendChild(option);
+
+        // Render icon
+        if (status.icon) {
+            const iconEl = option.querySelector('.status-icon-dropdown');
+            if (iconEl) {
+                iconEl.innerHTML = await IconPicker.renderIcon(status.icon);
+            }
+        }
+    }
+
+    // Position and append dropdown
+    statusDisplay.appendChild(dropdown);
+}
+
+async function selectStatus(statusId) {
+    const statusDisplay = document.getElementById('status-display');
+    const dropdown = document.getElementById('status-dropdown');
+
+    if (dropdown) dropdown.remove();
+
+    // Show loading state
+    statusDisplay.style.opacity = '0.5';
+
+    try {
+        const formData = new FormData();
+        formData.append('status_id', statusId);
+
+        const response = await fetch('/api/profile.php?action=update_status', {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            // Update display
+            let statusHTML = '<span class="profile-status status-' + data.statusSlug + '" style="color: ' + data.statusColor + '">';
+
+            if (data.statusIcon) {
+                statusHTML += '<span class="status-icon status-icon-hero" data-icon="' + data.statusIcon + '"></span>';
+            }
+
+            statusHTML += '<span>' + data.statusName + '</span></span>';
+
+            statusDisplay.innerHTML = statusHTML;
+            statusDisplay.dataset.original = data.statusId;
+
+            // Render the icon
+            if (data.statusIcon) {
+                const heroIcon = statusDisplay.querySelector('.status-icon-hero');
+                if (heroIcon) {
+                    heroIcon.innerHTML = await IconPicker.renderIcon(data.statusIcon);
+                }
+            }
+
+            // Update stats card
+            const statEl = document.getElementById('status-stat');
+            if (statEl) {
+                let statHTML = '';
+
+                if (data.statusIcon) {
+                    statHTML += '<span class="status-icon status-icon-stat" data-icon="' + data.statusIcon + '"></span>';
+                }
+
+                statHTML += '<span>' + data.statusName + '</span>';
+
+                statEl.innerHTML = statHTML;
+                statEl.className = 'stat-value status-' + data.statusSlug;
+                statEl.style.color = data.statusColor;
+
+                if (data.statusIcon) {
+                    const statIcon = statEl.querySelector('.status-icon-stat');
+                    if (statIcon) {
+                        statIcon.innerHTML = await IconPicker.renderIcon(data.statusIcon);
+                    }
+                }
+            }
+
+            statusDisplay.style.opacity = '1';
+            Toast.success('Status updated successfully');
+        } else {
+            statusDisplay.style.opacity = '1';
+            Toast.error(data.error || 'Failed to update status');
+        }
+    } catch (error) {
+        console.error('Update error:', error);
+        statusDisplay.style.opacity = '1';
+        Toast.error('An error occurred while updating status');
+    }
+}
+
 // Avatar upload functionality
 function triggerAvatarUpload() {
     const fileInput = document.getElementById('avatar-upload');
@@ -265,15 +364,18 @@ function triggerAvatarUpload() {
 
 // Handle avatar file selection
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize status dropdown
+    initStatusDropdown();
+
     const avatarInput = document.getElementById('avatar-upload');
     if (avatarInput) {
         avatarInput.addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file) return;
 
-            // Validate file size (5MB)
-            if (file.size > 5 * 1024 * 1024) {
-                Toast.error('File is too large (max 5MB)');
+            // Validate file size (2MB to match PHP upload_max_filesize)
+            if (file.size > 2 * 1024 * 1024) {
+                Toast.error('File is too large (max 2MB)');
                 avatarInput.value = '';
                 return;
             }
@@ -295,12 +397,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 const formData = new FormData();
                 formData.append('avatar', file);
 
-                const response = await fetch('api/profile.php?action=upload_avatar', {
+                const response = await fetch('/api/profile.php?action=upload_avatar', {
                     method: 'POST',
                     body: formData
                 });
 
-                const data = await response.json();
+                // Get response text first for better error handling
+                const responseText = await response.text();
+
+                // Parse JSON response
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('JSON parse error:', parseError);
+                    console.error('Response text:', responseText);
+                    throw new Error('Invalid server response');
+                }
 
                 if (data.success) {
                     // Update avatar display

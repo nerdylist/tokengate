@@ -44,6 +44,12 @@ function renderDataTable($columns, $data, $actions = []) {
                                     if (strpos($key, '_display') !== false && strpos($value, '<') !== false) {
                                         // Already formatted HTML, display as-is
                                         echo $value;
+                                    } elseif ($key === 'color') {
+                                        // Display color as a preview box with hex value
+                                        echo '<div style="display: flex; align-items: center; gap: 10px;">';
+                                        echo '<div style="width: 30px; height: 30px; background-color: ' . htmlspecialchars($value) . '; border: 1px solid #333; border-radius: 4px;"></div>';
+                                        echo '<span>' . htmlspecialchars($value) . '</span>';
+                                        echo '</div>';
                                     } elseif ($key === 'profile_id' && strpos($value, '<span') !== false) {
                                         // Already formatted HTML, display as-is
                                         echo $value;

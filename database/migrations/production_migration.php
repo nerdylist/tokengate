@@ -3,7 +3,7 @@
  * Production Migration Script
  *
  * This script handles:
- * 1. Database g8.db
+ * 1. Database g8.db (THE ONLY DATABASE - redot.db and rentpeople.db are OLD)
  * 2. Schema updates for guild/skill hierarchy
  * 3. Admin user creation from .env
  *
@@ -120,12 +120,12 @@ class ProductionMigration
         }
 
         if (!$sourceDb) {
-            echo "  ⚠ No source database found (legacy rentpeople.db or redot.db)\n";
-            echo "  ✓ Starting with fresh database\n\n";
+            echo "  ⚠ No source database found (legacy databases not present)\n";
+            echo "  ✓ Starting with fresh g8.db database\n\n";
             return;
         }
 
-        echo "  → Using {$sourceName} as data source\n";
+        echo "  → Using {$sourceName} as legacy data source (migrating to g8.db)\n";
 
         // Attach source database
         $this->pdo->exec("ATTACH DATABASE '{$sourceDb}' AS source");
