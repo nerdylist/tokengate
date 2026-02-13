@@ -129,3 +129,77 @@ Key additions:
 - Guild-skill associations
 - XP tracking per skill
 - Custom guild rank thresholds
+
+## Numbered Migration Files
+
+The following migrations are available for incremental database updates:
+
+**001_add_profile_statuses_table.php**
+- Creates `profile_statuses` table with name, slug, color, sort_order, is_active
+- Adds indexes for performance
+
+**002_add_guild_xp_tracking.sql**
+- Adds `xp` column to `profile_skills` table
+- Adds `is_primary_guild` column to `profile_skills` table
+- Creates indexes for query performance
+
+**003_create_guild_forum_tables.sql**
+- Creates `guild_threads` table for forum threads
+- Creates `guild_comments` table for forum comments
+- Adds foreign keys and indexes
+
+**004_create_bounty_ranks.sql**
+- Creates `bounty_ranks` junction table
+- Links bounties to ranks with many-to-many relationship
+
+**005_add_pending_skills.sql**
+- Creates `pending_skills` table for skill request workflow
+- Supports admin review and approval process
+
+**006_merge_pending_skills_into_skills.sql**
+- Adds `submitted_by_profile_id`, `status`, `reviewed_by_admin_id`, `reviewed_at` to `skills` table
+- Merges pending skill functionality into main skills table
+
+**007_migrate_pending_skills_data.sql**
+- Migrates data from `pending_skills` table to `skills` table
+- Handles pending and rejected skills
+
+**008_add_icon_to_profile_statuses.sql**
+- Adds `icon` column to `profile_statuses` table for emoji/icon support
+
+**009_add_bounty_hire_form_fields.sql**
+- Adds `payment_type`, `estimated_hours`, `spots`, `location`, `remote_ok` to `bounties` table
+
+**010_add_color_to_guilds.sql**
+- Adds `color` column to `guilds` table with default value #FFCC00
+
+**011_add_votes_to_guild_comments.sql**
+- Adds `votes` column to `guild_comments` table
+- Creates index for sorting by votes
+
+**012_create_guild_comment_votes.sql**
+- Creates `guild_comment_votes` table to track individual user votes
+- Ensures users can only vote once per comment
+- Supports upvote/downvote toggling
+
+## Additional Migration Files
+
+**replace_ranks_with_proper_ones.php**
+- Data migration to replace ranks with unified rank system
+- Parses ranks from `/data/ranks.md`
+- Creates universal rank progression with XP thresholds
+- Run manually when needed: `php database/migrations/replace_ranks_with_proper_ones.php`
+
+## Running Migrations
+
+To run individual migrations in order:
+
+```bash
+# PHP migrations
+php database/migrations/001_add_profile_statuses_table.php
+
+# SQL migrations (using sqlite3)
+sqlite3 database/g8.db < database/migrations/002_add_guild_xp_tracking.sql
+```
+
+Note: Migrations 002-012 are SQL files. Migration 001 is a PHP script with idempotent checks.
