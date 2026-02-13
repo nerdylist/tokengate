@@ -255,9 +255,6 @@ $availabilityClass = 'status-' . $currentStatus['slug'];
                             <?php else: ?>
                                 <div class="empty-state-small">
                                     <p class="empty-message">no guild memberships yet</p>
-                                    <?php if ($isOwnProfile): ?>
-                                        <button class="btn-search" onclick="alert('Join Guild feature coming soon!')">join a guild</button>
-                                    <?php endif; ?>
                                 </div>
                             <?php endif; ?>
                         </div>
