@@ -35,28 +35,51 @@ try {
     $stmt->execute(['email' => ADMIN_EMAIL]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Check if user exists
-    if (!$user) {
-        die("Error: No user found with email: " . ADMIN_EMAIL . "\n");
-    }
-
     // Hash the password using PHP's password_hash with PASSWORD_DEFAULT
     $hashedPassword = password_hash(ADMIN_PASSWORD, PASSWORD_DEFAULT);
 
-    // Update the password_hash in the database
-    $updateStmt = $pdo->prepare("UPDATE users SET password_hash = :password_hash, updated_at = CURRENT_TIMESTAMP WHERE email = :email");
-    $result = $updateStmt->execute([
-        'password_hash' => $hashedPassword,
-        'email' => ADMIN_EMAIL
-    ]);
+    if ($user) {
+        // User exists - update their password
+        $updateStmt = $pdo->prepare("UPDATE users SET password_hash = :password_hash, updated_at = CURRENT_TIMESTAMP WHERE email = :email");
+        $result = $updateStmt->execute([
+            'password_hash' => $hashedPassword,
+            'email' => ADMIN_EMAIL
+        ]);
 
-    // Verify the update succeeded
-    if ($result && $updateStmt->rowCount() > 0) {
-        echo "Success: Password reset successful for user: " . ADMIN_EMAIL . "\n";
-        echo "User ID: " . $user['id'] . "\n";
-        echo "Name: " . $user['name'] . "\n";
+        // Verify the update succeeded
+        if ($result && $updateStmt->rowCount() > 0) {
+            echo "Success: Password reset successful for existing user: " . ADMIN_EMAIL . "\n";
+            echo "User ID: " . $user['id'] . "\n";
+            echo "Name: " . $user['name'] . "\n";
+        } else {
+            die("Error: Password update failed. No rows were affected.\n");
+        }
     } else {
-        die("Error: Password update failed. No rows were affected.\n");
+        // User does not exist - create new admin user
+        $insertStmt = $pdo->prepare("
+            INSERT INTO users (email, password_hash, name, is_admin, is_verified, created_at, updated_at)
+            VALUES (:email, :password_hash, :name, :is_admin, :is_verified, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        ");
+        $result = $insertStmt->execute([
+            'email' => ADMIN_EMAIL,
+            'password_hash' => $hashedPassword,
+            'name' => 'Administrator',
+            'is_admin' => 1,
+            'is_verified' => 1
+        ]);
+
+        // Verify the insert succeeded
+        if ($result) {
+            $newUserId = $pdo->lastInsertId();
+            echo "Success: Admin user created successfully\n";
+            echo "User ID: " . $newUserId . "\n";
+            echo "Email: " . ADMIN_EMAIL . "\n";
+            echo "Name: Administrator\n";
+            echo "Admin Status: Yes\n";
+            echo "Verified Status: Yes\n";
+        } else {
+            die("Error: Failed to create admin user.\n");
+        }
     }
 
 } catch (PDOException $e) {
