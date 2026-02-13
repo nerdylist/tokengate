@@ -26,7 +26,8 @@ class BountyController
                         c.slug as category_slug,
                         u.name as user_name,
                         u.email as user_email,
-                        (SELECT COUNT(*) FROM applications WHERE bounty_id = b.id) as application_count
+                        (SELECT COUNT(*) FROM applications WHERE bounty_id = b.id) as application_count,
+                        (SELECT COUNT(*) FROM votes WHERE bounty_id = b.id) as vote_count
                     FROM bounties b
                     LEFT JOIN categories c ON b.category_id = c.id
                     LEFT JOIN users u ON b.user_id = u.id

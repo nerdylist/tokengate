@@ -37,9 +37,9 @@ try {
 
     // Apply sorting
     if ($sort === 'top') {
-        // Sort by application count (popularity)
+        // Sort by vote count (highest to lowest)
         usort($bounties, function($a, $b) {
-            return $b['application_count'] - $a['application_count'];
+            return $b['vote_count'] - $a['vote_count'];
         });
     }
     // 'new' is default (already sorted by created_at DESC)
@@ -79,7 +79,7 @@ try {
 
         return [
             'id' => $bounty['id'],
-            'votes' => 0, // TODO: Implement bounty voting system
+            'votes' => $bounty['vote_count'] ?? 0,
             'category' => $bounty['category_slug'] ?? $bounty['category_name'] ?? 'other',
             'due_days' => $due_days,
             'spots_filled' => 0, // TODO: Implement from applications table
