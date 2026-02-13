@@ -182,6 +182,12 @@ The following migrations are available for incremental database updates:
 - Ensures users can only vote once per comment
 - Supports upvote/downvote toggling
 
+**013_create_bounty_votes.sql**
+- Creates `bounty_votes` table for tracking upvotes/downvotes on bounties
+- Supports vote_type: 1 (upvote) or -1 (downvote)
+- Prevents duplicate votes with UNIQUE constraint
+- Vote count calculated as SUM(vote_type)
+
 ## Additional Migration Files
 
 **replace_ranks_with_proper_ones.php**

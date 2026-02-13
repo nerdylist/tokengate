@@ -181,6 +181,26 @@
     text-transform: lowercase;
 }
 
+.bounty-card-votes {
+    margin-bottom: 12px;
+}
+
+.vote-count-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(255, 107, 53, 0.1);
+    border: 1px solid rgba(255, 107, 53, 0.2);
+    border-radius: 4px;
+    color: #ff6b35;
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-family: 'Courier New', monospace;
+}
+
+.vote-count-badge:empty {
+    display: none;
+}
+
 .placeholder-card {
     background-color: #151515;
     border: 2px dashed #2d2d2d;

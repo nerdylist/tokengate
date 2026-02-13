@@ -10,7 +10,7 @@ $featuredBounties = [];
 try {
     $db = Database::getInstance();
     $sql = "SELECT b.*,
-                   (SELECT COUNT(*) FROM votes v WHERE v.bounty_id = b.id) as vote_count
+                   (SELECT COALESCE(SUM(vote_type), 0) FROM bounty_votes WHERE bounty_id = b.id) as vote_count
             FROM bounties b
             WHERE b.status = 'open'
             ORDER BY vote_count DESC, b.created_at DESC
@@ -90,6 +90,9 @@ try {
                         <?php foreach ($featuredBounties as $bounty): ?>
                             <a href="<?php echo url('bounty', ['id' => $bounty['id']]); ?>" class="bounty-card">
                                 <h3 class="bounty-card-title"><?php echo htmlspecialchars($bounty['title']); ?></h3>
+                                <div class="bounty-card-votes">
+                                    <span class="vote-count-badge"><?php echo ($bounty['vote_count'] > 0 ? '+' : '') . $bounty['vote_count']; ?></span>
+                                </div>
                                 <p class="bounty-card-description">
                                     <?php
                                     $description = htmlspecialchars($bounty['description']);
