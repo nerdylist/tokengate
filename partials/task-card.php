@@ -8,6 +8,7 @@ require_once __DIR__ . '/../config.php';
  * - $task (array): Task data containing:
  *   - id: Task ID
  *   - votes: Number of votes
+ *   - user_vote: User's vote status (1, -1, or 0)
  *   - category: Task category
  *   - due_days: Days until due
  *   - spots_filled: Number of spots filled
@@ -21,15 +22,22 @@ require_once __DIR__ . '/../config.php';
  *   - applications: Number of applications
  *   - posted_time: Time posted (e.g., '3 hours ago')
  */
+
+// Determine user vote status
+$userVote = $task['user_vote'] ?? 0;
+$upvoteClass = ($userVote === 1) ? ' voted' : '';
+$downvoteClass = ($userVote === -1) ? ' voted' : '';
+$upvoteIcon = ($userVote === 1) ? '/assets/img/token/icon/up-gold.png' : '/assets/img/token/icon/up-silver.png';
+$downvoteIcon = ($userVote === -1) ? '/assets/img/token/icon/down-gold.png' : '/assets/img/token/icon/down-silver.png';
 ?>
 <article class="task-card">
     <div class="task-vote">
-        <button class="vote-btn vote-up" aria-label="Upvote" data-index="<?php echo htmlspecialchars($task['id']); ?>">
-            <img src="/assets/img/token/icon/up-silver.png" alt="Upvote" class="vote-icon vote-up-icon" data-default="/assets/img/token/icon/up-silver.png" data-hover="/assets/img/token/icon/up-green.png" data-selected="/assets/img/token/icon/up-gold.png">
+        <button class="vote-btn vote-up<?php echo $upvoteClass; ?>" aria-label="Upvote" data-index="<?php echo htmlspecialchars($task['id']); ?>">
+            <img src="<?php echo $upvoteIcon; ?>" alt="Upvote" class="vote-icon vote-up-icon" data-default="/assets/img/token/icon/up-silver.png" data-hover="/assets/img/token/icon/up-green.png" data-selected="/assets/img/token/icon/up-gold.png">
         </button>
         <span class="vote-count"><?php echo htmlspecialchars($task['votes']); ?></span>
-        <button class="vote-btn vote-down" aria-label="Downvote" data-index="<?php echo htmlspecialchars($task['id']); ?>">
-            <img src="/assets/img/token/icon/down-silver.png" alt="Downvote" class="vote-icon vote-down-icon" data-default="/assets/img/token/icon/down-silver.png" data-hover="/assets/img/token/icon/down-red.png" data-selected="/assets/img/token/icon/down-gold.png">
+        <button class="vote-btn vote-down<?php echo $downvoteClass; ?>" aria-label="Downvote" data-index="<?php echo htmlspecialchars($task['id']); ?>">
+            <img src="<?php echo $downvoteIcon; ?>" alt="Downvote" class="vote-icon vote-down-icon" data-default="/assets/img/token/icon/down-silver.png" data-hover="/assets/img/token/icon/down-red.png" data-selected="/assets/img/token/icon/down-gold.png">
         </button>
     </div>
     <div class="task-content">

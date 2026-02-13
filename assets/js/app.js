@@ -30,32 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // ========================================================================
 
     /**
-     * Initialize vote counts from localStorage on page load
+     * Initialize vote button hover handlers
      */
     const initializeVotes = () => {
-        taskCards.forEach((card, index) => {
-            const voteData = getVoteData(index);
-            const voteCountSpan = card.querySelector('.vote-count');
-            const upvoteBtn = card.querySelector('.vote-up');
-            const downvoteBtn = card.querySelector('.vote-down');
-            const upIcon = upvoteBtn.querySelector('.vote-icon');
-            const downIcon = downvoteBtn.querySelector('.vote-icon');
-
-            // Update vote count if stored
-            if (voteData.count !== null) {
-                voteCountSpan.textContent = voteData.count;
-            }
-
-            // Apply voted class and icon based on user's previous vote
-            if (voteData.userVote === 'up') {
-                upvoteBtn.classList.add('voted');
-                upIcon.src = upIcon.dataset.selected;
-            } else if (voteData.userVote === 'down') {
-                downvoteBtn.classList.add('voted');
-                downIcon.src = downIcon.dataset.selected;
-            }
-        });
-
         // Add hover handlers for icon swapping
         document.querySelectorAll('.vote-btn').forEach(btn => {
             const icon = btn.querySelector('.vote-icon');
@@ -75,36 +52,62 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     /**
-     * Get vote data from localStorage
-     * @param {number} index - Card index
-     * @returns {Object} Vote data with count and userVote
+     * Submit vote to server via AJAX
+     * @param {number} bountyId - Bounty ID
+     * @param {number} voteType - Vote type (1 or -1)
+     * @param {HTMLElement} button - Vote button clicked
      */
-    const getVoteData = (index) => {
-        const key = `vote_bounty_${index}`;
-        const data = localStorage.getItem(key);
+    const submitVote = async (bountyId, voteType, button) => {
+        try {
+            const response = await fetch('/api/bounty-votes.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `bounty_id=${bountyId}&vote_type=${voteType}`
+            });
 
-        if (data) {
-            return JSON.parse(data);
+            const data = await response.json();
+
+            if (data.success) {
+                // Update vote count display
+                const card = button.closest('.task-card');
+                const voteCountSpan = card.querySelector('.vote-count');
+                if (voteCountSpan) {
+                    voteCountSpan.textContent = data.vote_count;
+                }
+
+                // Update button states
+                const upButton = card.querySelector('.vote-up');
+                const downButton = card.querySelector('.vote-down');
+                const upIcon = upButton.querySelector('.vote-icon');
+                const downIcon = downButton.querySelector('.vote-icon');
+
+                // Reset both buttons
+                upButton.classList.remove('voted');
+                downButton.classList.remove('voted');
+                upIcon.src = upIcon.dataset.default;
+                downIcon.src = downIcon.dataset.default;
+
+                // Set selected state based on user's vote
+                if (data.user_vote === 1) {
+                    upButton.classList.add('voted');
+                    upIcon.src = upIcon.dataset.selected;
+                } else if (data.user_vote === -1) {
+                    downButton.classList.add('voted');
+                    downIcon.src = downIcon.dataset.selected;
+                }
+            } else {
+                if (data.error === 'Authentication required') {
+                    alert('Please log in to vote');
+                    window.location.href = '/connect.php';
+                } else {
+                    console.error('Vote failed:', data.error);
+                }
+            }
+        } catch (error) {
+            console.error('Error submitting vote:', error);
         }
-
-        // Default: get current count from DOM
-        const card = taskCards[index];
-        const currentCount = parseInt(card.querySelector('.vote-count').textContent);
-
-        return {
-            count: currentCount,
-            userVote: null
-        };
-    };
-
-    /**
-     * Save vote data to localStorage
-     * @param {number} index - Card index
-     * @param {Object} voteData - Vote data object
-     */
-    const saveVoteData = (index, voteData) => {
-        const key = `vote_bounty_${index}`;
-        localStorage.setItem(key, JSON.stringify(voteData));
     };
 
     /**
@@ -112,77 +115,15 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {Event} e - Click event
      */
     const handleVote = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
         const voteBtn = e.currentTarget;
-        const card = voteBtn.closest('.task-card');
-        const cardIndex = Array.from(taskCards).indexOf(card);
-        const voteCountSpan = card.querySelector('.vote-count');
-        const upvoteBtn = card.querySelector('.vote-up');
-        const downvoteBtn = card.querySelector('.vote-down');
-        const upIcon = upvoteBtn.querySelector('.vote-icon');
-        const downIcon = downvoteBtn.querySelector('.vote-icon');
+        const bountyId = voteBtn.getAttribute('data-index');
         const isUpvote = voteBtn.classList.contains('vote-up');
+        const voteType = isUpvote ? 1 : -1;
 
-        // Get current vote data
-        const voteData = getVoteData(cardIndex);
-        let newCount = voteData.count;
-        let newUserVote = voteData.userVote;
-
-        // Determine new vote state
-        if (isUpvote) {
-            if (newUserVote === 'up') {
-                // Remove upvote
-                newCount--;
-                newUserVote = null;
-                upvoteBtn.classList.remove('voted');
-                upIcon.src = upIcon.dataset.default;
-            } else if (newUserVote === 'down') {
-                // Switch from downvote to upvote
-                newCount += 2;
-                newUserVote = 'up';
-                downvoteBtn.classList.remove('voted');
-                downIcon.src = downIcon.dataset.default;
-                upvoteBtn.classList.add('voted');
-                upIcon.src = upIcon.dataset.selected;
-            } else {
-                // Add upvote
-                newCount++;
-                newUserVote = 'up';
-                upvoteBtn.classList.add('voted');
-                upIcon.src = upIcon.dataset.selected;
-            }
-        } else {
-            // Downvote
-            if (newUserVote === 'down') {
-                // Remove downvote
-                newCount++;
-                newUserVote = null;
-                downvoteBtn.classList.remove('voted');
-                downIcon.src = downIcon.dataset.default;
-            } else if (newUserVote === 'up') {
-                // Switch from upvote to downvote
-                newCount -= 2;
-                newUserVote = 'down';
-                upvoteBtn.classList.remove('voted');
-                upIcon.src = upIcon.dataset.default;
-                downvoteBtn.classList.add('voted');
-                downIcon.src = downIcon.dataset.selected;
-            } else {
-                // Add downvote
-                newCount--;
-                newUserVote = 'down';
-                downvoteBtn.classList.add('voted');
-                downIcon.src = downIcon.dataset.selected;
-            }
-        }
-
-        // Update UI
-        voteCountSpan.textContent = newCount;
-
-        // Save to localStorage
-        saveVoteData(cardIndex, {
-            count: newCount,
-            userVote: newUserVote
-        });
+        submitVote(bountyId, voteType, voteBtn);
     };
 
     // Attach vote handlers to all vote buttons
@@ -190,8 +131,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const upvoteBtn = card.querySelector('.vote-up');
         const downvoteBtn = card.querySelector('.vote-down');
 
-        upvoteBtn.addEventListener('click', handleVote);
-        downvoteBtn.addEventListener('click', handleVote);
+        if (upvoteBtn) upvoteBtn.addEventListener('click', handleVote);
+        if (downvoteBtn) downvoteBtn.addEventListener('click', handleVote);
     });
 
     // Initialize votes on page load

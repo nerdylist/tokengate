@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/config/session.php';
 require_once 'config.php';
+require_once 'classes/Auth.php';
 require_once 'controllers/BountyController.php';
 
 // Initialize controller
@@ -44,8 +45,26 @@ try {
     }
     // 'new' is default (already sorted by created_at DESC)
 
+    // Fetch user's votes for all bounties if logged in
+    $userVotes = [];
+    if (Auth::check()) {
+        $db = Database::getInstance();
+        $userId = Auth::id();
+        $bountyIds = array_column($bounties, 'id');
+        if (!empty($bountyIds)) {
+            $placeholders = implode(',', array_fill(0, count($bountyIds), '?'));
+            $voteResults = $db->query(
+                "SELECT bounty_id, vote_type FROM bounty_votes WHERE user_id = ? AND bounty_id IN ($placeholders)",
+                array_merge([$userId], $bountyIds)
+            );
+            foreach ($voteResults as $vote) {
+                $userVotes[$vote['bounty_id']] = (int)$vote['vote_type'];
+            }
+        }
+    }
+
     // Transform bounties to match task-card.php expected format
-    $tasks = array_map(function($bounty) {
+    $tasks = array_map(function($bounty) use ($userVotes) {
         // Calculate days until deadline
         $due_days = 'no deadline';
         if (!empty($bounty['deadline'])) {
@@ -80,6 +99,7 @@ try {
         return [
             'id' => $bounty['id'],
             'votes' => $bounty['vote_count'] ?? 0,
+            'user_vote' => $userVotes[$bounty['id']] ?? 0,
             'category' => $bounty['category_slug'] ?? $bounty['category_name'] ?? 'other',
             'due_days' => $due_days,
             'spots_filled' => 0, // TODO: Implement from applications table
