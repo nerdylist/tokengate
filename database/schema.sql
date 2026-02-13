@@ -138,6 +138,7 @@ CREATE TABLE IF NOT EXISTS profile_skills (
     profile_id INTEGER NOT NULL,
     skill_id INTEGER NOT NULL,
     proficiency_level VARCHAR(50) DEFAULT 'intermediate',
+    xp INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (profile_id, skill_id),
     FOREIGN KEY (profile_id) REFERENCES profiles(id) ON DELETE CASCADE,
@@ -146,6 +147,7 @@ CREATE TABLE IF NOT EXISTS profile_skills (
 
 CREATE INDEX idx_profile_skills_skill ON profile_skills(skill_id);
 CREATE INDEX idx_profile_skills_proficiency ON profile_skills(proficiency_level);
+CREATE INDEX idx_profile_skills_xp ON profile_skills(xp DESC);
 
 -- Applications Table
 CREATE TABLE IF NOT EXISTS applications (
