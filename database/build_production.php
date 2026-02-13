@@ -260,8 +260,8 @@ try {
     ];
 
     $stmt = $db->prepare("
-        INSERT INTO guilds (name, slug, type, description, icon)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO guilds (name, slug, type, description, icon, color)
+        VALUES (?, ?, ?, ?, ?, ?)
     ");
 
     foreach ($guilds as $guild) {
@@ -270,7 +270,8 @@ try {
             $guild['slug'],
             $guild['type'],
             $guild['description'],
-            $guild['icon']
+            $guild['icon'],
+            $guild['color'] ?? '#FFCC00'
         ]);
     }
 
