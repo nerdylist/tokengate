@@ -1,6 +1,40 @@
 <?php
 require_once __DIR__ . '/config/session.php';
 require_once 'config.php';
+require_once 'classes/Database.php';
+require_once 'classes/Bounty.php';
+require_once 'classes/Category.php';
+
+// Fetch featured bounties (sorted by vote count)
+$featuredBounties = [];
+try {
+    $db = Database::getInstance();
+    $sql = "SELECT b.*,
+                   (SELECT COUNT(*) FROM votes v WHERE v.bounty_id = b.id) as vote_count
+            FROM bounties b
+            WHERE b.status = 'open'
+            ORDER BY vote_count DESC, b.created_at DESC
+            LIMIT 6";
+    $featuredBounties = $db->query($sql, []);
+} catch (Exception $e) {
+    error_log("Error fetching featured bounties: " . $e->getMessage());
+    $featuredBounties = [];
+}
+
+// Fetch popular categories with skill counts
+$popularCategories = [];
+try {
+    $db = Database::getInstance();
+    $sql = "SELECT c.id, c.name, c.description,
+                   (SELECT COUNT(*) FROM skills WHERE category_id = c.id) as skill_count
+            FROM categories c
+            ORDER BY skill_count DESC
+            LIMIT 6";
+    $popularCategories = $db->query($sql, []);
+} catch (Exception $e) {
+    error_log("Error fetching categories: " . $e->getMessage());
+    $popularCategories = [];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,18 +82,35 @@ require_once 'config.php';
                     <a href="<?php echo url('bounties'); ?>" class="section-link">view all</a>
                 </div>
                 <div class="placeholder-grid">
-                    <div class="placeholder-card">
-                        <div class="placeholder-shimmer"></div>
-                        <p class="placeholder-text">bounty card placeholder</p>
-                    </div>
-                    <div class="placeholder-card">
-                        <div class="placeholder-shimmer"></div>
-                        <p class="placeholder-text">bounty card placeholder</p>
-                    </div>
-                    <div class="placeholder-card">
-                        <div class="placeholder-shimmer"></div>
-                        <p class="placeholder-text">bounty card placeholder</p>
-                    </div>
+                    <?php if (count($featuredBounties) === 0): ?>
+                        <div class="empty-state">
+                            <p class="empty-state-text">no bounties posted yet</p>
+                        </div>
+                    <?php else: ?>
+                        <?php foreach ($featuredBounties as $bounty): ?>
+                            <a href="<?php echo url('bounty', ['id' => $bounty['id']]); ?>" class="bounty-card">
+                                <h3 class="bounty-card-title"><?php echo htmlspecialchars($bounty['title']); ?></h3>
+                                <p class="bounty-card-description">
+                                    <?php
+                                    $description = htmlspecialchars($bounty['description']);
+                                    echo strlen($description) > 100 ? substr($description, 0, 100) . '...' : $description;
+                                    ?>
+                                </p>
+                                <div class="bounty-card-meta">
+                                    <span class="bounty-card-budget">
+                                        $<?php echo number_format($bounty['budget_min']); ?> - $<?php echo number_format($bounty['budget_max']); ?>
+                                    </span>
+                                    <?php if (!empty($bounty['deadline'])): ?>
+                                        <span class="bounty-card-deadline">
+                                            due: <?php echo date('M j, Y', strtotime($bounty['deadline'])); ?>
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="bounty-card-deadline">no deadline</span>
+                                    <?php endif; ?>
+                                </div>
+                            </a>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
             </div>
         </section>
@@ -97,36 +148,21 @@ require_once 'config.php';
                     <h2 class="section-title">popular skills</h2>
                 </div>
                 <div class="skills-grid">
-                    <div class="skill-card">
-                        <div class="skill-icon-placeholder"></div>
-                        <h3 class="skill-name">skill category</h3>
-                        <p class="skill-count">placeholder</p>
-                    </div>
-                    <div class="skill-card">
-                        <div class="skill-icon-placeholder"></div>
-                        <h3 class="skill-name">skill category</h3>
-                        <p class="skill-count">placeholder</p>
-                    </div>
-                    <div class="skill-card">
-                        <div class="skill-icon-placeholder"></div>
-                        <h3 class="skill-name">skill category</h3>
-                        <p class="skill-count">placeholder</p>
-                    </div>
-                    <div class="skill-card">
-                        <div class="skill-icon-placeholder"></div>
-                        <h3 class="skill-name">skill category</h3>
-                        <p class="skill-count">placeholder</p>
-                    </div>
-                    <div class="skill-card">
-                        <div class="skill-icon-placeholder"></div>
-                        <h3 class="skill-name">skill category</h3>
-                        <p class="skill-count">placeholder</p>
-                    </div>
-                    <div class="skill-card">
-                        <div class="skill-icon-placeholder"></div>
-                        <h3 class="skill-name">skill category</h3>
-                        <p class="skill-count">placeholder</p>
-                    </div>
+                    <?php if (count($popularCategories) === 0): ?>
+                        <div class="empty-state">
+                            <p class="empty-state-text">no categories available</p>
+                        </div>
+                    <?php else: ?>
+                        <?php foreach ($popularCategories as $category): ?>
+                            <a href="<?php echo url('browse', ['category' => $category['name']]); ?>" class="skill-card">
+                                <div class="skill-icon-placeholder"></div>
+                                <h3 class="skill-name"><?php echo htmlspecialchars(strtolower($category['name'])); ?></h3>
+                                <p class="skill-count">
+                                    <?php echo (int)$category['skill_count']; ?> skill<?php echo (int)$category['skill_count'] !== 1 ? 's' : ''; ?> available
+                                </p>
+                            </a>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
             </div>
         </section>
